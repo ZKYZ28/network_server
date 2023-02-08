@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class ServerController {
-    private static final int DEFAULT_PORT = 12345;
     private List<ClientRunnable> clientList;
 
     public ServerController(int port) {
@@ -41,11 +40,5 @@ public class ServerController {
         }
 
     }
-
-    public static void main(String[] args) {
-        new ServerController(DEFAULT_PORT);
-    }
-
-
 }
 
