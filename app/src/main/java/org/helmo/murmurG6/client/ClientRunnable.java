@@ -7,11 +7,11 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class ClientRunnable implements Runnable {
-    private Socket monClient;
+    private final Socket monClient;
     private BufferedReader in;
     private PrintWriter out;
     private boolean isConnected = false;
-    private ServerController controller;
+    private final ServerController controller;
 
     public ClientRunnable(Socket client, ServerController controller) {
         this.monClient = client;
@@ -27,7 +27,6 @@ public class ClientRunnable implements Runnable {
 
     public void run() {
         try {
-            sendMessage("HELLO"); //Reconnaissance du murmur.client.server par le murmur.client (ou sinon crash)
             sendMessage("HELLO 192.168.148.47 azertyuiopmlkjhgfdsqwx"); //Reconnaissance du murmur.client.server par le murmur.client (ou sinon crash)
             String ligne = in.readLine(); //Le murmur.client.server attend que le murmur.client ecrive quelque chose
             while(isConnected && ligne != null) { //Quand le murmur.client envoie sa ligne
