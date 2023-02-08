@@ -77,14 +77,20 @@ public class User {
         return followedTrends;
     }
 
-    /**TODO
+    /**
+     * Définit la liste des utilisateurs suivis.
      *
-     * @param followedUsers
+     * @param followedUsers Liste des utilisateurs suivis.
      */
     public void setFollowedUsers(List<String> followedUsers) {
         this.followedUsers = followedUsers;
     }
 
+    /**
+     * Définit la liste des tendances suivies.
+     *
+     * @param followedTrends Liste des tendances suivies.
+     */
     public void setFollowedTrends(List<String> followedTrends) {
         this.followedTrends = followedTrends;
     }
