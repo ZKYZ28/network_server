@@ -14,10 +14,8 @@ public class ServerController {
 
     public ServerController(int port) {
         clientList = Collections.synchronizedList(new ArrayList<>());
-        ServerSocket server;
         Socket client;
-        try {
-            server = new ServerSocket(port);
+        try (ServerSocket server = new ServerSocket(port)) {
             while(true) {
                 client = server.accept();
                 System.out.println("Quelqu'un s'est connecté!");
@@ -25,7 +23,6 @@ public class ServerController {
                 clientList.add(runnable);
                 (new Thread(runnable)).start();
             }
-
         } catch(IOException ex) {
             ex.printStackTrace();
         }
