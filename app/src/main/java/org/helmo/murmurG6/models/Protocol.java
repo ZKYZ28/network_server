@@ -27,7 +27,6 @@ public class Protocol {
                 return new Message(identifyTypeMessage(i), createMatcher(msg, i), msg);
             }
         }
-
         return new Message(MessageType.MESSAGE, null, msg);
     }
 
@@ -51,7 +50,7 @@ public class Protocol {
 
     public static void main(String[] args) {
         System.out.println(CONNECT);
-       System.out.println(Pattern.matches(CONNECT, "CONNECT Louis\\n\\r"));
+        System.out.println(Pattern.matches(CONNECT, "CONNECT Louis\\n\\r"));
     }
 }
 
