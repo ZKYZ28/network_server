@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ServerController {
-    private List<ClientRunnable> clientList;
+    private final List<ClientRunnable> clientList;
 
     public ServerController(int port) {
         clientList = Collections.synchronizedList(new ArrayList<>());
@@ -35,7 +35,8 @@ public class ServerController {
             if(c != me)
                 c.sendMessage(message);
         }
-
     }
+
+
 }
 

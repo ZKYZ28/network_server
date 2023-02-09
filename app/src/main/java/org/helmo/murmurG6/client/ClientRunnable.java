@@ -34,7 +34,9 @@ public class ClientRunnable implements Runnable {
                 controller.broadcastToAllClientsExceptMe(this, ligne); //Il la publie à tous les clients dans la file
                 ligne = in.readLine(); //Le thread mis à disposition du murmur.client attend la prochaine ligne
             }
-        } catch(IOException ex) { ex.printStackTrace(); }
+        } catch(IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
