@@ -1,7 +1,6 @@
 package org.helmo.murmurG6.server;
 
-import org.helmo.murmurG6.client.ClientRunnable;
-
+import org.helmo.murmurG6.infrastructure.client.ClientRunnable;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,6 +15,7 @@ public class ServerController {
         clientList = Collections.synchronizedList(new ArrayList<>());
         Socket client;
         try (ServerSocket server = new ServerSocket(port)) {
+            System.out.println("Server online");
             while(true) {
                 client = server.accept();
                 System.out.println("Quelqu'un s'est connecté!");
@@ -26,7 +26,6 @@ public class ServerController {
         } catch(IOException ex) {
             ex.printStackTrace();
         }
-
     }
 
     public void broadcastToAllClientsExceptMe(ClientRunnable me, String message) {

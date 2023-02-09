@@ -1,6 +1,7 @@
 package org.helmo.murmurG6;
 
 import org.helmo.murmurG6.server.ServerController;
+import org.helmo.murmurG6.utils.RandomSaltGenerator;
 
 public class app {
 
