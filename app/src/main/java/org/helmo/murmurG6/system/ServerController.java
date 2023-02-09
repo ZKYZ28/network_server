@@ -2,7 +2,6 @@ package org.helmo.murmurG6.system;
 
 import org.helmo.murmurG6.models.UserCollection;
 import org.helmo.murmurG6.repository.IUserCollectionRepository;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -16,11 +15,13 @@ public class ServerController implements AutoCloseable {
     private final List<ClientRunnable> clientList;
     private final ServerSocket serverSocket;
     private final UserCollection userCollection;
+    private final IUserCollectionRepository userStorage;
 
-    public ServerController(int port, IUserCollectionRepository ucr) throws IOException {
+    public ServerController(int port, IUserCollectionRepository userStorage) throws IOException {
+        this.userStorage = userStorage;
+        this.userCollection = userStorage.read();
         this.clientList = Collections.synchronizedList(new ArrayList<>());
         this.serverSocket = new ServerSocket(port);
-        this.userCollection = ucr.read();
         System.out.println("SERVER ONLINE ! IP : " + getIp());
     }
 
@@ -57,6 +58,7 @@ public class ServerController implements AutoCloseable {
     public void close() throws IOException {
         try {
             this.serverSocket.close();
+            this.userStorage.save(this.userCollection);
         } catch (IOException e) {
             e.printStackTrace();
         }
