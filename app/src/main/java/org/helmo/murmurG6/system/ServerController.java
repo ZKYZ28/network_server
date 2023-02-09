@@ -15,7 +15,6 @@ import java.util.List;
 public class ServerController implements AutoCloseable {
     private final List<ClientRunnable> clientList;
     private final ServerSocket serverSocket;
-
     private final UserCollection userCollection;
 
     public ServerController(int port, IUserCollectionRepository ucr) throws IOException {
