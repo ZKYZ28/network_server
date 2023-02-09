@@ -7,12 +7,12 @@ public class Protocol {
 
     /*PARTS*/
     private final static String RX_ESP = " ";
-    private final static String RX_CRLF = "";
+    private final static String RX_CRLF = "(\\r\\n)?";
     private final static String RX_USERNAME = "(?i)(^[a-z])((?![-]$)[a-z-Ã§]){0,24}$";
     private final static String RX_DOMAIN = "^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\\\.)+[A-Za-z]{2,6}$";
     private static final String RX_SALT_SIZE = "[0-9]{2}";
     private static final String RX_BCRYPT_HASH = "^\\$2[ayb]\\$.{56}$";
-    private static final String TAG_DOMAIN = "";
+    private static final String TAG_DOMAIN = "#[a-zA-Z0-9]{5,20}";
 
 
     /*FULL*/
