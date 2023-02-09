@@ -27,7 +27,7 @@ public class UserJsonStorage implements UserCollectionRepository {
     public void save(UserCollection uc) throws SaveUserCollectionException {
         controlDirectoryExistence();
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(filePath), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING)){
-            gson.toJson(UserCollection.getRegisteredUsers, bufferedWriter);
+            gson.toJson(uc.getRegisteredUsers(), bufferedWriter);
         }catch(IOException e){
             throw new SaveUserCollectionException("Impossible de sauvegarder la liste d\'utilisateur!");
         }
@@ -46,12 +46,10 @@ public class UserJsonStorage implements UserCollectionRepository {
     }
 
 
-
     private void controlDirectoryExistence () {
         File directory = new File(directoryPath);
         if (!directory.exists()) {
             directory.mkdir();
         }
     }
-
 }
