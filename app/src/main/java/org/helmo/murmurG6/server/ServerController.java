@@ -24,7 +24,9 @@ public class ServerController implements AutoCloseable {
         this.serverSocket = new ServerSocket(port);
         this.userCollection = ucr.read();
         System.out.println("SERVER ONLINE ! IP : " + getIp());
+    }
 
+    public void start() throws IOException {
         while(true) {
             Socket client = serverSocket.accept();
             System.out.println("Quelqu'un s'est connecté!");

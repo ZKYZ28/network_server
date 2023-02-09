@@ -4,9 +4,11 @@ import org.helmo.murmurG6.infrastructure.storage.json.ReadUserCollectionExceptio
 import org.helmo.murmurG6.infrastructure.storage.json.SaveUserCollectionException;
 import org.helmo.murmurG6.models.UserCollection;
 
+import java.io.IOException;
+
 public interface UserCollectionRepository {
 
     void save(UserCollection uc) throws SaveUserCollectionException;
 
-    UserCollection read() throws ReadUserCollectionException;
+    UserCollection read() throws IOException;
 }

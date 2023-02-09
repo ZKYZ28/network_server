@@ -12,7 +12,7 @@ public class app {
 
     public static void main(String[] args) {
         try (ServerController server = new ServerController(DEFAULT_PORT, USER_JSON_STORAGE)) {
-
+            server.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
