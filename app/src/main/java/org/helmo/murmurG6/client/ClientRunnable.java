@@ -1,4 +1,4 @@
-package org.helmo.murmurG6.infrastructure.client;
+package org.helmo.murmurG6.client;
 
 import org.helmo.murmurG6.server.ServerController;
 import org.helmo.murmurG6.utils.RandomSaltGenerator;
@@ -28,8 +28,8 @@ public class ClientRunnable implements Runnable {
 
     public void run() {
         try {
-            sendMessage("HELLO 192.168.124.6 azertyuiopmlkjhgfdsqwx"); //Reconnaissance du murmur.client.server par le murmur.client (ou sinon crash)
-            //sayHello();
+            //sendMessage("HELLO 192.168.124.6 azertyuiopmlkjhgfdsqwx"); //Reconnaissance du murmur.client.server par le murmur.client (ou sinon crash)
+            sayHello();
             String ligne = in.readLine(); //Le murmur.client.server attend que le murmur.client ecrive quelque chose
             while(isConnected && ligne != null && !ligne.isEmpty()) { //Quand le murmur.client envoie sa ligne
                 System.out.printf("Ligne reçue : %s\r\n", ligne); //Le murmur.client.server recoit la ligne

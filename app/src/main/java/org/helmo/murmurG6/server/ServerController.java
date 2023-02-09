@@ -1,6 +1,6 @@
 package org.helmo.murmurG6.server;
 
-import org.helmo.murmurG6.infrastructure.client.ClientRunnable;
+import org.helmo.murmurG6.client.ClientRunnable;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
