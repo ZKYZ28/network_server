@@ -2,11 +2,12 @@ package org.helmo.murmurG6.models;
 
 import org.helmo.murmurG6.models.Message;
 import org.helmo.murmurG6.models.MessageType;
+import org.helmo.murmurG6.repository.IProtocol;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Protocol {
+public class Protocol implements IProtocol {
 
     /*
      * ACSII Characters
@@ -62,6 +63,7 @@ public class Protocol {
      * @param msg String qui est le message reçu depuis le Client
      * @return Message(typeMessage, matcher, msg)
      */
+    @Override
     public Message analyseMessage(String msg){
         for (int i = 0; i < TYPE_MESSAGE.length; i++) {
             if(Pattern.matches(TYPE_MESSAGE[i], msg)){
