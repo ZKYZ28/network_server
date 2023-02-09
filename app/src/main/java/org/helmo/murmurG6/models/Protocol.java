@@ -1,5 +1,8 @@
 package org.helmo.murmurG6.models;
 
+import org.helmo.murmurG6.models.Message;
+import org.helmo.murmurG6.models.MessageType;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,8 +20,8 @@ public class Protocol {
 
     /*FULL*/
     private final static String CONNECT = "CONNECT" + RX_ESP + RX_USERNAME + RX_CRLF;
-    private final String REGISTER = "REGISTER" + RX_ESP + RX_USERNAME + RX_ESP + RX_SALT_SIZE + RX_ESP + RX_BCRYPT_HASH + RX_CRLF;
-    private final String FOLLOW = "FOLLOW" + RX_ESP + RX_DOMAIN + TAG_DOMAIN + RX_CRLF;
+    private final static String REGISTER = "REGISTER" + RX_ESP + RX_USERNAME + RX_ESP + RX_SALT_SIZE + RX_ESP + RX_BCRYPT_HASH + RX_CRLF;
+    private final static String FOLLOW = "FOLLOW" + RX_ESP + RX_DOMAIN + TAG_DOMAIN + RX_CRLF;
     private String TYPE_MESSAGE[] = {CONNECT, REGISTER, FOLLOW};
 
     public Message analyseMessage(String msg){
