@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class UserJsonStorage implements UserCollectionRepository {
 
     private final String directoryPath = JsonConfig.SAVE_DIR;
-    private final String filePath = directoryPath.concat("\\e180280.json");
+    private final String filePath = directoryPath.concat("/murmur_user_storage.json");
     private final Gson gson = new Gson();
 
 
@@ -26,7 +26,8 @@ public class UserJsonStorage implements UserCollectionRepository {
     @Override
     public void save(UserCollection uc) throws SaveUserCollectionException {
         controlDirectoryExistence();
-        try(BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(filePath), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING)){
+
+        try(BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(filePath), StandardCharsets.UTF_8, StandardOpenOption.CREATE)){
             gson.toJson(uc.getRegisteredUsers(), bufferedWriter);
         }catch(IOException e){
             throw new SaveUserCollectionException("Impossible de sauvegarder la liste d\'utilisateur!");
@@ -34,8 +35,11 @@ public class UserJsonStorage implements UserCollectionRepository {
     }
 
     @Override
-    public UserCollection read() throws ReadUserCollectionException {
+    public UserCollection read() throws IOException {
+        controlDirectoryExistence();
+        controlFileExistence();
         ArrayList<User> result = new ArrayList<User>();
+
         try(BufferedReader reader = Files.newBufferedReader(Paths.get(filePath))){
             result = new GsonBuilder().create().fromJson(reader, new TypeToken<ArrayList<User>>(){}.getType());
 
@@ -46,10 +50,20 @@ public class UserJsonStorage implements UserCollectionRepository {
     }
 
 
+
     private void controlDirectoryExistence () {
         File directory = new File(directoryPath);
         if (!directory.exists()) {
             directory.mkdir();
         }
     }
+
+
+    private void controlFileExistence() throws IOException {
+        File f = new File(filePath);
+        if (!f.exists()) {
+            f.createNewFile();
+        }
+    }
+
 }
