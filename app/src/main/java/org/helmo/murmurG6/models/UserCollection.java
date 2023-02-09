@@ -8,8 +8,12 @@ public class UserCollection {
 
     private Map<String, User> registeredUsers;
 
-    public UserCollection() {
+    public UserCollection(Iterable<User> users) {
         this.registeredUsers = Collections.synchronizedMap(new HashMap<>());
+    }
+
+    public Iterable<User> getRegisteredUsers() {
+        return new ArrayList<>(this.registeredUsers.values());
     }
 
     public void setRegisteredUsers(Iterable<User> users) {
