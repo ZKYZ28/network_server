@@ -31,7 +31,7 @@ public class ClientRunnable implements Runnable {
                 System.out.printf("Ligne reçue : %s\r\n", ligne);       //Le murmur.client.server recoit la ligne
 
                 //Réagir à la ligne recue (Executor){
-
+                sendMessage("+OK");
                     //si ligne === REGISTER -> envoyer +OK sinon -ERR
                 //}
 
