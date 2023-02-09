@@ -42,13 +42,14 @@ public class Protocol {
     private static final String RX_CRLF = "(\\x0d\\x0a){0,1}";
     private static final String RX_SALT_SIZE = "([0-9]{2})";
     private static final String RX_BCRYPT_HASH = "(\\$2b\\$\\d{2}\\$(" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){1,70})";
-    private static final String TAG_DOMAIN = "#[a-zA-Z0-9]{5,20}";
+    private static final String TAG = "#[a-zA-Z0-9]{5,20}";
+    private static final String TAG_DOMAIN = "(" + TAG + "@" + RX_DOMAIN + ")";
 
 
     /*FULL*/
     private final static String CONNECT = "CONNECT" + RX_ESP + RX_USERNAME + RX_CRLF;
     private final static String REGISTER = "REGISTER" + RX_ESP + RX_USERNAME + RX_ESP + RX_SALT_SIZE + RX_ESP + RX_BCRYPT_HASH + RX_CRLF;
-    private final static String FOLLOW = "FOLLOW" + RX_ESP + RX_DOMAIN + "|" + TAG_DOMAIN + RX_CRLF;
+    private final static String FOLLOW = "FOLLOW" + RX_ESP + "(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")" + RX_CRLF;
     private final static String CONFIRM = "CONFIRM" + RX_ESP + RX_SHA3_EX + RX_CRLF;
     private final static String DISCONNECT = "DISCONNECT" + RX_CRLF;
 

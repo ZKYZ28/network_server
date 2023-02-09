@@ -94,6 +94,48 @@ class ProtocolTest {
     }
 
     @Test
+    void followInstructionInTheRightCase() {
+        //Given
+        Protocol protocol = new Protocol();
+        String msgClientToServer = "FOLLOW lswinnen@server1.godswila.guru\r\n";
+        //When
+        Message connectMessage = protocol.analyseMessage(msgClientToServer);
+        //Then
+        assertEquals(MessageType.FOLLOW, connectMessage.getType());
+
+        //When
+        msgClientToServer = "FOLLOW swila@server2.godswila.guru\r\n";
+        connectMessage = protocol.analyseMessage(msgClientToServer);
+        //Then
+        assertEquals(MessageType.FOLLOW, connectMessage.getType());
+
+        //When
+        msgClientToServer = "FOLLOW #swila123@server2.godswila.guru\r\n";
+        connectMessage = protocol.analyseMessage(msgClientToServer);
+        //Then
+        assertEquals(MessageType.FOLLOW, connectMessage.getType());
+
+
+    }
+
+    @Test
+    void followInstructionInBadCase() {
+        //Given
+        Protocol protocol = new Protocol();
+        String msgClientToServer = "FOLLOW ^^^^^^^^@server1.godswila.guru\r\n";
+        //When
+        Message connectMessage = protocol.analyseMessage(msgClientToServer);
+        //Then
+        assertEquals(MessageType.MESSAGE, connectMessage.getType());
+
+        //When
+        msgClientToServer = "FOLLOW #swila123@server2.godswila.guru\r\n";
+        connectMessage = protocol.analyseMessage(msgClientToServer);
+        //Then
+        assertEquals(MessageType.FOLLOW, connectMessage.getType());
+    }
+
+    @Test
     void checkConfirmInTheRightCase() {
         //Given
         Protocol protocol = new Protocol();
