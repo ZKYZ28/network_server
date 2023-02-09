@@ -1,4 +1,4 @@
-package org.helmo.murmurG6.infrastructure.storage.json;
+package org.helmo.murmurG6.repository.exceptions;
 
 import java.io.IOException;
 

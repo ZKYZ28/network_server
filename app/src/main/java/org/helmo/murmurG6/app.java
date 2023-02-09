@@ -1,7 +1,7 @@
 package org.helmo.murmurG6;
 
 import org.helmo.murmurG6.infrastructure.storage.json.UserJsonStorage;
-import org.helmo.murmurG6.server.ServerController;
+import org.helmo.murmurG6.system.ServerController;
 import java.io.IOException;
 
 public class app {

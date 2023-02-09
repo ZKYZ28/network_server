@@ -6,7 +6,9 @@ import com.google.gson.reflect.TypeToken;
 import org.helmo.murmurG6.infrastructure.storage.json.config.JsonConfig;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserCollection;
-import org.helmo.murmurG6.repository.UserCollectionRepository;
+import org.helmo.murmurG6.repository.IUserCollectionRepository;
+import org.helmo.murmurG6.repository.exceptions.ReadUserCollectionException;
+import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +17,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
-public class UserJsonStorage implements UserCollectionRepository {
+public class UserJsonStorage implements IUserCollectionRepository {
 
     private final String directoryPath = JsonConfig.SAVE_DIR;
     private final String filePath = directoryPath.concat("/murmur_user_storage.json");

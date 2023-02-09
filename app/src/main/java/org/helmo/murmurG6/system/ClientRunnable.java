@@ -1,7 +1,6 @@
-package org.helmo.murmurG6.client;
+package org.helmo.murmurG6.system;
 
-import org.helmo.murmurG6.models.UserCollection;
-import org.helmo.murmurG6.server.ServerController;
+import org.helmo.murmurG6.system.ServerController;
 import org.helmo.murmurG6.utils.RandomSaltGenerator;
 import java.io.*;
 import java.net.Socket;

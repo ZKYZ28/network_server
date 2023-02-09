@@ -1,12 +1,11 @@
 package org.helmo.murmurG6.repository;
 
-import org.helmo.murmurG6.infrastructure.storage.json.ReadUserCollectionException;
-import org.helmo.murmurG6.infrastructure.storage.json.SaveUserCollectionException;
+import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 import org.helmo.murmurG6.models.UserCollection;
 
 import java.io.IOException;
 
-public interface UserCollectionRepository {
+public interface IUserCollectionRepository {
 
     void save(UserCollection uc) throws SaveUserCollectionException;
 

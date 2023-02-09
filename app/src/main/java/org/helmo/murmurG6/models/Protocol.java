@@ -56,7 +56,7 @@ public class Protocol implements IProtocol {
     private final static String CONFIRM = "CONFIRM" + RX_ESP + RX_SHA3_EX + RX_CRLF;
     private final static String DISCONNECT = "DISCONNECT" + RX_CRLF;
 
-    private String TYPE_MESSAGE[] = {CONNECT, REGISTER, FOLLOW, CONFIRM, DISCONNECT};
+    private final String[] TYPE_MESSAGE = {CONNECT, REGISTER, FOLLOW, CONFIRM, DISCONNECT};
 
     /**
      * Méthode qui permet de créer une Objet Message sur base d'une string
