@@ -1,5 +1,7 @@
 package org.helmo.murmurG6.client;
 
+import org.helmo.murmurG6.models.Message;
+import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.server.ServerController;
 
 import java.io.*;
