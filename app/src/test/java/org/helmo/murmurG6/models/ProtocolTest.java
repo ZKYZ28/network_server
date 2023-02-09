@@ -8,7 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ProtocolTest {
 
     @Test
-    void checkName() {
-
+    void checkConnect() {
+        //Given
+        Protocol protocol = new Protocol();
+        String msgClientToServer = "CONNECT LOUIS\r\n";
+        //When
+        Message connectMessage = protocol.analyseMessage(msgClientToServer);
+        //Then
+       assertEquals(MessageType.CONNECT, connectMessage.getType());
     }
 }

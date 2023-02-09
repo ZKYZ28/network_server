@@ -12,4 +12,16 @@ public class Message {
         this.matcher = matcher;
         this.msg = msg;
     }
+
+    public MessageType getType() {
+        return type;
+    }
+
+    public Matcher getMatcher() {
+        return matcher;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
 }

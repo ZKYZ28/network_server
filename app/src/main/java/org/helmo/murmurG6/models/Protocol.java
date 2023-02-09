@@ -9,9 +9,9 @@ import java.util.regex.Pattern;
 public class Protocol {
 
     /*PARTS*/
-    private final static String RX_ESP = " ";
+    private final static String RX_ESP = "\\s";
     private final static String RX_CRLF = "(\\r\\n)?";
-    private final static String RX_USERNAME = "(?i)(^[a-z])((?![-]$)[a-z]){0,24}$";
+    private final static String RX_USERNAME = "([a-zA-Z]{5,20})$";
     private final static String RX_DOMAIN = "^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\\\.)+[A-Za-z]{2,6}$";
     private static final String RX_SALT_SIZE = "[0-9]{2}";
     private static final String RX_BCRYPT_HASH = "^\\$2[ayb]\\$.{56}$";
