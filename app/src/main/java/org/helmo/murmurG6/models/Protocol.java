@@ -8,7 +8,7 @@ public class Protocol {
     /*PARTS*/
     private final static String RX_ESP = " ";
     private final static String RX_CRLF = "(\\r\\n)?";
-    private final static String RX_USERNAME = "(?i)(^[a-z])((?![-]$)[a-z-Ã§]){0,24}$";
+    private final static String RX_USERNAME = "(?i)(^[a-z])((?![-]$)[a-z]){0,24}$";
     private final static String RX_DOMAIN = "^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\\\.)+[A-Za-z]{2,6}$";
     private static final String RX_SALT_SIZE = "[0-9]{2}";
     private static final String RX_BCRYPT_HASH = "^\\$2[ayb]\\$.{56}$";
@@ -30,6 +30,7 @@ public class Protocol {
 
         return new Message(MessageType.MESSAGE, null, msg);
     }
+
     public MessageType identifyTypeMessage(int i){
         switch (i){
             case 0:
@@ -49,7 +50,8 @@ public class Protocol {
     }
 
     public static void main(String[] args) {
-       System.out.println(Pattern.matches("", ""));
+        System.out.println(CONNECT);
+       System.out.println(Pattern.matches(CONNECT, "CONNECT Louis\\n\\r"));
     }
 }
 
