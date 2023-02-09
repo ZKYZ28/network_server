@@ -53,7 +53,3 @@ public class Protocol {
         System.out.println(Pattern.matches(CONNECT, "CONNECT Louis\\n\\r"));
     }
 }
-
-
-
-
