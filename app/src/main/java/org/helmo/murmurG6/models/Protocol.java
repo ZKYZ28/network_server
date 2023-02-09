@@ -45,11 +45,13 @@ public class Protocol {
     private static final String TAG = "#[a-zA-Z0-9]{5,20}";
     private static final String TAG_DOMAIN = "(" + TAG + "@" + RX_DOMAIN + ")";
 
+    private static final String TAG_DOMAIN_OR_RX_USER_DOMAIN = "(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")";
+
 
     /*FULL*/
     private final static String CONNECT = "CONNECT" + RX_ESP + RX_USERNAME + RX_CRLF;
     private final static String REGISTER = "REGISTER" + RX_ESP + RX_USERNAME + RX_ESP + RX_SALT_SIZE + RX_ESP + RX_BCRYPT_HASH + RX_CRLF;
-    private final static String FOLLOW = "FOLLOW" + RX_ESP + "(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")" + RX_CRLF;
+    private final static String FOLLOW = "FOLLOW" + RX_ESP + TAG_DOMAIN_OR_RX_USER_DOMAIN + RX_CRLF;
     private final static String CONFIRM = "CONFIRM" + RX_ESP + RX_SHA3_EX + RX_CRLF;
     private final static String DISCONNECT = "DISCONNECT" + RX_CRLF;
 

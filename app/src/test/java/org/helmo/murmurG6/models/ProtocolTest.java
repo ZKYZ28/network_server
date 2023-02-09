@@ -102,18 +102,24 @@ class ProtocolTest {
         Message connectMessage = protocol.analyseMessage(msgClientToServer);
         //Then
         assertEquals(MessageType.FOLLOW, connectMessage.getType());
+        assertEquals("FOLLOW lswinnen@server1.godswila.guru\r\n", connectMessage.getMatcher().group(0));
+        assertEquals("lswinnen@server1.godswila.guru", connectMessage.getMatcher().group(1));
 
         //When
         msgClientToServer = "FOLLOW swila@server2.godswila.guru\r\n";
         connectMessage = protocol.analyseMessage(msgClientToServer);
         //Then
         assertEquals(MessageType.FOLLOW, connectMessage.getType());
+        assertEquals("FOLLOW swila@server2.godswila.guru\r\n", connectMessage.getMatcher().group(0));
+        assertEquals("swila@server2.godswila.guru", connectMessage.getMatcher().group(1));
 
         //When
         msgClientToServer = "FOLLOW #swila123@server2.godswila.guru\r\n";
         connectMessage = protocol.analyseMessage(msgClientToServer);
         //Then
         assertEquals(MessageType.FOLLOW, connectMessage.getType());
+        assertEquals("FOLLOW #swila123@server2.godswila.guru\r\n", connectMessage.getMatcher().group(0));
+        assertEquals("#swila123@server2.godswila.guru", connectMessage.getMatcher().group(1));
 
 
     }
@@ -129,10 +135,10 @@ class ProtocolTest {
         assertEquals(MessageType.MESSAGE, connectMessage.getType());
 
         //When
-        msgClientToServer = "FOLLOW #swila123@server2.godswila.guru\r\n";
+        msgClientToServer = "FOLLOW #swila12315145541441515154151541515144515414@server2.godswila.guru\r\n";
         connectMessage = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.FOLLOW, connectMessage.getType());
+        assertEquals(MessageType.MESSAGE, connectMessage.getType());
     }
 
     @Test
