@@ -31,7 +31,7 @@ public class UserCollection {
         }
     }
 
-    public boolean isRegistered(User user) {
+    private boolean isRegistered(User user) {
         return this.registeredUsers.containsKey(user.getLogin());
     }
 }
