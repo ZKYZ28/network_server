@@ -4,7 +4,6 @@ import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserCollection;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.IUserCollectionRepository;
-
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
