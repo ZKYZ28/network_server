@@ -1,5 +1,7 @@
 package org.helmo.murmurG6.models;
 
+
+
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 
 import java.util.*;

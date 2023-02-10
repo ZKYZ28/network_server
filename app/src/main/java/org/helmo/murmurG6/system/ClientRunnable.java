@@ -1,6 +1,6 @@
 package org.helmo.murmurG6.system;
 
-import org.helmo.murmurG6.system.ServerController;
+import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.utils.RandomSaltGenerator;
 import java.io.*;
 import java.net.Socket;
@@ -9,11 +9,12 @@ import java.nio.charset.StandardCharsets;
 public class ClientRunnable implements Runnable {
     private BufferedReader in;
     private PrintWriter out;
-    private boolean isConnected = false;
-    private final ServerController controller;
 
-    public ClientRunnable(Socket client, ServerController controller) {
-        this.controller=  controller;
+    private boolean isConnected = false;
+    private final ServerController server;
+
+    public ClientRunnable(Socket client, ServerController server) {
+        this.server =  server;
         try {
             in = new BufferedReader(new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8));
             out = new PrintWriter(new OutputStreamWriter(client.getOutputStream(), StandardCharsets.UTF_8), true);
@@ -31,11 +32,12 @@ public class ClientRunnable implements Runnable {
                 System.out.printf("Ligne reçue : %s\r\n", ligne);       //Le murmur.client.server recoit la ligne
 
                 //Réagir à la ligne recue (Executor){
-                sendMessage("+OK");
-                    //si ligne === REGISTER -> envoyer +OK sinon -ERR
+                    //si ligne === REGISTER (test) {
+                        sendMessage("+OK");
+                        server.registerUser(new User("un_login", "un_bcryptHash", 99, "un_bcryptSalt"));
+                    //}
                 //}
 
-                controller.broadcastToAllClientsExceptMe(this, ligne); //Il la publie à tous les clients dans la file
                 ligne = in.readLine();                                     //Le thread mis à disposition du murmur.client attend la prochaine ligne
             }
         } catch(IOException ex) {
@@ -56,6 +58,6 @@ public class ClientRunnable implements Runnable {
     }
 
     private void sayHello() {
-        sendMessage("HELLO " + controller.getIp() + " " + RandomSaltGenerator.generateSalt());
+        sendMessage("HELLO " + server.getIp() + " " + RandomSaltGenerator.generateSalt());
     }
 }

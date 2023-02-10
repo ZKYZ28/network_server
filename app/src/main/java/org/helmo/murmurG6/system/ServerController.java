@@ -1,6 +1,8 @@
 package org.helmo.murmurG6.system;
 
+import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserCollection;
+import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.IUserCollectionRepository;
 
 import java.io.IOException;
@@ -15,12 +17,15 @@ import java.util.List;
 public class ServerController implements AutoCloseable {
     private final List<ClientRunnable> clientList;
     private final ServerSocket serverSocket;
+
+    private final IUserCollectionRepository repo;
     private final UserCollection userCollection;
 
-    public ServerController(int port, IUserCollectionRepository ucr) throws IOException {
+    public ServerController(int port, IUserCollectionRepository repo) throws IOException {
         this.clientList = Collections.synchronizedList(new ArrayList<>());
         this.serverSocket = new ServerSocket(port);
-        this.userCollection = ucr.read();
+        this.repo = repo;
+        this.userCollection = repo.read(); //remplissage de tous les users inscrits dans la usercollection
         System.out.println("SERVER ONLINE ! IP : " + getIp());
     }
 
@@ -43,6 +48,17 @@ public class ServerController implements AutoCloseable {
         }
     }
 
+    public void registerUser(User user) {
+        try{
+            userCollection.registerUser(user);
+        } catch (UserAlreadyRegisteredException e) {
+            //*************************************
+                e.printStackTrace();
+                //Mieux: sendMessageToUser => e.message
+            //**************************************
+        }
+    }
+
     public String getIp() {
         try {
             this.serverSocket.getInetAddress();
@@ -57,6 +73,7 @@ public class ServerController implements AutoCloseable {
     public void close() throws IOException {
         try {
             this.serverSocket.close();
+            this.repo.save(userCollection); //On sauvegarde le contenu de la userCollection à la fermeture du server
         } catch (IOException e) {
             e.printStackTrace();
         }
