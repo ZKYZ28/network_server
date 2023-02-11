@@ -15,9 +15,4 @@ public class BCryptDto {
     public String salt; //La sel associé au hachage Bcrypt
     public String hash; //Le hachage Bcrypt
 
-    public BCryptDto(int rounds, String salt, String hash) {
-        this.rounds = rounds;
-        this.salt = salt;
-        this.hash = hash;
-    }
 }
