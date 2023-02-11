@@ -6,6 +6,8 @@ import org.helmo.murmurG6.models.UserCollection;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.IUserCollectionRepository;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
+import org.helmo.murmurG6.utils.UltraImportantClass;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -37,6 +39,7 @@ public class ServerController implements AutoCloseable {
         this.serverSocket = new ServerSocket(port);
         this.repo = repo;
         this.userCollection.setRegisteredUsers(repo.read()); //remplissage de tous les users inscrits dans la usercollection
+        UltraImportantClass.welcome();
         System.out.println("****************************************************************");
         System.out.println("********      SERVER ONLINE ! IP : " +getIp()+"        *********");
         System.out.println("****************************************************************");
