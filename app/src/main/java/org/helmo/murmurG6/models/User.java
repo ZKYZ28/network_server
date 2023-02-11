@@ -6,59 +6,33 @@ import java.util.List;
 public class User {
 
     private final String login; //Login de l'utilisateur.
-    private final String bcryptHash; //Empreinte bcrypt du mot de passe de l'utilisateur.
-    private final int bcryptRound; //Nombre de tours bcrypt utilisé pour hacher le mot de passe.
-    private final String bcryptSalt; //Sel bcrypt utilisé pour hacher le mot de passe.
+    private final BcryptHash bcryptHash;
     private List<String> followedUsers; //Liste des utilisateurs suivis par l'utilisateur.
     private List<String> followedTrends; //Liste des tendances suivies par l'utilisateur.
 
-    /**
-     * Constructeur pour la classe User.
-     *
-     * @param login Login de l'utilisateur.
-     * @param bcryptHash Empreinte bcrypt du mot de passe de l'utilisateur.
-     * @param bcryptRound Nombre de tours bcrypt utilisé pour hacher le mot de passe.
-     * @param bcryptSalt Sel bcrypt utilisé pour hacher le mot de passe.
-     */
-    public User(String login, String bcryptHash, int bcryptRound, String bcryptSalt) {
+    public User(String login, BcryptHash bcryptHash) {
         this.login = login;
         this.bcryptHash = bcryptHash;
-        this.bcryptRound = bcryptRound;
-        this.bcryptSalt = bcryptSalt;
         this.followedUsers = new ArrayList<>();
         this.followedTrends = new ArrayList<>();
     }
 
-    /**
-     * Retourne le login de l'utilisateur.
-     * @return Login de l'utilisateur.
-     */
+    public BcryptHash getHashParts() { return this.bcryptHash; }
+
     public String getLogin() {
         return this.login;
     }
 
-    /**
-     * Retourne l'empreinte bcrypt du mot de passe de l'utilisateur.
-     * @return Empreinte bcrypt du mot de passe de l'utilisateur.
-     */
     public String getBcryptHash() {
-        return this.bcryptHash;
+        return this.bcryptHash.getHash();
     }
 
-    /**
-     * Retourne le nombre de tours bcrypt utilisé pour hacher le mot de passe.
-     * @return Nombre de tours bcrypt utilisé pour hacher le mot de passe.
-     */
     public int getBcryptRound() {
-        return this.bcryptRound;
+        return this.bcryptHash.getRounds();
     }
 
-    /**
-     * Retourne le sel bcrypt utilisé pour hacher le mot de passe.
-     * @return Sel bcrypt utilisé pour hacher le mot de passe.
-     */
     public String getBcryptSalt() {
-        return this.bcryptSalt;
+        return this.bcryptHash.getSalt();
     }
 
     /**
@@ -93,15 +67,6 @@ public class User {
      */
     public void setFollowedTrends(List<String> followedTrends) {
         this.followedTrends = followedTrends;
-    }
-
-    /**
-     * Permet de verifier que le résultat du hachage est bien égal au mot de passe haché de l'utilisateur
-     * @param hashedPassword Le résultat du hachage
-     * @return True si le résultat est correcte, sinon false
-     */
-    public boolean verifyPassword(String hashedPassword) {
-        return this.bcryptHash.equals(hashedPassword);
     }
 
     /**

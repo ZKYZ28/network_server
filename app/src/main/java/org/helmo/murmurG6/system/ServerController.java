@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * La classe ServerController représente le contrôleur principal de l'application serveur.
+ * Cette classe gère la connexion des clients et communique avec la classe ClientRunnable pour gérer la communication avec les clients.
+ */
 public class ServerController implements AutoCloseable {
     private final List<ClientRunnable> clientList = Collections.synchronizedList(new ArrayList<>());
     private final ServerSocket serverSocket;
@@ -21,23 +25,36 @@ public class ServerController implements AutoCloseable {
     private final Executor executor = new Executor();
     private final UserCollection userCollection = new UserCollection();
 
+    /**
+     * Le constructeur de la classe ServerController permet de créer un nouveau serveur en spécifiant un numéro de port et un storage d'utilisateurs.
+     *
+     * @param port Le numéro de port sur lequel le serveur écoutera les connexions entrantes.
+     * @param repo Le storage d'utilisateurs qui sera utilisé pour enregistrer et lire les informations d'utilisateur.
+     * @throws IOException En cas d'échec de la création du socket serveur.
+     */
     public ServerController(int port, IUserCollectionRepository repo) throws IOException {
         this.serverSocket = new ServerSocket(port);
         this.repo = repo;
         this.userCollection.setRegisteredUsers(repo.read()); //remplissage de tous les users inscrits dans la usercollection
         System.out.println("****************************************************************");
-        System.out.println("********     SERVER ONLINE ! IP : " + getIp()+"        **********");
+        System.out.println("********     SERVER ONLINE ! IP : " + getIp() + "     **********");
         System.out.println("****************************************************************");
     }
 
+    /**
+     * La méthode start() démarre le serveur en initialisant l'objet Executor et en écoutant les connexions des clients.
+     * Lorsqu'un client se connecte, une nouvelle instance de ClientRunnable est créée pour gérer la communication avec celui-ci.
+     *
+     * @throws IOException en cas d'erreur lors de l'initialisation du ServerSocket
+     */
     public void start() throws IOException {
-        this.executor.run();
-        while(true) {
-            Socket client = serverSocket.accept();
+        new Thread(this.executor).start();                                          //On lance le thread de l'exécuteur pour qu'il commence à exécuter les tâches qui lui sont données.
+        while(!serverSocket.isClosed()) {                                           //On continue tant que le socket du server est ouvert
+            Socket client = serverSocket.accept();                                  //Nouvelle connexion d'un utilisateur
             System.out.println("Quelqu'un s'est connecté!");
-            ClientRunnable runnable = new ClientRunnable(client, this);
-            clientList.add(runnable);
-            (new Thread(runnable)).start();
+            ClientRunnable runnable = new ClientRunnable(client, this);       //Création d'un nouveau ClientThread pour gérer la communication avec l'utilisateur
+            clientList.add(runnable);                                               //On ajoute le client à la liste de clients connectés
+            new Thread(runnable).start();                                           //On lance un thread dédié à la communication avec le client
         }
     }
 
@@ -69,11 +86,9 @@ public class ServerController implements AutoCloseable {
 
     public String getIp() {
         try {
-            this.serverSocket.getInetAddress();
             return InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException ex) {
-            ex.printStackTrace();
-            return null;
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -82,8 +97,8 @@ public class ServerController implements AutoCloseable {
     }
 
 
-    /*
-    Le close sert il a quelque chose ici ? car le server tourne à l'infini et se termine à la fin du programme
+    /**
+     * Le close sert il a quelque chose ici ? car le server tourne à l'infini et se termine à la fin du programme
      */
     @Override
     public void close() {

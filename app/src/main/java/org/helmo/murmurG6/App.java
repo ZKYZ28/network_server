@@ -16,5 +16,6 @@ public class App {
             e.printStackTrace();
         }
     }
-
 }
+
+    //python main.py 192.168.1.63 12345 admin admin
