@@ -1,9 +1,13 @@
 package org.helmo.murmurG6.infrastructure.storage.json;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import org.helmo.murmurG6.infrastructure.dto.UserDto;
 import org.helmo.murmurG6.infrastructure.storage.json.config.JsonConfig;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.repository.IUserCollectionRepository;
+import org.helmo.murmurG6.repository.exceptions.ReadUserCollectionException;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 
 import java.io.*;
@@ -17,11 +21,7 @@ import java.util.List;
 public class UserJsonStorage implements IUserCollectionRepository {
 
     private final String directoryPath = JsonConfig.SAVE_DIR;
-    private final String filePath = "app/src/main/java/org/helmo/murmurG6/Resources/jsonFilesStorage/jsonStorageFile.json";
-            //directoryPath.concat("/murmur_user_storage.json");
-
-
-
+    private final String filePath = directoryPath.concat("/user.json");
     Gson gson = new Gson();
 
 
@@ -37,17 +37,21 @@ public class UserJsonStorage implements IUserCollectionRepository {
 
     @Override
     public List<User> read() throws IOException {
-        /*controlDirectoryExistence();
+        controlDirectoryExistence();
         controlFileExistence();
-        ArrayList<User> result = new ArrayList<User>();
 
+        List<UserDto> resultDto = new ArrayList<>();
+        List<User> resultUser= new ArrayList<>();
         try(BufferedReader reader = Files.newBufferedReader(Paths.get(filePath))){
-            result = new GsonBuilder().create().fromJson(reader, new TypeToken<ArrayList<User>>(){}.getType());
+            resultDto = new GsonBuilder().create().fromJson(reader, new TypeToken<ArrayList<UserDto>>(){}.getType());
 
+            for(UserDto dto : resultDto){
+                resultUser.add(UserDto.userDtoToUser(dto));
+            }
         }catch(IOException e) {
             throw new ReadUserCollectionException("Impossible de charger la liste d\'utilisateur!");
-        }*/
-        return new ArrayList<User>();
+        }
+        return resultUser;
     }
 
 

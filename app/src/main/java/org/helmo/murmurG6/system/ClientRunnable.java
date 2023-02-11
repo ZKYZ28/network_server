@@ -34,7 +34,7 @@ public class ClientRunnable implements Runnable {
                 //Réagir à la ligne recue (Executor){
                     //si ligne === REGISTER (test) {
                         sendMessage("+OK");
-                        server.registerUser(new User("antho", "azerty", 14, "femme"));
+                        server.registerUser(new User("francois", "azerty", 14, "femme"));
 
                     //}sinon{
                         //sendMessage("-ERR");

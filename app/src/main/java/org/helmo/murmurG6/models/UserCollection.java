@@ -8,7 +8,7 @@ import java.util.*;
 
 public class UserCollection {
 
-    public Map<String, User> registeredUsers;
+    private Map<String, User> registeredUsers;
 
     public Iterable<User> getRegisteredUsers() {
         return new ArrayList<>(this.registeredUsers.values());

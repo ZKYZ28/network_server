@@ -6,12 +6,12 @@ import java.util.List;
 
 public class User {
 
-    public final String login; //Login de l'utilisateur.
-    public final String bcryptHash; //Empreinte bcrypt du mot de passe de l'utilisateur.
-    public final int bcryptRound; //Nombre de tours bcrypt utilisé pour hacher le mot de passe.
-    public final String bcryptSalt; //Sel bcrypt utilisé pour hacher le mot de passe.
-    public List<String> followedUsers; //Liste des utilisateurs suivis par l'utilisateur.
-    public List<String> followedTrends; //Liste des tendances suivies par l'utilisateur.
+    private final String login; //Login de l'utilisateur.
+    private final String bcryptHash; //Empreinte bcrypt du mot de passe de l'utilisateur.
+    private final int bcryptRound; //Nombre de tours bcrypt utilisé pour hacher le mot de passe.
+    private final String bcryptSalt; //Sel bcrypt utilisé pour hacher le mot de passe.
+    private List<String> followedUsers; //Liste des utilisateurs suivis par l'utilisateur.
+    private List<String> followedTrends; //Liste des tendances suivies par l'utilisateur.
 
     /**
      * Constructeur pour la classe User.
