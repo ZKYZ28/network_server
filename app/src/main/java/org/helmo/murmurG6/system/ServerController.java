@@ -16,11 +16,12 @@ import java.util.List;
 public class ServerController implements AutoCloseable {
     private final List<ClientRunnable> clientList;
     private final ServerSocket serverSocket;
-
     private final IUserCollectionRepository repo;
     private final UserCollection userCollection;
+    private final Executor executor;
 
     public ServerController(int port, IUserCollectionRepository repo) throws IOException {
+        this.executor = new Executor();
         this.clientList = Collections.synchronizedList(new ArrayList<>());
         this.serverSocket = new ServerSocket(port);
         this.repo = repo;
@@ -29,6 +30,7 @@ public class ServerController implements AutoCloseable {
     }
 
     public void start() throws IOException {
+        this.executor.run();
         while(true) {
             Socket client = serverSocket.accept();
             System.out.println("Quelqu'un s'est connecté!");
@@ -68,8 +70,12 @@ public class ServerController implements AutoCloseable {
         }
     }
 
+    public Executor getExecutor() {
+        return executor;
+    }
+
     @Override
-    public void close() throws IOException {
+    public void close() {
         try {
             this.serverSocket.close();
             this.repo.save(userCollection); //On sauvegarde le contenu de la userCollection à la fermeture du server

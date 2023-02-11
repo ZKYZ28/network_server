@@ -3,9 +3,9 @@ package org.helmo.murmurG6.models;
 import java.util.regex.Matcher;
 
 public class Message {
-    private MessageType type;
-    private Matcher matcher;
-    private String msg;
+    private final MessageType type;
+    private final Matcher matcher;
+    private final String msg;
 
     public Message(MessageType type, Matcher matcher, String msg){
         this.type = type;

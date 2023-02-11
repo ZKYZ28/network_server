@@ -1,5 +1,7 @@
 package org.helmo.murmurG6.system;
 
+import org.helmo.murmurG6.models.Message;
+import org.helmo.murmurG6.models.MessageType;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.utils.RandomSaltGenerator;
 import java.io.*;
@@ -9,7 +11,6 @@ import java.nio.charset.StandardCharsets;
 public class ClientRunnable implements Runnable {
     private BufferedReader in;
     private PrintWriter out;
-
     private boolean isConnected = false;
     private final ServerController server;
 
@@ -51,7 +52,7 @@ public class ClientRunnable implements Runnable {
      * @param message Le message à envoyer au murmur.client.
      */
     public void sendMessage(String message) {
-        if(isConnected) {
+        if (isConnected) {
             out.println(message);
             out.flush();
         }
