@@ -1,6 +1,6 @@
 package org.helmo.murmurG6.infrastructure.dto;
 
-import org.helmo.murmurG6.models.BcryptHash;
+import org.helmo.murmurG6.models.BCrypt;
 
 /**
  * Classe Data Transfer Object pour les informations du hachage Bcrypt.
@@ -9,7 +9,7 @@ import org.helmo.murmurG6.models.BcryptHash;
  * @version 1.0
  * @since 11 février 2023
  */
-public class BcryptHashDto {
+public class BCryptDto {
 
     public  int rounds; //Nombre de tours pour le hachage Bcrypt
     public String salt; //La sel associé au hachage Bcrypt
@@ -22,7 +22,7 @@ public class BcryptHashDto {
      * @param dto l'objet BcryptHashDto à convertir
      * @return l'objet BcryptHash converti
      */
-    public static BcryptHash hashPartsDtoToHashParts(BcryptHashDto dto){
-       return new BcryptHash(dto.rounds, dto.salt, dto.hash);
+    public static BCrypt bcryptDtoToBcrypt(BCryptDto dto){
+       return new BCrypt(dto.rounds, dto.salt, dto.hash);
     }
 }

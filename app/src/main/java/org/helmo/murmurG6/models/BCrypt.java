@@ -16,13 +16,13 @@ import java.security.NoSuchAlgorithmException;
  * @since 11 février 2023
  * @version 1.0
  */
-public class BcryptHash {
+public class BCrypt {
 
     private final int rounds;
     private final String salt;
     private final String hash;
 
-    public BcryptHash(int rounds, String salt, String hash) {
+    public BCrypt(int rounds, String salt, String hash) {
         this.rounds = rounds;
         this.salt = salt;
         this.hash = hash;
@@ -51,11 +51,11 @@ public class BcryptHash {
      * @return un objet BcryptHash contenant les informations décomposées : le nombre de tours (rounds), la valeur de sel (salt)
      * et le hachage (hash).
      */
-    public static BcryptHash decomposeHash(String hashed) {
+    public static BCrypt decomposeHash(String hashed) {
         int rounds = Integer.parseInt(hashed.substring(4, 6));
         String salt = hashed.substring(7, 29);
         String hash = hashed.substring(29);
-        return new BcryptHash(rounds, salt, hash);
+        return new BCrypt(rounds, salt, hash);
     }
 
     /**

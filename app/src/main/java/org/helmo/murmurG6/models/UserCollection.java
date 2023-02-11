@@ -39,7 +39,7 @@ public class UserCollection {
     }
 
 
-    public User getUserOnLoggin(String loggin){
+    public User getUserFromLogin(String loggin){
         return this.registeredUsers.get(loggin);
     }
 }

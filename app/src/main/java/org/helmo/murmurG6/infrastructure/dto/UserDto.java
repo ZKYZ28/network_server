@@ -1,8 +1,8 @@
 package org.helmo.murmurG6.infrastructure.dto;
 
 import org.helmo.murmurG6.models.User;
-
 import java.util.List;
+
 
 /**
  * /**
@@ -15,12 +15,12 @@ import java.util.List;
 public class UserDto {
 
     public String login;
-    public BcryptHashDto hashParts;
+    public BCryptDto bcryptDto;
     public List<String> followedUsers;
     public List<String> followedTrends;
 
     public static User userDtoToUser(UserDto dto){
-        User result = new User(dto.login, BcryptHashDto.hashPartsDtoToHashParts(dto.hashParts));
+        User result = new User(dto.login, BCryptDto.bcryptDtoToBcrypt(dto.bcryptDto));
         result.setFollowedUsers(dto.followedUsers);
         result.setFollowedTrends(dto.followedTrends);
 
