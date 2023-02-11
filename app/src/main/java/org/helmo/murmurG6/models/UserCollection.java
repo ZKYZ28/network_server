@@ -1,6 +1,7 @@
 package org.helmo.murmurG6.models;
 
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
+
 import java.util.*;
 
 /**
@@ -34,12 +35,12 @@ public class UserCollection {
         }
     }
 
-    public boolean isRegistered(String loggin) {
-        return this.registeredUsers.containsKey(loggin);
+    public boolean isRegistered(String login) {
+        return this.registeredUsers.containsKey(login);
     }
 
 
-    public User getUserFromLogin(String loggin){
-        return this.registeredUsers.get(loggin);
+    public User getUserFromLogin(String login) {
+        return this.registeredUsers.get(login);
     }
 }
