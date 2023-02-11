@@ -60,6 +60,8 @@ public class Executor implements Runnable, AutoCloseable {
                 break;
 
             case CONNECT:
+                User u = server.getUserCollection().getUserOnLoggin(params.group(1));
+                client.setUser(u);
                 client.sendMessage(connect(params.group(1), client.getUser().getBcryptSalt()));
                 break;
 
@@ -71,7 +73,6 @@ public class Executor implements Runnable, AutoCloseable {
 
     private String connect(String loggin, String salt){
         if (server.getUserCollection().isRegistered(loggin)) {
-            System.out.println("j'envoie param");
             return "PARAM " + server.getUserCollection().getRegisteredUsers().get(loggin).getBcryptRound() + " " +salt;
         } else {
             return  "-ERR";
