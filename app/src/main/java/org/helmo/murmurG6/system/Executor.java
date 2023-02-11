@@ -1,9 +1,9 @@
 package org.helmo.murmurG6.system;
 
-import org.helmo.murmurG6.models.BcryptHash;
+import org.helmo.murmurG6.models.BCrypt;
 import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.User;
-
+import org.helmo.murmurG6.models.UserCollection;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 
@@ -11,13 +11,14 @@ public class Executor implements Runnable, AutoCloseable {
 
     private final ExecutorService executorService; //ExecutorService avec un seul thread pour exécuter les tâches de la file d'attente.
     private final BlockingQueue<Task> taskQueue; //File d'attente BlockingQueue appelée taskQueue pour stocker les tâches à exécuter.
-
-    private final ServerController server; //Le server qui possède l'executor
+    private final ServerController server;
+    private final UserCollection collection;
 
     public Executor (ServerController server) {
-        taskQueue = new LinkedBlockingQueue<>();
-        executorService = Executors.newSingleThreadExecutor();
+        this.taskQueue = new LinkedBlockingQueue<>();
+        this.executorService = Executors.newSingleThreadExecutor();
         this.server = server;
+        this.collection = server.getUserCollection();
     }
 
     /**
@@ -56,43 +57,41 @@ public class Executor implements Runnable, AutoCloseable {
 
         ClientRunnable client = task.getClient(); //On récupère le client à qui on fait la tache
         Matcher params = task.getMatcher();   //On récupère le matcher de la tache à éxécuter
+        User user;
 
-        switch (task.getType()){
+        switch (task.getType()) {
             case REGISTER:
-                try{
-                    User u = new User(params.group(1), BcryptHash.decomposeHash(params.group(4))); //Construit un User sur base des élément de la commande REGISTER
-                    server.registerUser(u); //Enregistre l'utilisateur sur le server
-                    client.setUser(u);      //Associe un objet User à un ClientRunnable
-                }catch (RegistrationImpossibleException e){
-                    System.out.println(e.getMessage());
-                }
+                user = new User(params.group(1), BCrypt.decomposeHash(params.group(4)));
+                client.sendMessage(register(user, client));
                 break;
 
             case CONNECT:
-                User u = server.getUserCollection().getUserOnLoggin(params.group(1)); //Recupere l'utilisateur dans la liste des inscrits sur base de son loggin
-                client.setUser(u);  //Associe un objet User à un ClientRunnable
-                client.sendMessage(connect(params.group(1), client.getUser().getBcryptSalt())); //Envoi du message PARAM au client
+                user = collection.getUserFromLogin(params.group(1));
+                client.setUser(user);
+                String login = params.group(1);
+                client.sendMessage(connect(login));
                 break;
 
             case CONFIRM:
-                //Envoi du message +OK ou -ERR selon si la connexion s'est déroulée avec succès ou non
-                client.sendMessage(confirm(params.group(1), client.getUser().getBcrypt().calculateChallenge(client.getRandom22())));
+                user = client.getUser();
+                String received = params.group(1);
+                String expected = user.getBcrypt().calculateChallenge(client.getRandom22());
+                client.sendMessage(confirm(received, expected));
                 break;
         }
     }
 
-
     /**
      * Retourne le message à envoyer au client lorsque celui veut se connecter
-     * @param loggin le loggin de l'utilisateur qui veut se connecter
-     * @param salt le sel utilisé par le client
+     * @param login le loggin de l'utilisateur qui veut se connecter
      * @return le message PARAM oubien -ERR
      */
-    private String connect(String loggin, String salt){
-        if (server.getUserCollection().isRegistered(loggin)) {
-            return "PARAM " + server.getUserCollection().getRegisteredUsers().get(loggin).getBcryptRound() + " " +salt;
+    private String connect(String login) {
+        if (collection.isRegistered(login)) {
+            User user = collection.getUserFromLogin(login);
+            return "PARAM " + user.getBcryptRound() + " " + user.getBcryptSalt();
         } else {
-            return  "-ERR";
+            return "-ERR";
         }
     }
 
@@ -107,6 +106,15 @@ public class Executor implements Runnable, AutoCloseable {
         return clientChallenge.equals(userChallenge) ? "+OK" : "-ERR";
     }
 
+    private String register(User user, ClientRunnable client)  {
+        try {
+            server.registerUser(user);
+            client.setUser(user);
+            return "+OK";
+        } catch (RegistrationImpossibleException e) {
+            return "-ERR";
+        }
+    }
 
 
     @Override
@@ -120,6 +128,4 @@ public class Executor implements Runnable, AutoCloseable {
             this.executorService.shutdownNow();
         }
     }
-
-
 }

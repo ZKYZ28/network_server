@@ -2,6 +2,7 @@ package org.helmo.murmurG6.infrastructure.storage.json;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.helmo.murmurG6.infrastructure.dto.Mapper;
 import org.helmo.murmurG6.infrastructure.dto.UserDto;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.repository.IUserCollectionRepository;
@@ -36,8 +37,9 @@ public class UserJsonStorage implements IUserCollectionRepository {
     @Override
     public void save(Iterable<User> uc) throws SaveUserCollectionException {
         createFile(FILE_PATH);
+
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(FILE_PATH, StandardCharsets.UTF_8, StandardOpenOption.CREATE)){
-            gson.toJson(uc, bufferedWriter);
+            gson.toJson(Mapper.userDtoListFromUsers(uc), new TypeToken<ArrayList<UserDto>>(){}.getType(), bufferedWriter);
         }catch(IOException e){
             throw new SaveUserCollectionException("Impossible de sauvegarder la liste d'utilisateur!");
         }
@@ -52,19 +54,10 @@ public class UserJsonStorage implements IUserCollectionRepository {
     @Override
     public List<User> read() throws ReadUserCollectionException {
         createFile(FILE_PATH);
-        List<User> resultUsers = new ArrayList<>();
 
-        try {
-            BufferedReader reader = Files.newBufferedReader(FILE_PATH, StandardCharsets.UTF_8);
-            List<UserDto> resultDto = gson.fromJson(reader, new TypeToken<ArrayList<UserDto>>(){}.getType());
-            reader.close();
-
-            if (resultDto != null) {
-                for (UserDto dto : resultDto) {
-                    resultUsers.add(UserDto.userDtoToUser(dto));
-                }
-            }
-            return resultUsers;
+        try (BufferedReader reader = Files.newBufferedReader(FILE_PATH, StandardCharsets.UTF_8)) {
+            Iterable<UserDto> resultDto = gson.fromJson(reader, new TypeToken<ArrayList<UserDto>>(){}.getType());
+            return Mapper.userListFromDto(resultDto);
         } catch (IOException e) {
             throw new ReadUserCollectionException("Impossible de charger la liste d'utilisateurs!");
         }

@@ -39,5 +39,4 @@ public class Task {
     public String getTaskParams() {
         return taskParams;
     }
-
 }

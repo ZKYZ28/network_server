@@ -49,20 +49,20 @@ public class UserCollection {
 
     /**
      * Vérrifie si un utilisateur est déja connecté
-     * @param loggin Le loggin de l'utilisateur pour qui on regarde si il est déja inscrit
+     * @param login Le loggin de l'utilisateur pour qui on regarde si il est déja inscrit
      * @return True si il est déja inscrit, false sinon
      */
-    public boolean isRegistered(String loggin) {
-        return this.registeredUsers.containsKey(loggin);
+    public boolean isRegistered(String login) {
+        return this.registeredUsers.containsKey(login);
     }
 
 
     /**
      * Recupere un User dans la collection d'utilisateur inscrits sur le server sur base de leur loggin
-     * @param loggin Le loggin de l'utlisateur que l'on souhaite récupérer
+     * @param login Le loggin de l'utlisateur que l'on souhaite récupérer
      * @return L'utilisateur que l'on cherche
      */
-    public User getUserOnLoggin(String loggin){
-        return this.registeredUsers.get(loggin);
+    public User getUserFromLogin(String login) {
+        return this.registeredUsers.get(login);
     }
 }
