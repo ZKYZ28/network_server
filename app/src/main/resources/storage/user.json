@@ -8,6 +8,14 @@
     "followedTrends": []
   },
   {
+    "login": "admin",
+    "bcryptHash": "w1jNq4IGtYU6HzWom8ekgqIYOv.malG",
+    "bcryptRound": 14,
+    "bcryptSalt": "kNiGg2UrxsHe.Ga.PC0bL.",
+    "followedUsers": [],
+    "followedTrends": []
+  },
+  {
     "login": "francois",
     "bcryptHash": "azerty",
     "bcryptRound": 14,
