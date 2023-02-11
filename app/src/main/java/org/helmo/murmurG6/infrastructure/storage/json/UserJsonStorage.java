@@ -1,13 +1,9 @@
 package org.helmo.murmurG6.infrastructure.storage.json;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.helmo.murmurG6.infrastructure.storage.json.config.JsonConfig;
 import org.helmo.murmurG6.models.User;
-import org.helmo.murmurG6.models.UserCollection;
 import org.helmo.murmurG6.repository.IUserCollectionRepository;
-import org.helmo.murmurG6.repository.exceptions.ReadUserCollectionException;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 
 import java.io.*;
@@ -16,29 +12,29 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserJsonStorage implements IUserCollectionRepository {
 
     private final String directoryPath = JsonConfig.SAVE_DIR;
     private final String filePath = directoryPath.concat("/murmur_user_storage.json");
-    private final Gson gson = new Gson();
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
 
 
     @Override
-    public void save(UserCollection uc) throws SaveUserCollectionException {
-        controlDirectoryExistence();
-
+    public void save(Iterable<User> uc) throws SaveUserCollectionException {
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(filePath), StandardCharsets.UTF_8, StandardOpenOption.CREATE)){
-            gson.toJson(uc.getRegisteredUsers(), bufferedWriter);
+            bufferedWriter.write(objectMapper.writeValueAsString(uc));
         }catch(IOException e){
             throw new SaveUserCollectionException("Impossible de sauvegarder la liste d\'utilisateur!");
         }
     }
 
     @Override
-    public UserCollection read() throws IOException {
-        controlDirectoryExistence();
+    public List<User> read() throws IOException {
+        /*controlDirectoryExistence();
         controlFileExistence();
         ArrayList<User> result = new ArrayList<User>();
 
@@ -47,8 +43,8 @@ public class UserJsonStorage implements IUserCollectionRepository {
 
         }catch(IOException e) {
             throw new ReadUserCollectionException("Impossible de charger la liste d\'utilisateur!");
-        }
-        return new UserCollection(result);
+        }*/
+        return new ArrayList<User>();
     }
 
 

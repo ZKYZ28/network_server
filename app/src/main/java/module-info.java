@@ -1,4 +1,4 @@
 module org.helmo {
-    requires com.google.gson;
+    requires com.fasterxml.jackson.databind;
     exports org.helmo.murmurG6;
 }

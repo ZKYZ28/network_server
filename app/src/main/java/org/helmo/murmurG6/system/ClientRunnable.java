@@ -34,8 +34,19 @@ public class ClientRunnable implements Runnable {
                 //Réagir à la ligne recue (Executor){
                     //si ligne === REGISTER (test) {
                         sendMessage("+OK");
-                        server.registerUser(new User("un_login", "un_bcryptHash", 99, "un_bcryptSalt"));
+                        server.registerUser(new User("antho", "azerty", 14, "femme"));
+
+                    //}sinon{
+                        //sendMessage("-ERR");
                     //}
+                //}
+
+                //si ligne === CONNECT (ET loggin valide !! + existe dans la userCollection){
+                    //sendMessage("PARAM rotation salt")
+
+                    //-> Le client doit nous renvoyer le message: CONFIRM
+
+                    //-> on répond au client +OK/-ERR
                 //}
 
                 ligne = in.readLine();                                     //Le thread mis à disposition du murmur.client attend la prochaine ligne

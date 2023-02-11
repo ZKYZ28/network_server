@@ -4,6 +4,8 @@ import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserCollection;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.IUserCollectionRepository;
+import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -18,13 +20,13 @@ public class ServerController implements AutoCloseable {
     private final ServerSocket serverSocket;
 
     private final IUserCollectionRepository repo;
-    private final UserCollection userCollection;
+    private final UserCollection userCollection = new UserCollection();
 
     public ServerController(int port, IUserCollectionRepository repo) throws IOException {
         this.clientList = Collections.synchronizedList(new ArrayList<>());
         this.serverSocket = new ServerSocket(port);
         this.repo = repo;
-        this.userCollection = repo.read(); //remplissage de tous les users inscrits dans la usercollection
+        this.userCollection.setRegisteredUsers(repo.read()); //remplissage de tous les users inscrits dans la usercollection
         System.out.println("SERVER ONLINE ! IP : " + getIp());
     }
 
@@ -50,7 +52,8 @@ public class ServerController implements AutoCloseable {
     public void registerUser(User user) {
         try{
             userCollection.registerUser(user);
-        } catch (UserAlreadyRegisteredException e) {
+            repo.save(userCollection.getRegisteredUsers()); //On sauvegarde le contenu de la userCollection à la fermeture du server
+        } catch (UserAlreadyRegisteredException | SaveUserCollectionException e) {
             //*************************************
                 e.printStackTrace();
                 //Mieux: sendMessageToUser => e.message
@@ -72,7 +75,6 @@ public class ServerController implements AutoCloseable {
     public void close() throws IOException {
         try {
             this.serverSocket.close();
-            this.repo.save(userCollection); //On sauvegarde le contenu de la userCollection à la fermeture du server
         } catch (IOException e) {
             e.printStackTrace();
         }
