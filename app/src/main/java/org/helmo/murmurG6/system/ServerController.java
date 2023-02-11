@@ -1,5 +1,6 @@
 package org.helmo.murmurG6.system;
 
+import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserCollection;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
@@ -18,26 +19,27 @@ public class ServerController implements AutoCloseable {
     private final List<ClientRunnable> clientList = Collections.synchronizedList(new ArrayList<>());
     private final ServerSocket serverSocket;
     private final IUserCollectionRepository repo;
-    private final Executor executor = new Executor();
     private final UserCollection userCollection = new UserCollection();
+    private Executor executor;
 
     public ServerController(int port, IUserCollectionRepository repo) throws IOException {
         this.serverSocket = new ServerSocket(port);
         this.repo = repo;
         this.userCollection.setRegisteredUsers(repo.read()); //remplissage de tous les users inscrits dans la usercollection
         System.out.println("****************************************************************");
-        System.out.println("********     SERVER ONLINE ! IP : " + getIp()+"        **********");
+        System.out.println("********      SERVER ONLINE ! IP : " +getIp()+"        *********");
         System.out.println("****************************************************************");
     }
 
     public void start() throws IOException {
-        this.executor.run();
+        this.executor = new Executor(this);
+        new Thread(executor).start();
         while(true) {
             Socket client = serverSocket.accept();
             System.out.println("Quelqu'un s'est connecté!");
             ClientRunnable runnable = new ClientRunnable(client, this);
             clientList.add(runnable);
-            (new Thread(runnable)).start();
+            new Thread(runnable).start();
         }
     }
 
@@ -50,15 +52,12 @@ public class ServerController implements AutoCloseable {
         }
     }
 
-    public void registerUser(User user) {
+    public void registerUser(User user) throws RegistrationImpossibleException {
         try{
             userCollection.registerUser(user);
             repo.save(userCollection.getRegisteredUsers().values()); //On sauvegarde le contenu de la userCollection à la fermeture du server
         } catch (UserAlreadyRegisteredException | SaveUserCollectionException e) {
-            //*************************************
-                e.printStackTrace();
-                //Mieux: sendMessageToUser => e.message
-            //**************************************
+            throw new RegistrationImpossibleException("Inscription impossible!");
         }
     }
 

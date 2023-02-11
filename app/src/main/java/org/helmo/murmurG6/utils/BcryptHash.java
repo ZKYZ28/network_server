@@ -1,6 +1,6 @@
 package org.helmo.murmurG6.utils;
 
-public class HashParts {
+public class BcryptHash {
 
     private int rounds;
     private String salt;
@@ -30,8 +30,8 @@ public class HashParts {
         this.hash = hash;
     }
 
-    public static HashParts decomposeHash(String hash) {
-        HashParts parts = new HashParts();
+    public static BcryptHash decomposeHash(String hash) {
+        BcryptHash parts = new BcryptHash();
         parts.setRounds(Integer.parseInt(hash.substring(4, 6)));
         parts.setSalt(hash.substring(7, 29));
         parts.setHash(hash.substring(29));
@@ -39,7 +39,7 @@ public class HashParts {
     }
 
     public static void main(String[] args) {
-        HashParts parts = HashParts.decomposeHash("$2b$14$azertyuiopmlkjhgfdsqwxMotDePasseHashé");
+        BcryptHash parts = BcryptHash.decomposeHash("$2b$14$azertyuiopmlkjhgfdsqwxMotDePasseHashé");
         System.out.println(parts.salt);
     }
 }
