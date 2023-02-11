@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Mapper {
+
     public static BCrypt bcryptDtoToBcrypt(BCryptDto dto){
         return new BCrypt(dto.rounds, dto.salt, dto.hash);
     }
@@ -35,7 +36,6 @@ public class Mapper {
                 users.add(Mapper.userDtoToUser(dto));
             }
         }
-
         return users;
     }
 

@@ -13,16 +13,17 @@ import java.util.List;
 public class UserDto {
 
     public String login;
-    public BcryptDto bcryptDto;
+    public BCryptDto bcryptDto;
     public List<String> followedUsers; //liste des loggins des users followed
     public List<String> followedTrends; //liste des hashtags
 
 
-
-    public UserDto(String login, BCryptDto bcryptDto, List<String> followedUsers, List<String> followedTrends) {
+    /*public UserDto(String login, BCryptDto bcryptDto, List<String> followedUsers, List<String> followedTrends) {
         this.login = login;
         this.bcryptDto = bcryptDto;
         this.followedUsers = followedUsers;
         this.followedTrends = followedTrends;
-    }
+    }*/
+
+
 }
