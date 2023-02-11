@@ -2,44 +2,18 @@ package org.helmo.murmurG6.infrastructure.dto;
 
 import org.helmo.murmurG6.models.BCrypt;
 import org.helmo.murmurG6.models.User;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Mapper {
 
-    public static BCrypt bcryptDtoToBcrypt(BCryptDto dto){
-        return new BCrypt(dto.rounds, dto.salt, dto.hash);
-    }
+    public static BCrypt bcryptDtoToBcrypt(BCryptDto dto) { return BCryptDto.fromDtoToBcrypt(dto);}
 
-    public static BCryptDto bcryptToBcryptDto(BCrypt bcrypt){
-        BCryptDto bc = new BCryptDto();
-        bc.salt = bcrypt.getSalt();
-        bc.rounds = bcrypt.getRounds();
-        bc.hash = bcrypt.getHash();
-        return bc;
-    }
+    public static BCryptDto bcryptToBcryptDto(BCrypt bcrypt) { return BCryptDto.fromBcryptToDto(bcrypt);}
 
-    public static User userDtoToUser(UserDto dto){
-        User result = new User(dto.login, Mapper.bcryptDtoToBcrypt(dto.bcryptDto));
-        result.setFollowedUsers(dto.followedUsers);
-        result.setFollowedTrends(dto.followedTrends);
+    public static User userDtoToUser(UserDto dto) { return UserDto.fromUserDtoToUser(dto); }
 
-        return result;
-    }
-
-    public static UserDto userToUserDto(User user){
-        UserDto dto = new UserDto();
-        dto.login = user.getLogin();
-        dto.bcryptDto = new BCryptDto();
-        dto.bcryptDto.rounds = user.getBcryptRound();
-        dto.bcryptDto.salt = user.getBcryptSalt();
-        dto.bcryptDto.hash = user.getBcryptHash();
-        dto.followedUsers = user.getFollowedUsers();
-        dto.followedTrends = user.getFollowedTrends();
-        return dto;
-        //return new UserDto(user.getLogin(), Mapper.bcryptToBcryptDto(user.getBcrypt()), user.getFollowedUsers(), user.getFollowedTrends());
-    }
+    public static UserDto userToUserDto(User user) { return UserDto.fromUserToDto(user); }
 
     public static List<User> userListFromDto(Iterable<UserDto> dtos) {
         List<User> users = new ArrayList<>();

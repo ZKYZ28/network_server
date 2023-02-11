@@ -15,4 +15,16 @@ public class BCryptDto {
     public String salt; //La sel associé au hachage Bcrypt
     public String hash; //Le hachage Bcrypt
 
+    public static BCrypt fromDtoToBcrypt(BCryptDto dto){
+        return new BCrypt(dto.rounds, dto.salt, dto.hash);
+    }
+
+    public static BCryptDto fromBcryptToDto(BCrypt bcrypt){
+        BCryptDto bc = new BCryptDto();
+        bc.salt = bcrypt.getSalt();
+        bc.rounds = bcrypt.getRounds();
+        bc.hash = bcrypt.getHash();
+        return bc;
+    }
+
 }

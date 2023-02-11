@@ -1,4 +1,4 @@
-package org.helmo.murmurG6.infrastructure.storage.json;
+package org.helmo.murmurG6.infrastructure;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
