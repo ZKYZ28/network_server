@@ -1,18 +1,27 @@
 package org.helmo.murmurG6.models;
 
+import org.helmo.murmurG6.system.ClientRunnable;
+
 import java.util.regex.Matcher;
 
 public class Task {
+    private ClientRunnable client;
     private final TaskType type;
     private final Matcher matcher;
-    private final String msg;
+    private final String taskParams;
 
-    public Task(TaskType type, Matcher matcher, String msg){
+    public Task(TaskType type, Matcher matcher, String taskParams){
         this.type = type;
         this.matcher = matcher;
-        this.msg = msg;
+        this.taskParams = taskParams;
     }
 
+    public void setClient(ClientRunnable client){
+        this.client = client;
+    }
+    public ClientRunnable getClient(){
+        return this.client;
+    }
     public TaskType getType() {
         return type;
     }
@@ -21,8 +30,8 @@ public class Task {
         return matcher;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getTaskParams() {
+        return taskParams;
     }
 
 }

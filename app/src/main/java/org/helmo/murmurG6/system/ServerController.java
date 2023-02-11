@@ -1,5 +1,6 @@
 package org.helmo.murmurG6.system;
 
+import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserCollection;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
@@ -22,8 +23,8 @@ public class ServerController implements AutoCloseable {
     private final List<ClientRunnable> clientList = Collections.synchronizedList(new ArrayList<>());
     private final ServerSocket serverSocket;
     private final IUserCollectionRepository repo;
-    private final Executor executor = new Executor();
     private final UserCollection userCollection = new UserCollection();
+    private Executor executor;
 
     /**
      * Le constructeur de la classe ServerController permet de créer un nouveau serveur en spécifiant un numéro de port et un storage d'utilisateurs.
@@ -37,7 +38,7 @@ public class ServerController implements AutoCloseable {
         this.repo = repo;
         this.userCollection.setRegisteredUsers(repo.read()); //remplissage de tous les users inscrits dans la usercollection
         System.out.println("****************************************************************");
-        System.out.println("********     SERVER ONLINE ! IP : " + getIp() + "     **********");
+        System.out.println("********      SERVER ONLINE ! IP : " +getIp()+"        *********");
         System.out.println("****************************************************************");
     }
 
@@ -48,13 +49,14 @@ public class ServerController implements AutoCloseable {
      * @throws IOException en cas d'erreur lors de l'initialisation du ServerSocket
      */
     public void start() throws IOException {
-        new Thread(this.executor).start();                                          //On lance le thread de l'exécuteur pour qu'il commence à exécuter les tâches qui lui sont données.
-        while(!serverSocket.isClosed()) {                                           //On continue tant que le socket du server est ouvert
-            Socket client = serverSocket.accept();                                  //Nouvelle connexion d'un utilisateur
+        this.executor = new Executor(this);
+        new Thread(executor).start();
+        while(true) {
+            Socket client = serverSocket.accept();
             System.out.println("Quelqu'un s'est connecté!");
-            ClientRunnable runnable = new ClientRunnable(client, this);       //Création d'un nouveau ClientThread pour gérer la communication avec l'utilisateur
-            clientList.add(runnable);                                               //On ajoute le client à la liste de clients connectés
-            new Thread(runnable).start();                                           //On lance un thread dédié à la communication avec le client
+            ClientRunnable runnable = new ClientRunnable(client, this);
+            clientList.add(runnable);
+            new Thread(runnable).start();
         }
     }
 
@@ -67,15 +69,12 @@ public class ServerController implements AutoCloseable {
         }
     }
 
-    public void registerUser(User user) {
+    public void registerUser(User user) throws RegistrationImpossibleException {
         try{
             userCollection.registerUser(user);
             repo.save(userCollection.getRegisteredUsers().values()); //On sauvegarde le contenu de la userCollection à la fermeture du server
         } catch (UserAlreadyRegisteredException | SaveUserCollectionException e) {
-            //*************************************
-                e.printStackTrace();
-                //Mieux: sendMessageToUser => e.message
-            //**************************************
+            throw new RegistrationImpossibleException("Inscription impossible!");
         }
     }
 
