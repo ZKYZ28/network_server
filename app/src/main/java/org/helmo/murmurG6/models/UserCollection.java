@@ -13,12 +13,20 @@ import java.util.*;
  */
 public class UserCollection {
 
-    private Map<String, User> registeredUsers;
+    private Map<String, User> registeredUsers; //L'ensemble des utilisateur inscrit (KEY: loggin -- VALUE: objet User)
 
+    /**
+     * Retourne la map d'utilisateur inscrit sur le server
+     * @return la map des user inscrits
+     */
     public Map<String, User> getRegisteredUsers() {
         return registeredUsers;
     }
 
+    /**
+     * Rempli la map registeredUsers à partir d'un iterable contenant des User
+     * @param users des utilisateurs
+     */
     public void setRegisteredUsers(Iterable<User> users) {
         this.registeredUsers = Collections.synchronizedMap(new HashMap<>());
         for (User user : users) {
@@ -26,6 +34,11 @@ public class UserCollection {
         }
     }
 
+    /**
+     * Enregistre un utilisateur dans la collection d'utilisateur inscrits sur le server
+     * @param user un User
+     * @throws UserAlreadyRegisteredException
+     */
     public void registerUser(User user) throws UserAlreadyRegisteredException {
         if (isRegistered(user.getLogin())) {
             throw new UserAlreadyRegisteredException("Un utilisateur est déjà inscrit sous ce login.");
@@ -34,11 +47,21 @@ public class UserCollection {
         }
     }
 
+    /**
+     * Vérrifie si un utilisateur est déja connecté
+     * @param loggin Le loggin de l'utilisateur pour qui on regarde si il est déja inscrit
+     * @return True si il est déja inscrit, false sinon
+     */
     public boolean isRegistered(String loggin) {
         return this.registeredUsers.containsKey(loggin);
     }
 
 
+    /**
+     * Recupere un User dans la collection d'utilisateur inscrits sur le server sur base de leur loggin
+     * @param loggin Le loggin de l'utlisateur que l'on souhaite récupérer
+     * @return L'utilisateur que l'on cherche
+     */
     public User getUserOnLoggin(String loggin){
         return this.registeredUsers.get(loggin);
     }

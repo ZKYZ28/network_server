@@ -37,17 +37,17 @@ public class ClientRunnable implements Runnable {
 
     public void run() {
         try {
-            random22 = sayHello();    //Reconnaissance du murmur.client.server par le murmur.client (ou sinon crash)
-            String login ="";
-            String ligne = in.readLine();      //Le murmur.client.server attend que le murmur.client ecrive quelque chose
-            while(isConnected && ligne != null && !ligne.isEmpty()) {   //Quand le murmur.client envoie sa ligne
-                System.out.printf("Ligne reçue : %s\r\n", ligne);    //Le murmur.client.server recoit la ligne
+            random22 = sayHello();                                      //Envoi du message Hello au client + récupération du random de 22 caractères aléatoires
+            String login ="";                                           //Le loggin du client
+            String ligne = in.readLine();                               //Le server attend que le client ecrive quelque chose
+            while(isConnected && ligne != null && !ligne.isEmpty()) {
+                System.out.printf("Ligne reçue : %s\r\n", ligne);
 
-                Task task = protocol.analyseMessage(ligne);
-                task.setClient(this);
-                executor.addTask(task);
+                Task task = protocol.analyseMessage(ligne); //Création d'une tache sur base de la ligne recue
+                task.setClient(this);      //Asignation du ClientRunnable à la tache (utile pour l'executor)
+                executor.addTask(task);     //Ajout de la tache dans la file de taches de l'executor
 
-                ligne = in.readLine();    //Le thread mis à disposition du murmur.client attend la prochaine ligne
+                ligne = in.readLine();    //Le thread mis à disposition du client attend la prochaine ligne
             }
         } catch(IOException ex) {
             ex.printStackTrace();
@@ -66,6 +66,10 @@ public class ClientRunnable implements Runnable {
         }
     }
 
+    /**
+     * Envoi le message "Hello" + une chaine de 22 caractères aléatoire
+     * @return la chaine de caractère aléatoire
+     */
     private String sayHello() {
         String random22 = RandomSaltGenerator.generateSalt();
         sendMessage("HELLO " + server.getIp() + " " + random22);

@@ -16,9 +16,16 @@ public class UserDto {
 
     public String login;
     public BcryptHashDto hashParts;
-    public List<String> followedUsers;
-    public List<String> followedTrends;
+    public List<String> followedUsers; //liste des loggins des users followed
+    public List<String> followedTrends; //liste des hashtags
 
+
+    /**
+     * Converti un objet userDto en un objet User
+     *
+     * @param dto un userDto
+     * @return un User
+     */
     public static User userDtoToUser(UserDto dto){
         User result = new User(dto.login, BcryptHashDto.hashPartsDtoToHashParts(dto.hashParts));
         result.setFollowedUsers(dto.followedUsers);

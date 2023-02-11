@@ -69,6 +69,12 @@ public class ServerController implements AutoCloseable {
         }
     }
 
+
+    /**
+     * Enregistre un utilisateur dans la liste d'inscription de User du server.
+     * @param user L'utilisateur à inscrire sur le server
+     * @throws RegistrationImpossibleException
+     */
     public void registerUser(User user) throws RegistrationImpossibleException {
         try{
             userCollection.registerUser(user);
@@ -79,10 +85,18 @@ public class ServerController implements AutoCloseable {
     }
 
 
+    /**
+     * Retourne la liste des inscrit sur le server
+     * @return un objet UserCollection
+     */
     public UserCollection getUserCollection() {
         return userCollection;
     }
 
+    /**
+     * Recupere l'addresse IP du server
+     * @return L'addresse IP en chaine de carctere
+     */
     public String getIp() {
         try {
             return InetAddress.getLocalHost().getHostAddress();
@@ -91,6 +105,10 @@ public class ServerController implements AutoCloseable {
         }
     }
 
+    /**
+     * Recupere l'executor du server
+     * @return un objet Executor
+     */
     public Executor getExecutor() {
         return executor;
     }

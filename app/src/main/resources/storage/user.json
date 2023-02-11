@@ -1,1 +1,12 @@
-[{"login":"admin","hashParts":{"rounds":14,"salt":"J5SR7DlXlZd5PmwMDqVOsu","hash":"4s.dsbR/nAGGF19RuaSCoqctuMik3le"},"followedUsers":[],"followedTrends":[]}]
+[
+  {
+    "login": "admin",
+    "bcryptHash": {
+      "rounds": 14,
+      "salt": "J5SR7DlXlZd5PmwMDqVOsu",
+      "hash": "4s.dsbR/nAGGF19RuaSCoqctuMik3le"
+    },
+    "followedUsers": [],
+    "followedTrends": []
+  }
+]
