@@ -3,7 +3,6 @@ package org.helmo.murmurG6.infrastructure.storage.json;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.helmo.murmurG6.infrastructure.dto.UserDto;
-import org.helmo.murmurG6.infrastructure.storage.json.config.JsonConfig;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.repository.IUserCollectionRepository;
 import org.helmo.murmurG6.repository.exceptions.ReadUserCollectionException;
