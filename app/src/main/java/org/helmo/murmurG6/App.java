@@ -5,6 +5,7 @@ import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserCollection;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class App {
 
 
 
-    public static void main(String[] args) throws SaveUserCollectionException {
+    public static void main(String[] args) throws IOException {
         /*try (ServerController server = new ServerController(DEFAULT_PORT, USER_JSON_STORAGE)) {
             server.start();
         } catch (IOException e) {

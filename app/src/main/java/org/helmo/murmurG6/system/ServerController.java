@@ -53,7 +53,7 @@ public class ServerController implements AutoCloseable {
         try{
             userCollection.registerUser(user);
             repo.save(userCollection.getRegisteredUsers()); //On sauvegarde le contenu de la userCollection à la fermeture du server
-        } catch (UserAlreadyRegisteredException | SaveUserCollectionException e) {
+        } catch (UserAlreadyRegisteredException | IOException e) {
             //*************************************
                 e.printStackTrace();
                 //Mieux: sendMessageToUser => e.message

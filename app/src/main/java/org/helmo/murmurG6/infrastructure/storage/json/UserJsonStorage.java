@@ -1,6 +1,6 @@
 package org.helmo.murmurG6.infrastructure.storage.json;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.helmo.murmurG6.infrastructure.storage.json.config.JsonConfig;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.repository.IUserCollectionRepository;
@@ -17,16 +17,19 @@ import java.util.List;
 public class UserJsonStorage implements IUserCollectionRepository {
 
     private final String directoryPath = JsonConfig.SAVE_DIR;
-    private final String filePath = directoryPath.concat("/murmur_user_storage.json");
+    private final String filePath = "app/src/main/java/org/helmo/murmurG6/Resources/jsonFilesStorage/jsonStorageFile.json";
+            //directoryPath.concat("/murmur_user_storage.json");
 
-    ObjectMapper objectMapper = new ObjectMapper();
+
+
+    Gson gson = new Gson();
 
 
 
     @Override
     public void save(Iterable<User> uc) throws SaveUserCollectionException {
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(filePath), StandardCharsets.UTF_8, StandardOpenOption.CREATE)){
-            bufferedWriter.write(objectMapper.writeValueAsString(uc));
+            gson.toJson(uc, bufferedWriter);
         }catch(IOException e){
             throw new SaveUserCollectionException("Impossible de sauvegarder la liste d\'utilisateur!");
         }
