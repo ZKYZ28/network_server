@@ -15,14 +15,9 @@ public class BCryptDto {
     public String salt; //La sel associé au hachage Bcrypt
     public String hash; //Le hachage Bcrypt
 
-
-    /**
-     * Convertit un objet BcryptHashDto en objet BcryptHash.
-     *
-     * @param dto l'objet BcryptHashDto à convertir
-     * @return l'objet BcryptHash converti
-     */
-    public static BCrypt bcryptDtoToBcrypt(BCryptDto dto){
-       return new BCrypt(dto.rounds, dto.salt, dto.hash);
+    public BCryptDto(int rounds, String salt, String hash) {
+        this.rounds = rounds;
+        this.salt = salt;
+        this.hash = hash;
     }
 }

@@ -19,12 +19,10 @@ public class UserDto {
     public List<String> followedUsers;
     public List<String> followedTrends;
 
-    public static User userDtoToUser(UserDto dto){
-        User result = new User(dto.login, BCryptDto.bcryptDtoToBcrypt(dto.bcryptDto));
-        result.setFollowedUsers(dto.followedUsers);
-        result.setFollowedTrends(dto.followedTrends);
-
-        return result;
+    public UserDto(String login, BCryptDto bcryptDto, List<String> followedUsers, List<String> followedTrends) {
+        this.login = login;
+        this.bcryptDto = bcryptDto;
+        this.followedUsers = followedUsers;
+        this.followedTrends = followedTrends;
     }
-
 }

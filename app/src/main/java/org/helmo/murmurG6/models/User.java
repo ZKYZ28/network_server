@@ -6,33 +6,33 @@ import java.util.List;
 public class User {
 
     private final String login; //Login de l'utilisateur.
-    private final BCrypt BCrypt;
+    private final BCrypt bCrypt;
     private List<String> followedUsers; //Liste des utilisateurs suivis par l'utilisateur.
     private List<String> followedTrends; //Liste des tendances suivies par l'utilisateur.
 
-    public User(String login, BCrypt BCrypt) {
+    public User(String login, BCrypt bCrypt) {
         this.login = login;
-        this.BCrypt = BCrypt;
+        this.bCrypt = bCrypt;
         this.followedUsers = new ArrayList<>();
         this.followedTrends = new ArrayList<>();
     }
 
-    public BCrypt getBcrypt() { return this.BCrypt; }
+    public BCrypt getBcrypt() { return this.bCrypt; }
 
     public String getLogin() {
         return this.login;
     }
 
     public String getBcryptHash() {
-        return this.BCrypt.getHash();
+        return this.bCrypt.getHash();
     }
 
     public int getBcryptRound() {
-        return this.BCrypt.getRounds();
+        return this.bCrypt.getRounds();
     }
 
     public String getBcryptSalt() {
-        return this.BCrypt.getSalt();
+        return this.bCrypt.getSalt();
     }
 
     /**

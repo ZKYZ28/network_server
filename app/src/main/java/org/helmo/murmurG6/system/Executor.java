@@ -52,24 +52,22 @@ public class Executor implements Runnable, AutoCloseable {
 
         switch (task.getType()) {
             case REGISTER:
-                try{
-                    user = new User(params.group(1), BCrypt.decomposeHash(params.group(4)));
-                    server.registerUser(user);
-                    client.setUser(user);
-                } catch (RegistrationImpossibleException e){
-                    System.out.println(e.getMessage());
-                }
+                user = new User(params.group(1), BCrypt.decomposeHash(params.group(4)));
+                client.sendMessage(register(user, client));
                 break;
 
             case CONNECT:
                 user = collection.getUserFromLogin(params.group(1));
                 client.setUser(user);
-                client.sendMessage(connect(params.group(1)));
+                String login = params.group(1);
+                client.sendMessage(connect(login));
                 break;
 
             case CONFIRM:
                 user = client.getUser();
-                client.sendMessage(confirm(params.group(1),user.getBcrypt().calculateChallenge(client.getRandom22())));
+                String received = params.group(1);
+                String expected = user.getBcrypt().calculateChallenge(client.getRandom22());
+                client.sendMessage(confirm(received, expected));
                 break;
         }
     }
@@ -85,6 +83,16 @@ public class Executor implements Runnable, AutoCloseable {
 
     private String confirm(String challenge, String userBcrypt){
         return challenge.equals(userBcrypt) ? "+OK" : "-ERR";
+    }
+
+    private String register(User user, ClientRunnable client)  {
+        try {
+            server.registerUser(user);
+            client.setUser(user);
+            return "+OK";
+        } catch (RegistrationImpossibleException e) {
+           return "-ERR";
+        }
     }
 
 
