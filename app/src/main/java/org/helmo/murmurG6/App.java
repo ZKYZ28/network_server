@@ -1,21 +1,8 @@
 package org.helmo.murmurG6;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import org.helmo.murmurG6.infrastructure.dto.UserDto;
 import org.helmo.murmurG6.infrastructure.storage.json.UserJsonStorage;
-import org.helmo.murmurG6.models.User;
-import org.helmo.murmurG6.models.UserCollection;
-import org.helmo.murmurG6.repository.exceptions.ReadUserCollectionException;
-import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 import org.helmo.murmurG6.system.ServerController;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 public class App {
 

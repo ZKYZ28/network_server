@@ -80,7 +80,6 @@ public class ServerController implements AutoCloseable {
     public void close() {
         try {
             this.serverSocket.close();
-            this.repo.save(userCollection); //On sauvegarde le contenu de la userCollection à la fermeture du server
         } catch (IOException e) {
             e.printStackTrace();
         }
