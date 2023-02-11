@@ -8,15 +8,5 @@
     },
     "followedUsers": [],
     "followedTrends": []
-  },
-  {
-    "login": "femmes",
-    "bcryptDto": {
-      "rounds": 14,
-      "salt": "eM3xMket2hGKg5.W5dJuP.",
-      "hash": "2hJ4v.3mmlyatRivudhpCuBYffl6M2m"
-    },
-    "followedUsers": [],
-    "followedTrends": []
   }
 ]
