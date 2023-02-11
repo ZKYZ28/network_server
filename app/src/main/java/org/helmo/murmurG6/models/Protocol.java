@@ -1,7 +1,5 @@
 package org.helmo.murmurG6.models;
 
-import org.helmo.murmurG6.models.Message;
-import org.helmo.murmurG6.models.MessageType;
 import org.helmo.murmurG6.repository.IProtocol;
 
 import java.util.regex.Matcher;
@@ -64,13 +62,13 @@ public class Protocol implements IProtocol {
      * @return Message(typeMessage, matcher, msg)
      */
     @Override
-    public Message analyseMessage(String msg){
+    public Task analyseMessage(String msg){
         for (int i = 0; i < TYPE_MESSAGE.length; i++) {
             if(Pattern.matches(TYPE_MESSAGE[i], msg)){
-                return new Message(identifyTypeMessage(i), createMatcher(msg, i), msg);
+                return new Task(identifyTypeMessage(i), createMatcher(msg, i), msg);
             }
         }
-        return new Message(MessageType.MESSAGE, null, msg);
+        return new Task(TaskType.MESSAGE, null, msg);
     }
 
     /**
@@ -78,20 +76,20 @@ public class Protocol implements IProtocol {
      * @param i i qui est l'index dans le tableau des différents types de message
      * @return MessageType qui est le type de message
      */
-    private MessageType identifyTypeMessage(int i){
+    private TaskType identifyTypeMessage(int i){
         switch (i){
             case 0:
-                return MessageType.CONNECT;
+                return TaskType.CONNECT;
             case 1:
-                return MessageType.REGISTER;
+                return TaskType.REGISTER;
             case 2:
-                return MessageType.FOLLOW;
+                return TaskType.FOLLOW;
             case 3:
-                return MessageType.CONFIRM;
+                return TaskType.CONFIRM;
             case 4:
-                return MessageType.DISCONNECT;
+                return TaskType.DISCONNECT;
             default:
-                return MessageType.MESSAGE;
+                return TaskType.MESSAGE;
         }
     }
 

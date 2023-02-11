@@ -7,7 +7,7 @@ package org.helmo.murmurG6.models;
 * CONFIRM => 1.sha3_hex
 * DISCONNECT => /
 * */
-public enum MessageType {
+public enum TaskType {
      CONNECT, REGISTER, FOLLOW, CONFIRM, DISCONNECT, MESSAGE;
 }
 

@@ -2,18 +2,18 @@ package org.helmo.murmurG6.models;
 
 import java.util.regex.Matcher;
 
-public class Message {
-    private final MessageType type;
+public class Task {
+    private final TaskType type;
     private final Matcher matcher;
     private final String msg;
 
-    public Message(MessageType type, Matcher matcher, String msg){
+    public Task(TaskType type, Matcher matcher, String msg){
         this.type = type;
         this.matcher = matcher;
         this.msg = msg;
     }
 
-    public MessageType getType() {
+    public TaskType getType() {
         return type;
     }
 

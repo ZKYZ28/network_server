@@ -1,6 +1,6 @@
 package org.helmo.murmurG6.system;
 
-import org.helmo.murmurG6.models.Message;
+import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.utils.Challenger;
@@ -38,7 +38,7 @@ public class ClientRunnable implements Runnable {
             while(isConnected && ligne != null && !ligne.isEmpty()) {   //Quand le murmur.client envoie sa ligne
                 System.out.printf("Ligne reçue : %s\r\n", ligne);       //Le murmur.client.server recoit la ligne
 
-                Message task = protocol.analyseMessage(ligne);
+                Task task = protocol.analyseMessage(ligne);
                 Matcher param = task.getMatcher();
 
 

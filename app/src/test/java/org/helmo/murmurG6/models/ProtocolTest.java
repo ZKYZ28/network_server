@@ -14,11 +14,11 @@ class ProtocolTest {
         Protocol protocol = new Protocol();
         String msgClientToServer = "CONNECT LOUIS\r\n";
         //When
-        Message connectMessage = protocol.analyseMessage(msgClientToServer);
+        Task connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-       assertEquals(MessageType.CONNECT, connectMessage.getType());
-       assertEquals("CONNECT LOUIS\r\n", connectMessage.getMatcher().group(0));
-       assertEquals("LOUIS", connectMessage.getMatcher().group(1));
+       assertEquals(TaskType.CONNECT, connectTask.getType());
+       assertEquals("CONNECT LOUIS\r\n", connectTask.getMatcher().group(0));
+       assertEquals("LOUIS", connectTask.getMatcher().group(1));
     }
 
     @Test
@@ -27,9 +27,9 @@ class ProtocolTest {
         Protocol protocol = new Protocol();
         String msgClientToServer = "CONNECT @@123abc\r\n";
         //When
-        Message connectMessage = protocol.analyseMessage(msgClientToServer);
+        Task connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.MESSAGE, connectMessage.getType());
+        assertEquals(TaskType.MESSAGE, connectTask.getType());
     }
 
     @Test
@@ -38,9 +38,9 @@ class ProtocolTest {
         Protocol protocol = new Protocol();
         String msgClientToServer = "REGISTER LOUIS 22 $2b$14$gfuefhsivdiv18\r\n";
         //When
-        Message msg = protocol.analyseMessage(msgClientToServer);
+        Task msg = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.REGISTER, msg.getType());
+        assertEquals(TaskType.REGISTER, msg.getType());
         assertEquals("REGISTER LOUIS 22 $2b$14$gfuefhsivdiv18\r\n", msg.getMatcher().group(0));
         assertEquals("LOUIS", msg.getMatcher().group(1));
         assertEquals("22", msg.getMatcher().group(3));
@@ -50,13 +50,13 @@ class ProtocolTest {
         msgClientToServer = "REGISTER LOUIS 22 $2b$16$gfuefhsivdiv18\r\n";
         msg = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.REGISTER, msg.getType());
+        assertEquals(TaskType.REGISTER, msg.getType());
 
         //When
         msgClientToServer = "REGISTER LOUIS 22 $2b$14$grgsdgrgrgrvfc@()*+,-./\r\n";
         msg = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.REGISTER, msg.getType());
+        assertEquals(TaskType.REGISTER, msg.getType());
         assertEquals("REGISTER LOUIS 22 $2b$14$grgsdgrgrgrvfc@()*+,-./\r\n", msg.getMatcher().group(0));
         assertEquals("LOUIS", msg.getMatcher().group(1));
         assertEquals("22", msg.getMatcher().group(3));
@@ -66,7 +66,7 @@ class ProtocolTest {
         msgClientToServer = "REGISTER LOUIS 22 $2b$14$grgsdgrgrgrvfc@()*+,-./\r\n";
         msg = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.REGISTER, msg.getType());
+        assertEquals(TaskType.REGISTER, msg.getType());
     }
 
     @Test
@@ -75,21 +75,21 @@ class ProtocolTest {
         Protocol protocol = new Protocol();
         String msgClientToServer = "REGISTER LOUIS 1 $2b$14$trefvrgtgbgrvfcezf\r\n";
         //When
-        Message msg = protocol.analyseMessage(msgClientToServer);
+        Task msg = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.MESSAGE, msg.getType());
+        assertEquals(TaskType.MESSAGE, msg.getType());
 
         //When
         msgClientToServer = "REGISTER LOUIS 22 $2b14$trarefefefzfzzf\r\n";
         msg = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.MESSAGE, msg.getType());
+        assertEquals(TaskType.MESSAGE, msg.getType());
 
         //When
         msgClientToServer = "REGISTER LOUIS 22 $3b$14$grgsdgrgrgrvfc\r\n";
         msg = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.MESSAGE, msg.getType());
+        assertEquals(TaskType.MESSAGE, msg.getType());
 
     }
 
@@ -99,27 +99,27 @@ class ProtocolTest {
         Protocol protocol = new Protocol();
         String msgClientToServer = "FOLLOW lswinnen@server1.godswila.guru\r\n";
         //When
-        Message connectMessage = protocol.analyseMessage(msgClientToServer);
+        Task connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.FOLLOW, connectMessage.getType());
-        assertEquals("FOLLOW lswinnen@server1.godswila.guru\r\n", connectMessage.getMatcher().group(0));
-        assertEquals("lswinnen@server1.godswila.guru", connectMessage.getMatcher().group(1));
+        assertEquals(TaskType.FOLLOW, connectTask.getType());
+        assertEquals("FOLLOW lswinnen@server1.godswila.guru\r\n", connectTask.getMatcher().group(0));
+        assertEquals("lswinnen@server1.godswila.guru", connectTask.getMatcher().group(1));
 
         //When
         msgClientToServer = "FOLLOW swila@server2.godswila.guru\r\n";
-        connectMessage = protocol.analyseMessage(msgClientToServer);
+        connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.FOLLOW, connectMessage.getType());
-        assertEquals("FOLLOW swila@server2.godswila.guru\r\n", connectMessage.getMatcher().group(0));
-        assertEquals("swila@server2.godswila.guru", connectMessage.getMatcher().group(1));
+        assertEquals(TaskType.FOLLOW, connectTask.getType());
+        assertEquals("FOLLOW swila@server2.godswila.guru\r\n", connectTask.getMatcher().group(0));
+        assertEquals("swila@server2.godswila.guru", connectTask.getMatcher().group(1));
 
         //When
         msgClientToServer = "FOLLOW #swila123@server2.godswila.guru\r\n";
-        connectMessage = protocol.analyseMessage(msgClientToServer);
+        connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.FOLLOW, connectMessage.getType());
-        assertEquals("FOLLOW #swila123@server2.godswila.guru\r\n", connectMessage.getMatcher().group(0));
-        assertEquals("#swila123@server2.godswila.guru", connectMessage.getMatcher().group(1));
+        assertEquals(TaskType.FOLLOW, connectTask.getType());
+        assertEquals("FOLLOW #swila123@server2.godswila.guru\r\n", connectTask.getMatcher().group(0));
+        assertEquals("#swila123@server2.godswila.guru", connectTask.getMatcher().group(1));
 
 
     }
@@ -130,15 +130,15 @@ class ProtocolTest {
         Protocol protocol = new Protocol();
         String msgClientToServer = "FOLLOW ^^^^^^^^@server1.godswila.guru\r\n";
         //When
-        Message connectMessage = protocol.analyseMessage(msgClientToServer);
+        Task connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.MESSAGE, connectMessage.getType());
+        assertEquals(TaskType.MESSAGE, connectTask.getType());
 
         //When
         msgClientToServer = "FOLLOW #swila12315145541441515154151541515144515414@server2.godswila.guru\r\n";
-        connectMessage = protocol.analyseMessage(msgClientToServer);
+        connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.MESSAGE, connectMessage.getType());
+        assertEquals(TaskType.MESSAGE, connectTask.getType());
     }
 
     @Test
@@ -147,33 +147,33 @@ class ProtocolTest {
         Protocol protocol = new Protocol();
         String msgClientToServer = "CONFIRM 20de15er87er56er78er89er56er23er45er78er45er12er45er78er49er87re96sf55vv3zfheoefz486rezzefyezyfgezyvfu\r\n";
         //When
-        Message connectMessage = protocol.analyseMessage(msgClientToServer);
+        Task connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.CONFIRM, connectMessage.getType());
-        assertEquals("CONFIRM 20de15er87er56er78er89er56er23er45er78er45er12er45er78er49er87re96sf55vv3zfheoefz486rezzefyezyfgezyvfu\r\n", connectMessage.getMatcher().group(0));
-        assertEquals("20de15er87er56er78er89er56er23er45er78er45er12er45er78er49er87re96sf55vv3zfheoefz486rezzefyezyfgezyvfu", connectMessage.getMatcher().group(1));
+        assertEquals(TaskType.CONFIRM, connectTask.getType());
+        assertEquals("CONFIRM 20de15er87er56er78er89er56er23er45er78er45er12er45er78er49er87re96sf55vv3zfheoefz486rezzefyezyfgezyvfu\r\n", connectTask.getMatcher().group(0));
+        assertEquals("20de15er87er56er78er89er56er23er45er78er45er12er45er78er49er87re96sf55vv3zfheoefz486rezzefyezyfgezyvfu", connectTask.getMatcher().group(1));
 
         //When
         msgClientToServer = "CONFIRM YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839\r\n";
-        connectMessage = protocol.analyseMessage(msgClientToServer);
+        connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.CONFIRM, connectMessage.getType());
+        assertEquals(TaskType.CONFIRM, connectTask.getType());
 
         //When
         msgClientToServer = "CONFIRM YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839\r\n";
-        connectMessage = protocol.analyseMessage(msgClientToServer);
+        connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.CONFIRM, connectMessage.getType());
-        assertEquals("CONFIRM YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839\r\n", connectMessage.getMatcher().group(0));
-        assertEquals("YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839", connectMessage.getMatcher().group(1));
+        assertEquals(TaskType.CONFIRM, connectTask.getType());
+        assertEquals("CONFIRM YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839\r\n", connectTask.getMatcher().group(0));
+        assertEquals("YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839", connectTask.getMatcher().group(1));
 
         //When
         msgClientToServer = "CONFIRM w5hQjAvqPntVAdA4VSNw3LWZTLfUKO\r\n";
-        connectMessage = protocol.analyseMessage(msgClientToServer);
+        connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.CONFIRM, connectMessage.getType());
-        assertEquals("CONFIRM w5hQjAvqPntVAdA4VSNw3LWZTLfUKO\r\n", connectMessage.getMatcher().group(0));
-        assertEquals("w5hQjAvqPntVAdA4VSNw3LWZTLfUKO", connectMessage.getMatcher().group(1));
+        assertEquals(TaskType.CONFIRM, connectTask.getType());
+        assertEquals("CONFIRM w5hQjAvqPntVAdA4VSNw3LWZTLfUKO\r\n", connectTask.getMatcher().group(0));
+        assertEquals("w5hQjAvqPntVAdA4VSNw3LWZTLfUKO", connectTask.getMatcher().group(1));
     }
 
     @Test
@@ -182,22 +182,22 @@ class ProtocolTest {
         Protocol protocol = new Protocol();
         String msgClientToServer = "CONFIRM zyvfu48894\r\n";
         //When
-        Message connectMessage = protocol.analyseMessage(msgClientToServer);
+        Task connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.MESSAGE, connectMessage.getType());
+        assertEquals(TaskType.MESSAGE, connectTask.getType());
 
 
         //When
          msgClientToServer = "CONFIRM YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839\r\n";
-         connectMessage = protocol.analyseMessage(msgClientToServer);
+         connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.MESSAGE, connectMessage.getType());
+        assertEquals(TaskType.MESSAGE, connectTask.getType());
 
         //When
         msgClientToServer = "CONF jRD9CgQH6VyfzVTHgdFyojRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839\r\n";
-        connectMessage = protocol.analyseMessage(msgClientToServer);
+        connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.MESSAGE, connectMessage.getType());
+        assertEquals(TaskType.MESSAGE, connectTask.getType());
     }
 
 
@@ -207,9 +207,9 @@ class ProtocolTest {
         Protocol protocol = new Protocol();
         String msgClientToServer = "DISCONNECT\r\n";
         //When
-        Message connectMessage = protocol.analyseMessage(msgClientToServer);
+        Task connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.DISCONNECT, connectMessage.getType());
+        assertEquals(TaskType.DISCONNECT, connectTask.getType());
     }
 
     @Test
@@ -218,15 +218,15 @@ class ProtocolTest {
         Protocol protocol = new Protocol();
         String msgClientToServer = "DISCO\r\n";
         //When
-        Message connectMessage = protocol.analyseMessage(msgClientToServer);
+        Task connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.MESSAGE, connectMessage.getType());
+        assertEquals(TaskType.MESSAGE, connectTask.getType());
 
 
         //When
          msgClientToServer = "DISCONNECT\n";
-         connectMessage = protocol.analyseMessage(msgClientToServer);
+         connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(MessageType.MESSAGE, connectMessage.getType());
+        assertEquals(TaskType.MESSAGE, connectTask.getType());
     }
 }
