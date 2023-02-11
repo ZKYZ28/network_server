@@ -1,9 +1,8 @@
 package org.helmo.murmurG6.system;
 
+import org.helmo.murmurG6.models.BcryptHash;
 import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.User;
-import org.helmo.murmurG6.utils.Challenger;
-import org.helmo.murmurG6.utils.BcryptHash;
 
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
@@ -18,7 +17,7 @@ public class Executor implements Runnable, AutoCloseable {
     public Executor (ServerController server) {
         taskQueue = new LinkedBlockingQueue<>();
         executorService = Executors.newSingleThreadExecutor();
-        this.server = sever;
+        this.server = server;
     }
 
     /**
@@ -45,12 +44,14 @@ public class Executor implements Runnable, AutoCloseable {
     }
 
     public void executeTask(Task task) {
+
         ClientRunnable client = task.getClient();
         Matcher params = task.getMatcher();
+
         switch (task.getType()){
             case REGISTER:
                 try{
-                    User u = new User(params.group(1), params.group(4));
+                    User u = new User(params.group(1), BcryptHash.decomposeHash(params.group(4)));
                     server.registerUser(u);
                     client.setUser(u);
                 }catch (RegistrationImpossibleException e){
@@ -59,18 +60,19 @@ public class Executor implements Runnable, AutoCloseable {
                 break;
 
             case CONNECT:
-                client.sendMessage(connect(params.group(1)));
+                client.sendMessage(connect(params.group(1), client.getUser().getBcryptSalt()));
                 break;
 
             case CONFIRM:
-                client.sendMessage(confirm(params.group(1), client.getUser().getBcrypt()));
+                client.sendMessage(confirm(params.group(1), client.getUser().getBcrypt().calculateChallenge(client.getRandom22())));
                 break;
         }
     }
 
-    private String connect(String loggin){
+    private String connect(String loggin, String salt){
         if (server.getUserCollection().isRegistered(loggin)) {
-            return "PARAM " + server.getUserCollection().getRegisteredUsers().get(loggin).getBcryptRound() + " " + server.getUserCollection().getRegisteredUsers().get(loggin).getBcryptSalt();
+            System.out.println("j'envoie param");
+            return "PARAM " + server.getUserCollection().getRegisteredUsers().get(loggin).getBcryptRound() + " " +salt;
         } else {
             return  "-ERR";
         }

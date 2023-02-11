@@ -17,7 +17,7 @@ public class User {
         this.followedTrends = new ArrayList<>();
     }
 
-    public BcryptHash getHashParts() { return this.bcryptHash; }
+    public BcryptHash getBcrypt() { return this.bcryptHash; }
 
     public String getLogin() {
         return this.login;

@@ -19,6 +19,8 @@ public class ClientRunnable implements Runnable {
     private User user;
     private Executor executor;
 
+    private String random22 = "";
+
     private final Protocol protocol = new Protocol();
 
     public ClientRunnable(Socket client, ServerController server) {
@@ -35,7 +37,7 @@ public class ClientRunnable implements Runnable {
 
     public void run() {
         try {
-            String r22 = sayHello();    //Reconnaissance du murmur.client.server par le murmur.client (ou sinon crash)
+            random22 = sayHello();    //Reconnaissance du murmur.client.server par le murmur.client (ou sinon crash)
             String login ="";
             String ligne = in.readLine();      //Le murmur.client.server attend que le murmur.client ecrive quelque chose
             while(isConnected && ligne != null && !ligne.isEmpty()) {   //Quand le murmur.client envoie sa ligne
@@ -76,5 +78,9 @@ public class ClientRunnable implements Runnable {
 
     public void setUser(User u) {
         this.user = u;
+    }
+
+    public String getRandom22(){
+        return random22;
     }
 }
