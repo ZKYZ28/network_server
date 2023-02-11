@@ -15,19 +15,19 @@ import java.util.Collections;
 import java.util.List;
 
 public class ServerController implements AutoCloseable {
-    private final List<ClientRunnable> clientList;
+    private final List<ClientRunnable> clientList = Collections.synchronizedList(new ArrayList<>());
     private final ServerSocket serverSocket;
     private final IUserCollectionRepository repo;
-    private final Executor executor;
+    private final Executor executor = new Executor();
     private final UserCollection userCollection = new UserCollection();
 
     public ServerController(int port, IUserCollectionRepository repo) throws IOException {
-        this.executor = new Executor();
-        this.clientList = Collections.synchronizedList(new ArrayList<>());
         this.serverSocket = new ServerSocket(port);
         this.repo = repo;
         this.userCollection.setRegisteredUsers(repo.read()); //remplissage de tous les users inscrits dans la usercollection
-        System.out.println("SERVER ONLINE ! IP : " + getIp());
+        System.out.println("****************************************************************");
+        System.out.println("********     SERVER ONLINE ! IP : " + getIp()+"        **********");
+        System.out.println("****************************************************************");
     }
 
     public void start() throws IOException {
@@ -76,6 +76,10 @@ public class ServerController implements AutoCloseable {
         return executor;
     }
 
+
+    /*
+    Le close sert il a quelque chose ici ? car le server tourne à l'infini et se termine à la fin du programme
+     */
     @Override
     public void close() {
         try {
