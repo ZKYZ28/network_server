@@ -3,8 +3,7 @@ package org.helmo.murmurG6.system;
 import org.helmo.murmurG6.models.Message;
 import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.models.User;
-import org.helmo.murmurG6.utils.Challenger;
-import org.helmo.murmurG6.utils.HashParts;
+import org.helmo.murmurG6.models.BcryptHash;
 import org.helmo.murmurG6.utils.RandomSaltGenerator;
 import java.io.*;
 import java.net.Socket;
@@ -12,11 +11,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 
 public class ClientRunnable implements Runnable {
+    private User connectedUser;
     private BufferedReader in;
     private PrintWriter out;
     private boolean isConnected = false;
     private final ServerController server;
-
     private final Protocol protocol = new Protocol();
 
     public ClientRunnable(Socket client, ServerController server) {
@@ -32,48 +31,39 @@ public class ClientRunnable implements Runnable {
 
     public void run() {
         try {
-            String r22 = sayHello();                                                 //Reconnaissance du murmur.client.server par le murmur.client (ou sinon crash)
-            String login ="";
-            String ligne = in.readLine();                               //Le murmur.client.server attend que le murmur.client ecrive quelque chose
+            String random22 = sayHello();                                                 //Reconnaissance du murmur.client.server par le murmur.client (ou sinon crash)
+            String ligne = in.readLine(); //Le murmur.client.server attend que le murmur.client ecrive quelque chose
+
             while(isConnected && ligne != null && !ligne.isEmpty()) {   //Quand le murmur.client envoie sa ligne
                 System.out.printf("Ligne reçue : %s\r\n", ligne);       //Le murmur.client.server recoit la ligne
-
                 Message task = protocol.analyseMessage(ligne);
                 Matcher param = task.getMatcher();
-
-
 
                 switch (task.getType()) {
                     case REGISTER: {
                         sendMessage("+OK");
-                        HashParts parts = HashParts.decomposeHash(param.group(4));
-
-                        server.registerUser(new User(param.group(1), parts.getHash(), parts.getRounds(), parts.getSalt()));
+                        BcryptHash bcryptHash = BcryptHash.decomposeHash(param.group(4));
+                        this.connectedUser = new User(param.group(1), bcryptHash);
+                        server.registerUser(connectedUser);
                         break;
                     }
                     case CONNECT: {
-                        login = param.group(1);
+                        String login = param.group(1);
                         if (server.getUserCollection().isRegistered(login)) {
-                            sendMessage("PARAM " + server.getUserCollection().getRegisteredUsers().get(login).getBcryptRound() + " " +  server.getUserCollection().getRegisteredUsers().get(login).getBcryptSalt());
+                            this.connectedUser = server.getUserCollection().getRegisteredUsers().get(login);
+                            sendMessage("PARAM " + this.connectedUser.getBcryptRound() + " " +  this.connectedUser.getBcryptSalt());
                         } else {
                             sendMessage("-ERR");
                         }
                         break;
                     } case CONFIRM: {
-                        if(param.group(1).equals(Challenger.calculChallenge(server.getUserCollection().getUserOnLoggin(login), r22))){
+                        if(param.group(1).equals(connectedUser.getHashParts().calculateChallenge(random22))){
                             sendMessage("+OK");
-                            System.out.println("OK ma biche!");
-                            System.out.println(Challenger.calculChallenge(server.getUserCollection().getUserOnLoggin(login), r22));
-                        }else{
+                        } else {
                             sendMessage("-ERR");
-                            System.out.println("Bhouuuuuuuuuuuuuu!!!!!");
-                            System.out.println(Challenger.calculChallenge(server.getUserCollection().getUserOnLoggin(login), r22));
                         }
-
                     }
                 }
-
-
                 ligne = in.readLine();                                     //Le thread mis à disposition du murmur.client attend la prochaine ligne
             }
         } catch(IOException ex) {
@@ -94,8 +84,8 @@ public class ClientRunnable implements Runnable {
     }
 
     private String sayHello() {
-        String salt = RandomSaltGenerator.generateSalt();
-        sendMessage("HELLO " + server.getIp() + " " + salt);
-        return salt;
+        String random22 = RandomSaltGenerator.generateSalt();
+        sendMessage("HELLO " + server.getIp() + " " + random22);
+        return random22;
     }
 }

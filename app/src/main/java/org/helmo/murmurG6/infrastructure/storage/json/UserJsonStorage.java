@@ -15,14 +15,27 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
 
+/**
+ * Cette classe implémente l'interface {@link IUserCollectionRepository} et permet de sauvegarder et de lire des collections d'utilisateurs sous forme de fichier JSON.
+ * La classe utilise la bibliothèque Google Gson pour effectuer les opérations de conversion entre les objets Java et les données JSON.
+ * Les fichiers sont sauvegardés dans un emplacement spécifié par la classe {@link JsonConfig}.
+ *
+ * @since 11 février 2023
+ * @version 1.0
+ */
 public class UserJsonStorage implements IUserCollectionRepository {
     private final Path FILE_PATH = Paths.get(JsonConfig.SAVE_DIR, "/user.json");
     private final Gson gson = new Gson();
 
+
+    /**
+     * {@inheritDoc}
+     * Cette méthode sauvegarde une collection d'utilisateurs en tant que fichier JSON à l'emplacement spécifié.
+     * Si le fichier n'existe pas, il sera créé.
+     */
     @Override
     public void save(Iterable<User> uc) throws SaveUserCollectionException {
         createFile(FILE_PATH);
-
         try(BufferedWriter bufferedWriter = Files.newBufferedWriter(FILE_PATH, StandardCharsets.UTF_8, StandardOpenOption.CREATE)){
             gson.toJson(uc, bufferedWriter);
         }catch(IOException e){
@@ -30,27 +43,37 @@ public class UserJsonStorage implements IUserCollectionRepository {
         }
     }
 
-    @Override
-    public List<User> read() throws IOException {
-        createFile(FILE_PATH);
-        List<UserDto> resultDto;
-        List<User> resultUser= new ArrayList<>();
 
-        try(BufferedReader reader = Files.newBufferedReader(FILE_PATH, StandardCharsets.UTF_8)){
-            resultDto = this.gson.fromJson(reader, new TypeToken<ArrayList<UserDto>>(){}.getType());
+    /**
+     * {@inheritDoc}
+     * Cette méthode lit une collection d'utilisateurs enregistrée en tant que fichier JSON à l'emplacement spécifié.
+     * Si le fichier n'existe pas, il sera créé.
+     */
+    @Override
+    public List<User> read() throws ReadUserCollectionException {
+        createFile(FILE_PATH);
+        List<User> resultUsers = new ArrayList<>();
+
+        try {
+            BufferedReader reader = Files.newBufferedReader(FILE_PATH, StandardCharsets.UTF_8);
+            List<UserDto> resultDto = gson.fromJson(reader, new TypeToken<ArrayList<UserDto>>(){}.getType());
+            reader.close();
 
             if (resultDto != null) {
-                for(UserDto dto : resultDto){
-                    resultUser.add(UserDto.userDtoToUser(dto));
+                for (UserDto dto : resultDto) {
+                    resultUsers.add(UserDto.userDtoToUser(dto));
                 }
             }
-            return Objects.requireNonNullElseGet(resultUser, ArrayList::new); //Retourne le result si non null, sinon, retourne une nouvelle ArrayList
-        }catch(IOException e) {
-            throw new ReadUserCollectionException("Impossible de charger la liste d'utilisateur!");
+            return resultUsers;
+        } catch (IOException e) {
+            throw new ReadUserCollectionException("Impossible de charger la liste d'utilisateurs!");
         }
     }
 
-
+    /**
+     * Crée un fichier à l'emplacement spécifié. Si le répertoire parent de l'emplacement n'existe pas, il sera créé.
+     * @param path l'emplacement du fichier à créer
+     */
     private void createFile(Path path) {
         try {
             Files.createDirectories(path.getParent());
