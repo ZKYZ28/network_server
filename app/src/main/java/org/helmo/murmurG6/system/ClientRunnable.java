@@ -4,6 +4,8 @@ import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.utils.RandomSaltGenerator;
+
+import javax.net.ssl.SSLSocket;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -20,7 +22,7 @@ public class ClientRunnable implements Runnable {
 
     private final Protocol protocol = new Protocol();
 
-    public ClientRunnable(Socket client, ServerController server) {
+    public ClientRunnable(SSLSocket client, ServerController server) {
         this.server =  server;
         this.executor = server.getExecutor();
         try {
