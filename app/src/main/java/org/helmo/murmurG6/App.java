@@ -5,10 +5,7 @@ import org.helmo.murmurG6.system.ServerController;
 
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.security.*;
 import java.security.cert.CertificateException;
@@ -27,15 +24,16 @@ public class App {
 
     public static SSLServerSocketFactory getSSLServerSocketFactory(){
         try {
-            KeyStore ks = KeyStore.getInstance("PKCS12");
-            File f =  new File("app/src/main/resources/", "star.godswila.guru.p12");
-            FileInputStream certif = new FileInputStream(f);
-            ks.load(certif, "labo2023".toCharArray());
+            KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
 
-            KeyManagerFactory kmf = KeyManagerFactory.getInstance("X509");
-            kmf.init(ks, "keystorePassword".toCharArray());
+            try(InputStream certif = new FileInputStream(new File("app/src/main/resources/", "star.godswila.guru.p12"))){
+                ks.load(certif, "labo2023".toCharArray());
+            }
 
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance("X509");
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+            kmf.init(ks, "labo2023".toCharArray());
+
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             tmf.init(ks);
 
             SSLContext sc = SSLContext.getInstance("TLS");
@@ -44,18 +42,25 @@ public class App {
 
             return sc.getServerSocketFactory();
         }catch (KeyStoreException e) {
+            System.out.println("1");
             throw new RuntimeException(e);
         } catch (UnrecoverableKeyException e) {
+            System.out.println("2");
             throw new RuntimeException(e);
         } catch (FileNotFoundException e) {
+            System.out.println("3");
             throw new RuntimeException(e);
         } catch (CertificateException e) {
+            System.out.println("4");
             throw new RuntimeException(e);
         } catch (IOException e) {
+            System.out.println("5");
             throw new RuntimeException(e);
         } catch (NoSuchAlgorithmException e) {
+            System.out.println("6");
             throw new RuntimeException(e);
         } catch (KeyManagementException e) {
+            System.out.println("7");
             throw new RuntimeException(e);
         }
     }
