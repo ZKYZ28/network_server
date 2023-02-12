@@ -11,7 +11,7 @@ public class App {
      * pour toute l'instance de l'application
      */
     static {
-        System.setProperty("javax.net.ssl.keyStore", "./org/helmo/murmurG6/ssl/star.godswila.guru.p12");
+        System.setProperty("javax.net.ssl.keyStore", "org/helmo/murmurG6/ssl/star.godswila.guru.p12");
         System.setProperty("javax.net.ssl.keyStorePassword", "labo2023");
     }
 
