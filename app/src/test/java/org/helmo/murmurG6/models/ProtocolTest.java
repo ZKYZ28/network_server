@@ -29,7 +29,7 @@ class ProtocolTest {
         //When
         Task connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(TaskType.MESSAGE, connectTask.getType());
+        assertEquals(TaskType.MSG, connectTask.getType());
     }
 
     @Test
@@ -77,19 +77,19 @@ class ProtocolTest {
         //When
         Task msg = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(TaskType.MESSAGE, msg.getType());
+        assertEquals(TaskType.MSG, msg.getType());
 
         //When
         msgClientToServer = "REGISTER LOUIS 22 $2b14$trarefefefzfzzf\r\n";
         msg = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(TaskType.MESSAGE, msg.getType());
+        assertEquals(TaskType.MSG, msg.getType());
 
         //When
         msgClientToServer = "REGISTER LOUIS 22 $3b$14$grgsdgrgrgrvfc\r\n";
         msg = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(TaskType.MESSAGE, msg.getType());
+        assertEquals(TaskType.MSG, msg.getType());
 
     }
 
@@ -132,13 +132,13 @@ class ProtocolTest {
         //When
         Task connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(TaskType.MESSAGE, connectTask.getType());
+        assertEquals(TaskType.MSG, connectTask.getType());
 
         //When
         msgClientToServer = "FOLLOW #swila12315145541441515154151541515144515414@server2.godswila.guru\r\n";
         connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(TaskType.MESSAGE, connectTask.getType());
+        assertEquals(TaskType.MSG, connectTask.getType());
     }
 
     @Test
@@ -184,20 +184,20 @@ class ProtocolTest {
         //When
         Task connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(TaskType.MESSAGE, connectTask.getType());
+        assertEquals(TaskType.MSG, connectTask.getType());
 
 
         //When
          msgClientToServer = "CONFIRM YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839YSrB7bhp9ksJUqp3ifKSm1Dozi2GKUQQ2fQCKrflajRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839\r\n";
          connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(TaskType.MESSAGE, connectTask.getType());
+        assertEquals(TaskType.MSG, connectTask.getType());
 
         //When
         msgClientToServer = "CONF jRD9CgQH6VyfzVTHgdFyojRD9CgQH6VyfzVTHgdFyorPYEcmXkwSOuHbvf44MJ4BgZ0TrnEIHj5Vo839\r\n";
         connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(TaskType.MESSAGE, connectTask.getType());
+        assertEquals(TaskType.MSG, connectTask.getType());
     }
 
 
@@ -220,13 +220,13 @@ class ProtocolTest {
         //When
         Task connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(TaskType.MESSAGE, connectTask.getType());
+        assertEquals(TaskType.MSG, connectTask.getType());
 
 
         //When
          msgClientToServer = "DISCONNECT\n";
          connectTask = protocol.analyseMessage(msgClientToServer);
         //Then
-        assertEquals(TaskType.MESSAGE, connectTask.getType());
+        assertEquals(TaskType.MSG, connectTask.getType());
     }
 }

@@ -8,6 +8,10 @@ import org.helmo.murmurG6.repository.IUserCollectionRepository;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 import org.helmo.murmurG6.utils.UltraImportantClass;
 
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -23,7 +27,7 @@ import java.util.List;
  */
 public class ServerController implements AutoCloseable {
     private final List<ClientRunnable> clientList = Collections.synchronizedList(new ArrayList<>());
-    private final ServerSocket serverSocket;
+    private final SSLServerSocket  serverSocket;
     private final IUserCollectionRepository repo;
     private final UserCollection userCollection = new UserCollection();
     private Executor executor;
@@ -35,8 +39,8 @@ public class ServerController implements AutoCloseable {
      * @param repo Le storage d'utilisateurs qui sera utilisé pour enregistrer et lire les informations d'utilisateur.
      * @throws IOException En cas d'échec de la création du socket serveur.
      */
-    public ServerController(int port, IUserCollectionRepository repo) throws IOException {
-        this.serverSocket = new ServerSocket(port);
+    public ServerController(int port, SSLServerSocketFactory ssf, IUserCollectionRepository repo) throws IOException {
+        this.serverSocket = (SSLServerSocket) ssf.createServerSocket(port);
         this.repo = repo;
         this.userCollection.setRegisteredUsers(repo.read()); //remplissage de tous les users inscrits dans la usercollection
         UltraImportantClass.welcome();
@@ -55,7 +59,7 @@ public class ServerController implements AutoCloseable {
         this.executor = new Executor(this);
         new Thread(executor).start();
         while(true) {
-            Socket client = serverSocket.accept();
+            SSLSocket client = (SSLSocket) serverSocket.accept();
             System.out.println("Quelqu'un s'est connecté!");
             ClientRunnable runnable = new ClientRunnable(client, this);
             clientList.add(runnable);
