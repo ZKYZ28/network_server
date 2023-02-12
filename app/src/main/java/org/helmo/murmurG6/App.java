@@ -5,9 +5,11 @@ import org.helmo.murmurG6.system.ServerController;
 
 import javax.net.ServerSocketFactory;
 import javax.net.ssl.*;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.security.*;
 import java.security.cert.CertificateException;
 
@@ -18,18 +20,24 @@ public class App {
      * pour toute l'instance de l'application
      */
     static {
-        System.setProperty("javax.net.ssl.keyStore", "org/helmo/murmurG6/ssl/star.godswila.guru.p12");
-        System.setProperty("javax.net.ssl.keyStorePassword", "labo2023");
+       System.setProperty("javax.net.ssl.keyStore", "org/helmo/murmurG6/ssl/star.godswila.guru.p12");
+       System.setProperty("javax.net.ssl.keyStorePassword", "labo2023");
     }
 
     private static final int DEFAULT_PORT = 12345;
     private static final UserJsonStorage USER_JSON_STORAGE = new UserJsonStorage();
 
     public static void main(String[] args){
-        KeyStore ks = null;
-        SSLServerSocketFactory ssf = null;
+            try (ServerController server = new ServerController(DEFAULT_PORT, getSSLServerSocketFactory(), USER_JSON_STORAGE)) {
+                server.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+
+    public static SSLServerSocketFactory getSSLServerSocketFactory(){
         try {
-            ks = KeyStore.getInstance("JKS");
+            KeyStore ks = KeyStore.getInstance("JKS");
             ks.load(new FileInputStream("keystoreFile"), "keystorePassword".toCharArray());
 
             KeyManagerFactory kmf = KeyManagerFactory.getInstance("X509");
@@ -42,15 +50,8 @@ public class App {
             TrustManager[] trustManagers = tmf.getTrustManagers();
             sc.init(kmf.getKeyManagers(), trustManagers, null);
 
-            ssf = sc.getServerSocketFactory();
-
-            try (ServerController server = new ServerController(DEFAULT_PORT, ssf, USER_JSON_STORAGE)) {
-                server.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        } catch (KeyStoreException e) {
+            return sc.getServerSocketFactory();
+        }catch (KeyStoreException e) {
             throw new RuntimeException(e);
         } catch (UnrecoverableKeyException e) {
             throw new RuntimeException(e);
