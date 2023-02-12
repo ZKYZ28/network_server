@@ -82,6 +82,8 @@ public class Executor implements Runnable, AutoCloseable {
             case MSG:
                 server.broadcastToAllClientsExceptMe(client, params.group(1));
                 break;
+            default:
+                client.sendMessage("-ERR");
         }
     }
 
@@ -112,6 +114,9 @@ public class Executor implements Runnable, AutoCloseable {
 
     private String register(User user, ClientRunnable client)  {
         try {
+            if(user.getLogin().length() < 5 || user.getLogin().length() >20){
+                throw new RegistrationImpossibleException("Longeur du loggin incorrect ("+user.getLogin().length()+")");
+            }
             server.registerUser(user);
             client.setUser(user);
             return "+OK";
