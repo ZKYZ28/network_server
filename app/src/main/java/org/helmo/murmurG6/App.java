@@ -14,16 +14,6 @@ import java.security.*;
 import java.security.cert.CertificateException;
 
 public class App {
-
-    /*
-     * Chargement des propriétés SSL dans un bloc static afin d'avoir ces propriétés
-     * pour toute l'instance de l'application
-     */
-    static {
-       System.setProperty("javax.net.ssl.keyStore", "org/helmo/murmurG6/ssl/star.godswila.guru.p12");
-       System.setProperty("javax.net.ssl.keyStorePassword", "labo2023");
-    }
-
     private static final int DEFAULT_PORT = 12345;
     private static final UserJsonStorage USER_JSON_STORAGE = new UserJsonStorage();
 
@@ -37,8 +27,10 @@ public class App {
 
     public static SSLServerSocketFactory getSSLServerSocketFactory(){
         try {
-            KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(new FileInputStream("keystoreFile"), "keystorePassword".toCharArray());
+            KeyStore ks = KeyStore.getInstance("PKCS12");
+            File f =  new File("app/src/main/resources/", "star.godswila.guru.p12");
+            FileInputStream certif = new FileInputStream(f);
+            ks.load(certif, "labo2023".toCharArray());
 
             KeyManagerFactory kmf = KeyManagerFactory.getInstance("X509");
             kmf.init(ks, "keystorePassword".toCharArray());
