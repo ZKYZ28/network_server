@@ -78,6 +78,10 @@ public class Executor implements Runnable, AutoCloseable {
                 String expected = user.getBcrypt().calculateChallenge(client.getRandom22());
                 client.sendMessage(confirm(received, expected));
                 break;
+
+            case MSG:
+                server.broadcastToAllClientsExceptMe(client, params.group(1));
+                break;
         }
     }
 

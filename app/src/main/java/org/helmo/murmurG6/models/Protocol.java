@@ -53,8 +53,8 @@ public class Protocol implements IProtocol {
     private final static String FOLLOW = "FOLLOW" + RX_ESP + TAG_DOMAIN_OR_RX_USER_DOMAIN + RX_CRLF;
     private final static String CONFIRM = "CONFIRM" + RX_ESP + RX_SHA3_EX + RX_CRLF;
     private final static String DISCONNECT = "DISCONNECT" + RX_CRLF;
-
-    private final String[] TYPE_MESSAGE = {CONNECT, REGISTER, FOLLOW, CONFIRM, DISCONNECT};
+    private final static String MSG = "MSG" + RX_ESP + RX_MESSAGE;
+    private final String[] TYPE_MESSAGE = {CONNECT, REGISTER, FOLLOW, CONFIRM, DISCONNECT, MSG};
 
     /**
      * Méthode qui permet de créer une Objet Message sur base d'une string
@@ -68,7 +68,7 @@ public class Protocol implements IProtocol {
                 return new Task(identifyTypeMessage(i), createMatcher(msg, i), msg);
             }
         }
-        return new Task(TaskType.MESSAGE, null, msg);
+        return null;
     }
 
     /**
@@ -88,8 +88,10 @@ public class Protocol implements IProtocol {
                 return TaskType.CONFIRM;
             case 4:
                 return TaskType.DISCONNECT;
+            case 5:
+                return TaskType.MSG;
             default:
-                return TaskType.MESSAGE;
+                return null;
         }
     }
 

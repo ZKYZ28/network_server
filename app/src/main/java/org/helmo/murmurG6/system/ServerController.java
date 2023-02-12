@@ -67,7 +67,7 @@ public class ServerController implements AutoCloseable {
         System.out.printf("[broadcastAll] Message envoyé : %s\n", message);
         for(ClientRunnable c : clientList) {
             if (c != me) {
-                c.sendMessage(message);
+                c.sendMessage("MSGS admin@192.168.0.19 "+message);
             }
         }
     }
