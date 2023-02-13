@@ -91,6 +91,18 @@ public class ServerController implements AutoCloseable {
         }
     }
 
+    /**
+     * Enregistre un utilisateur dans la liste d'inscription de User du server.
+     * @throws RegistrationImpossibleException
+     */
+    public void followUserOrTrend() throws RegistrationImpossibleException {
+        try{
+            repo.save(userCollection.getRegisteredUsers().values());
+        } catch (SaveUserCollectionException e) {
+            throw new RegistrationImpossibleException("Follow impossible!");
+        }
+    }
+
 
     /**
      * Retourne la liste des inscrit sur le server

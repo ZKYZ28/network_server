@@ -85,7 +85,7 @@ public class User {
      */
     public void followTrend(String trendId) {
         if (!this.followedTrends.contains(trendId)) {
-            this.followedUsers.add(trendId);
+            this.followedTrends.add(trendId);
         }
     }
 }

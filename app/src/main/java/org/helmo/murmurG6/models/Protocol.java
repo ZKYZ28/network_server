@@ -107,4 +107,11 @@ public class Protocol implements IProtocol {
         matcher.matches();
         return matcher;
     }
+
+    public static boolean isFollowUser(String msg){
+        if(msg.charAt(0) != '#'){
+            return true;
+        }
+        return false;
+    }
 }

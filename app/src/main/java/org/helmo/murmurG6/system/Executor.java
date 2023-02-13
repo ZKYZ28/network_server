@@ -1,9 +1,7 @@
 package org.helmo.murmurG6.system;
 
-import org.helmo.murmurG6.models.BCrypt;
-import org.helmo.murmurG6.models.Task;
-import org.helmo.murmurG6.models.User;
-import org.helmo.murmurG6.models.UserCollection;
+import org.helmo.murmurG6.models.*;
+
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 
@@ -83,14 +81,25 @@ public class Executor implements Runnable, AutoCloseable {
                 server.broadcastToAllClientsExceptMe(client, params.group(1));
                 break;
             case FOLLOW:
-                //Identifier l'utilisateur
-                user =  client.getUser();
-                String receveid = params.group(1);
-
+                follow(params.group(1), client.getUser());
             default:
                 client.sendMessage("-ERR");
         }
     }
+
+    private void follow(String msgFollow, User user)  {
+        try {
+            if(Protocol.isFollowUser(msgFollow)){
+                user.followUser(msgFollow);
+            }else{
+                user.followTrend(msgFollow);
+            }
+            server.followUserOrTrend();
+        } catch (RegistrationImpossibleException e) {
+
+        }
+    }
+
 
     /**
      * Retourne le message à envoyer au client lorsque celui veut se connecter
