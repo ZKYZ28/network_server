@@ -81,7 +81,7 @@ public class Executor implements Runnable, AutoCloseable {
                 server.broadcastToAllClientsExceptMe(client, params.group(1));
                 break;
             case FOLLOW:
-                follow(params.group(1), client.getUser());
+                follow(params, client.getUser());
             default:
                 client.sendMessage("-ERR");
         }
@@ -92,12 +92,12 @@ public class Executor implements Runnable, AutoCloseable {
      * @param msgFollow le message qui contient le follow
      * @param user L'User qui follow
      */
-    private void follow(String msgFollow, User user)  {
+    private void follow(Matcher params, User user)  {
         try {
-            if(Protocol.isFollowUser(msgFollow)){
-                user.followUser(msgFollow);
+            if(Protocol.isFollowUser(params.group(1))){
+                user.followUser(new FollowInformation(params.group(3), params.group(5), true));
             }else{
-                user.followTrend(msgFollow);
+                user.followTrend(new FollowInformation(params.group(8), params.group(9), false));
             }
             server.followUserOrTrend();
         } catch (RegistrationImpossibleException e) {
