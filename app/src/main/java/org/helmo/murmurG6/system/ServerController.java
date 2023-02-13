@@ -8,10 +8,8 @@ import org.helmo.murmurG6.repository.IUserCollectionRepository;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 import org.helmo.murmurG6.utils.UltraImportantClass;
 
-import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ServerSocketFactory;
+import javax.net.ssl.*;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -31,6 +29,7 @@ public class ServerController implements AutoCloseable {
     private final IUserCollectionRepository repo;
     private final UserCollection userCollection = new UserCollection();
     private Executor executor;
+    private final int port;
 
     /**
      * Le constructeur de la classe ServerController permet de créer un nouveau serveur en spécifiant un numéro de port et un storage d'utilisateurs.
@@ -39,9 +38,11 @@ public class ServerController implements AutoCloseable {
      * @param repo Le storage d'utilisateurs qui sera utilisé pour enregistrer et lire les informations d'utilisateur.
      * @throws IOException En cas d'échec de la création du socket serveur.
      */
-    public ServerController(int port, SSLServerSocketFactory ssf, IUserCollectionRepository repo) throws IOException {
+    public ServerController(int port, IUserCollectionRepository repo) throws IOException {
+        SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
         this.serverSocket = (SSLServerSocket) ssf.createServerSocket(port);
         this.repo = repo;
+        this.port = port;
         this.userCollection.setRegisteredUsers(repo.read()); //remplissage de tous les users inscrits dans la usercollection
         UltraImportantClass.welcome();
         System.out.println("****************************************************************");
@@ -60,8 +61,7 @@ public class ServerController implements AutoCloseable {
         new Thread(executor).start();
         while(true) {
             SSLSocket client = (SSLSocket) serverSocket.accept();
-            System.out.println("Quelqu'un s'est connecté!");
-            ClientRunnable runnable = new ClientRunnable(client, this);
+            ClientRunnable runnable = new ClientRunnable(client,this);
             clientList.add(runnable);
             new Thread(runnable).start();
         }
@@ -110,6 +110,14 @@ public class ServerController implements AutoCloseable {
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Recupere le port du server
+     * @return le port du sertver
+     */
+    public int getPort() {
+        return this.port;
     }
 
     /**
