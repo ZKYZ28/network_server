@@ -104,6 +104,8 @@ class ProtocolTest {
         assertEquals(TaskType.FOLLOW, connectTask.getType());
         assertEquals("FOLLOW lswinnen@server1.godswila.guru\r\n", connectTask.getMatcher().group(0));
         assertEquals("lswinnen@server1.godswila.guru", connectTask.getMatcher().group(1));
+        assertEquals("lswinnen", connectTask.getMatcher().group(3));
+        assertEquals("server1.godswila.guru", connectTask.getMatcher().group(5));
 
         //When
         msgClientToServer = "FOLLOW swila@server2.godswila.guru\r\n";
@@ -112,6 +114,9 @@ class ProtocolTest {
         assertEquals(TaskType.FOLLOW, connectTask.getType());
         assertEquals("FOLLOW swila@server2.godswila.guru\r\n", connectTask.getMatcher().group(0));
         assertEquals("swila@server2.godswila.guru", connectTask.getMatcher().group(1));
+        assertEquals("swila", connectTask.getMatcher().group(3));
+        assertEquals("server2.godswila.guru", connectTask.getMatcher().group(5));
+
 
         //When
         msgClientToServer = "FOLLOW #swila123@server2.godswila.guru\r\n";
@@ -120,6 +125,9 @@ class ProtocolTest {
         assertEquals(TaskType.FOLLOW, connectTask.getType());
         assertEquals("FOLLOW #swila123@server2.godswila.guru\r\n", connectTask.getMatcher().group(0));
         assertEquals("#swila123@server2.godswila.guru", connectTask.getMatcher().group(1));
+        assertEquals("#swila123", connectTask.getMatcher().group(8));
+        assertEquals("server2.godswila.guru", connectTask.getMatcher().group(9));
+
 
 
     }

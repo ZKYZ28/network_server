@@ -42,7 +42,7 @@ public class Protocol implements IProtocol {
     private static final String RX_SALT_SIZE = "([0-9]{2})";
     private static final String RX_BCRYPT_HASH = "(\\$2b\\$\\d{2}\\$(" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){1,70})";
     private static final String TAG = "#[a-zA-Z0-9]{5,20}";
-    private static final String TAG_DOMAIN = "(" + TAG + "@" + RX_DOMAIN + ")";
+    private static final String TAG_DOMAIN = "(" + "(" + TAG + ")" + "@" + RX_DOMAIN + ")";
 
     private static final String TAG_DOMAIN_OR_RX_USER_DOMAIN = "(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")";
 

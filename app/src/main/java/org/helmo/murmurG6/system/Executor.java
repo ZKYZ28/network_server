@@ -82,6 +82,11 @@ public class Executor implements Runnable, AutoCloseable {
             case MSG:
                 server.broadcastToAllClientsExceptMe(client, params.group(1));
                 break;
+            case FOLLOW:
+                //Identifier l'utilisateur
+                user =  client.getUser();
+                String receveid = params.group(1);
+
         }
     }
 
