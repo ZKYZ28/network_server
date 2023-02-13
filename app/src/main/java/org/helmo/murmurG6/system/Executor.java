@@ -87,6 +87,11 @@ public class Executor implements Runnable, AutoCloseable {
         }
     }
 
+    /**
+     * Méthode qui permet d'enregistrer un follow dans le user et d'appeller la méthode pour le stocker dans le Json
+     * @param msgFollow le message qui contient le follow
+     * @param user L'User qui follow
+     */
     private void follow(String msgFollow, User user)  {
         try {
             if(Protocol.isFollowUser(msgFollow)){

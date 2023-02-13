@@ -92,7 +92,7 @@ public class ServerController implements AutoCloseable {
     }
 
     /**
-     * Enregistre un utilisateur dans la liste d'inscription de User du server.
+     * Enregistre un follow qu'il soit sur un User ou sur un Trend
      * @throws RegistrationImpossibleException
      */
     public void followUserOrTrend() throws RegistrationImpossibleException {
