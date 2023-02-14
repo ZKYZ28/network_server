@@ -1,5 +1,6 @@
 package org.helmo.murmurG6.system;
 
+import org.helmo.murmurG6.models.FollowInformation;
 import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserCollection;
@@ -15,9 +16,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * La classe ServerController représente le contrôleur principal de l'application serveur.
@@ -75,6 +74,31 @@ public class ServerController implements AutoCloseable {
             }
         }
     }
+
+   /* private Set tellWhoRecevedMessage(ClientRunnable me){
+        Set needToSend = new HashSet<ClientRunnable>();
+        for(ClientRunnable c : clientList){
+            if( c!= me){
+                if(c.getUser().chekcIfFollowUser(me.getUser().getLogin())){
+                    needToSend.add(c);
+                }
+
+                for(FollowInformation follow : me.getUser().getFollowedTrends()){
+                    if(c.getUser().chekcIfFollowTrend(follow)){
+                        needToSend.add(c);
+                    }
+                }
+            }
+        }
+        return needToSend;
+    }
+
+    public void broadcastOther(ClientRunnable me, String message){
+        Set<ClientRunnable> needToSend = tellWhoRecevedMessage(me);
+        for(ClientRunnable c : needToSend){
+            c.sendMessage(c.getUser().getLogin() + " : " + message);
+        }
+    }*/
 
 
     /**

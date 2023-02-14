@@ -88,4 +88,13 @@ public class User {
             this.followedTrends.add(followTrend);
         }
     }
+
+
+    public boolean chekcIfFollowUser(String login){
+        return this.followedUsers.contains(new FollowInformation(login, "empty"));
+    }
+
+    public boolean chekcIfFollowTrend(FollowInformation trend){
+        return this.followedTrends.contains(trend);
+    }
 }

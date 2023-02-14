@@ -10,12 +10,9 @@ public class FollowInformation {
 
     private String serverDomain;
 
-    private boolean isUser;
-
-    public FollowInformation(String informationFollow, String serverDomain, boolean isUser) {
+    public FollowInformation(String informationFollow, String serverDomain) {
         this.informationFollow = informationFollow;
         this.serverDomain = serverDomain;
-        this.isUser = isUser;
     }
 
     public String getInformationFollow() {
@@ -26,9 +23,6 @@ public class FollowInformation {
         return serverDomain;
     }
 
-    public boolean isUser() {
-        return isUser;
-    }
 
     @Override
     public boolean equals(Object o) {

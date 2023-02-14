@@ -78,7 +78,7 @@ public class Executor implements Runnable, AutoCloseable {
                 break;
 
             case MSG:
-                server.broadcastToAllClientsExceptMe(client, params.group(1));
+                server.broadcastToAllClientsExceptMe(client, params.group(1)); // ICI CHANGER POUR METTRE QUE LES TARGETS
                 break;
             case FOLLOW:
                 follow(params, client.getUser());
@@ -89,15 +89,14 @@ public class Executor implements Runnable, AutoCloseable {
 
     /**
      * Méthode qui permet d'enregistrer un follow dans le user et d'appeller la méthode pour le stocker dans le Json
-     * @param msgFollow le message qui contient le follow
      * @param user L'User qui follow
      */
     private void follow(Matcher params, User user)  {
         try {
             if(Protocol.isFollowUser(params.group(1))){
-                user.followUser(new FollowInformation(params.group(3), params.group(5), true));
+                user.followUser(new FollowInformation(params.group(3), params.group(5)));
             }else{
-                user.followTrend(new FollowInformation(params.group(8), params.group(9), false));
+                user.followTrend(new FollowInformation(params.group(8), params.group(9)));
             }
             server.followUserOrTrend();
         } catch (RegistrationImpossibleException e) {
