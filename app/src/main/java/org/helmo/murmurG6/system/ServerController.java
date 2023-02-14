@@ -1,7 +1,6 @@
 package org.helmo.murmurG6.system;
 
 import org.helmo.murmurG6.models.FollowInformation;
-import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserCollection;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
@@ -9,12 +8,9 @@ import org.helmo.murmurG6.repository.IUserCollectionRepository;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 import org.helmo.murmurG6.utils.UltraImportantClass;
 
-import javax.net.ServerSocketFactory;
 import javax.net.ssl.*;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
 
@@ -70,21 +66,21 @@ public class ServerController implements AutoCloseable {
         System.out.printf("[broadcastAll] Message envoyé : %s\n", message);
         for(ClientRunnable c : clientList) {
             if (c != me) {
-                c.sendMessage("MSGS admin@192.168.0.19 "+message);
+                c.sendMessage("MSGS admin@192.168.0.19 " + message);
             }
         }
     }
 
-   /* private Set tellWhoRecevedMessage(ClientRunnable me){
-        Set needToSend = new HashSet<ClientRunnable>();
-        for(ClientRunnable c : clientList){
-            if( c!= me){
-                if(c.getUser().chekcIfFollowUser(me.getUser().getLogin())){
+    public Set<ClientRunnable> tellWhoRecevedMessage(ClientRunnable me) {
+        Set<ClientRunnable> needToSend = Collections.synchronizedSet(new HashSet<>());
+        for (ClientRunnable c : clientList) {
+            if (c != me) {
+                if (c.getUser().chekcIfFollowUser(me.getUser().getLogin())) {
                     needToSend.add(c);
                 }
 
-                for(FollowInformation follow : me.getUser().getFollowedTrends()){
-                    if(c.getUser().chekcIfFollowTrend(follow)){
+                for (FollowInformation follow : me.getUser().getFollowedTrends()) {
+                    if (c.getUser().chekcIfFollowTrend(follow)) {
                         needToSend.add(c);
                     }
                 }
@@ -93,12 +89,12 @@ public class ServerController implements AutoCloseable {
         return needToSend;
     }
 
-    public void broadcastOther(ClientRunnable me, String message){
+    public void broadcastOther(ClientRunnable me, String message) {
         Set<ClientRunnable> needToSend = tellWhoRecevedMessage(me);
-        for(ClientRunnable c : needToSend){
-            c.sendMessage(c.getUser().getLogin() + " : " + message);
+        for (ClientRunnable c : needToSend) {
+            c.sendMessage("MSGS " + c.getUser().getLogin() + " : " + message);
         }
-    }*/
+    }
 
 
     /**

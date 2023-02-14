@@ -78,12 +78,14 @@ public class Executor implements Runnable, AutoCloseable {
                 break;
 
             case MSG:
-                server.broadcastToAllClientsExceptMe(client, params.group(1)); // ICI CHANGER POUR METTRE QUE LES TARGETS
+                server.broadcastOther(client, params.group(1));
                 break;
             case FOLLOW:
                 follow(params, client.getUser());
+                break;
             default:
                 client.sendMessage("-ERR");
+                break;
         }
     }
 
@@ -100,7 +102,7 @@ public class Executor implements Runnable, AutoCloseable {
             }
             server.followUserOrTrend();
         } catch (RegistrationImpossibleException e) {
-
+            //TODO : renvoyer l'erreur
         }
     }
 
