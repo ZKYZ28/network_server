@@ -15,10 +15,8 @@ public class ClientRunnable implements Runnable {
     private final ServerController server;
     private User user;
     private Executor executor;
-
     private String random22 = "";
 
-    private final Protocol protocol = new Protocol();
 
     public ClientRunnable(Socket client, ServerController server) {
         this.server =  server;
@@ -35,12 +33,11 @@ public class ClientRunnable implements Runnable {
     public void run() {
         try {
             random22 = sayHello();                                      //Envoi du message Hello au client + récupération du random de 22 caractères aléatoires
-            String login ="";                                           //Le loggin du client
             String ligne = in.readLine();                               //Le server attend que le client ecrive quelque chose
             while(isConnected && ligne != null && !ligne.isEmpty()) {
                 System.out.printf("Ligne reçue : %s\r\n", ligne);
 
-                Task task = protocol.buildTask(ligne); //Création d'une tache sur base de la ligne recue
+                Task task = Protocol.buildTask(ligne); //Création d'une tache sur base de la ligne recue
                 task.setClient(this);      //Asignation du ClientRunnable à la tache (utile pour l'executor)
                 executor.addTask(task);     //Ajout de la tache dans la file de taches de l'executor
 

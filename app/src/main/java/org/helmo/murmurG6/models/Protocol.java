@@ -34,7 +34,7 @@ public class Protocol {
     private static final String RX_USERNAME = "((" + RX_LETTER_DIGIT + "){5,20})";
     private static final String RX_USER_DOMAIN = "(" + RX_USERNAME + "@" + RX_DOMAIN + ")";
     private static final String RX_MESSAGE = "((" + RX_VISIBLE_CHARACTER + "){1,250})";
-    private static final String RX_SHA3_EX = "((" + RX_LETTER_DIGIT+ "){30,200})";
+    private static final String RX_SHA3_EX = "((" + RX_LETTER_DIGIT + "){30,200})";
 
     /*PARTS*/
     private static final String RX_CRLF = "(\\x0d\\x0a){0,1}";
@@ -47,13 +47,14 @@ public class Protocol {
 
 
     /*FULL*/
-    private final static String CONNECT = "CONNECT" + RX_ESP + RX_USERNAME + RX_CRLF;
-    private final static String REGISTER = "REGISTER" + RX_ESP + RX_USERNAME + RX_ESP + RX_SALT_SIZE + RX_ESP + RX_BCRYPT_HASH + RX_CRLF;
-    private final static String FOLLOW = "FOLLOW" + RX_ESP + TAG_DOMAIN_OR_RX_USER_DOMAIN + RX_CRLF;
-    private final static String CONFIRM = "CONFIRM" + RX_ESP + RX_SHA3_EX + RX_CRLF;
-    private final static String DISCONNECT = "DISCONNECT" + RX_CRLF;
-    private final static String MSG = "MSG" + RX_ESP + RX_MESSAGE + RX_CRLF;
-    private static final Map<String, TaskType> TYPE_MESSAGE_MAP = Map.of(
+    private final static Pattern CONNECT = Pattern.compile("CONNECT" + RX_ESP + "(?<username>" + RX_USERNAME + ")" + RX_CRLF);
+    private final static Pattern REGISTER = Pattern.compile("REGISTER" + RX_ESP + "(?<username>" + RX_USERNAME + ")" + RX_ESP + RX_SALT_SIZE + RX_ESP + "(?<bcrypt>" + RX_BCRYPT_HASH + ")" + RX_CRLF);
+    private final static Pattern FOLLOW = Pattern.compile("FOLLOW" + RX_ESP + "(?<domain>" + TAG_DOMAIN_OR_RX_USER_DOMAIN + ")" + RX_CRLF);
+    private final static Pattern CONFIRM = Pattern.compile("CONFIRM" + RX_ESP + "(?<challenge>" + RX_SHA3_EX + ")" + RX_CRLF);
+    private final static Pattern DISCONNECT = Pattern.compile("DISCONNECT" + RX_CRLF);
+    private final static Pattern MSG = Pattern.compile("MSG" + RX_ESP + "(?<message>" + RX_MESSAGE + ")" + RX_CRLF);
+
+    private static final Map<Pattern, TaskType> TYPE_MESSAGE_MAP = Map.of(
             CONNECT, TaskType.CONNECT,
             REGISTER, TaskType.REGISTER,
             FOLLOW, TaskType.FOLLOW,
@@ -63,17 +64,12 @@ public class Protocol {
     );
 
     public static Task buildTask(String command) throws InvalidTaskException {
-        for (Map.Entry<String, TaskType> entry : TYPE_MESSAGE_MAP.entrySet()) {
-            if (Pattern.matches(entry.getKey(), command)) {
-                return new Task(entry.getValue(), createMatcher(command, entry.getKey()), command);
+        for (Map.Entry<Pattern, TaskType> entry : TYPE_MESSAGE_MAP.entrySet()) {
+            Matcher matcher = entry.getKey().matcher(command);
+            if (matcher.matches()) {
+                return new Task(entry.getValue(), matcher);
             }
         }
         throw new InvalidTaskException("Tache invalide!");
-    }
-
-
-    private static Matcher createMatcher(String command, String regex){
-        Pattern pattern = Pattern.compile(regex);
-        return pattern.matcher(command);
     }
 }

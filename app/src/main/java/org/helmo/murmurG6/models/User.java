@@ -1,14 +1,13 @@
 package org.helmo.murmurG6.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class User {
 
     private final String login; //Login de l'utilisateur.
     private final BCrypt bCrypt;
-    private List<String> followedUsers; //Liste des utilisateurs suivis par l'utilisateur.
-    private List<String> followedTrends; //Liste des tendances suivies par l'utilisateur.
+    private final List<String> followedUsers; //Liste des utilisateurs suivis par l'utilisateur.
+    private final List<String> followedTrends; //Liste des tendances suivies par l'utilisateur.
 
     public User(String login, BCrypt bCrypt, List<String> followedUsers, List<String> followedTrends) {
         this.login = login;
