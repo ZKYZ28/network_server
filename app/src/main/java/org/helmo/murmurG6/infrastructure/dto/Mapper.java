@@ -8,12 +8,10 @@ import java.util.List;
 public class Mapper {
 
     public static BCrypt bcryptDtoToBcrypt(BCryptDto dto) { return BCryptDto.fromDtoToBcrypt(dto);}
-
     public static BCryptDto bcryptToBcryptDto(BCrypt bcrypt) { return BCryptDto.fromBcryptToDto(bcrypt);}
-
     public static User userDtoToUser(UserDto dto) { return UserDto.fromUserDtoToUser(dto); }
-
     public static UserDto userToUserDto(User user) { return UserDto.fromUserToDto(user); }
+
 
     public static List<User> userListFromDto(Iterable<UserDto> dtos) {
         List<User> users = new ArrayList<>();
