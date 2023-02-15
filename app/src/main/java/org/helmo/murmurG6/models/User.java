@@ -10,11 +10,11 @@ public class User {
     private List<String> followedUsers; //Liste des utilisateurs suivis par l'utilisateur.
     private List<String> followedTrends; //Liste des tendances suivies par l'utilisateur.
 
-    public User(String login, BCrypt bCrypt) {
+    public User(String login, BCrypt bCrypt, List<String> followedUsers, List<String> followedTrends) {
         this.login = login;
         this.bCrypt = bCrypt;
-        this.followedUsers = new ArrayList<>();
-        this.followedTrends = new ArrayList<>();
+        this.followedUsers = followedUsers;
+        this.followedTrends = followedTrends;
     }
 
     public BCrypt getBcrypt() { return this.bCrypt; }
@@ -51,23 +51,6 @@ public class User {
         return followedTrends;
     }
 
-    /**
-     * Définit la liste des utilisateurs suivis.
-     *
-     * @param followedUsers Liste des utilisateurs suivis.
-     */
-    public void setFollowedUsers(List<String> followedUsers) {
-        this.followedUsers = followedUsers;
-    }
-
-    /**
-     * Définit la liste des tendances suivies.
-     *
-     * @param followedTrends Liste des tendances suivies.
-     */
-    public void setFollowedTrends(List<String> followedTrends) {
-        this.followedTrends = followedTrends;
-    }
 
     /**
      * Permet d'ajouter un utilisateur à sa liste d'abonnement

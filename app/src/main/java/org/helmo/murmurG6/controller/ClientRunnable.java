@@ -40,7 +40,7 @@ public class ClientRunnable implements Runnable {
             while(isConnected && ligne != null && !ligne.isEmpty()) {
                 System.out.printf("Ligne reçue : %s\r\n", ligne);
 
-                Task task = protocol.analyseMessage(ligne); //Création d'une tache sur base de la ligne recue
+                Task task = protocol.buildTask(ligne); //Création d'une tache sur base de la ligne recue
                 task.setClient(this);      //Asignation du ClientRunnable à la tache (utile pour l'executor)
                 executor.addTask(task);     //Ajout de la tache dans la file de taches de l'executor
 

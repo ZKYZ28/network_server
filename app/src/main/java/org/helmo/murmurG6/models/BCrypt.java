@@ -42,7 +42,7 @@ public class BCrypt {
 
 
     /**
-     * Décompose un hachage Bcrypt en ses composants.
+     * Construit un Bcrypt
      *
      * @param hashed le hachage Bcrypt à décomposer, qui doit avoir le format suivant : $2a$RR$SALT$HASH
      * où RR représente le nombre de tours de l'algorithme de hachage, SALT est la valeur de sel utilisée
@@ -51,7 +51,9 @@ public class BCrypt {
      * @return un objet BcryptHash contenant les informations décomposées : le nombre de tours (rounds), la valeur de sel (salt)
      * et le hachage (hash).
      */
-    public static BCrypt decomposeHash(String hashed) {
+    public static BCrypt of(String hashed) {
+        //TODO
+        //try catch regex
         int rounds = Integer.parseInt(hashed.substring(4, 6));
         String salt = hashed.substring(7, 29);
         String hash = hashed.substring(29);
@@ -66,7 +68,7 @@ public class BCrypt {
      * @param random La chaîne de caractères aléatoires reçue lors de la connexion avec le serveur.
      * @return Le hachage calculé sous forme hexadécimale.
      */
-    public String calculateChallenge(String random) {
+    public String generateChallenge(String random) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA3-256");
             byte[] unHashedChallengeBytes = (random + this.toString()).getBytes();

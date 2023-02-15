@@ -9,7 +9,4 @@ public interface TaskScheduler {
      * @param task
      */
     void addTask(Task task);
-
-
-
 }

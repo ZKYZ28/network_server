@@ -1,7 +1,7 @@
 package org.helmo.murmurG6.controller;
 
 import org.helmo.murmurG6.models.User;
-import org.helmo.murmurG6.models.UserCollection;
+import org.helmo.murmurG6.models.UserLibrary;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.IUserCollectionRepository;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
@@ -24,7 +24,7 @@ public class ServerController implements AutoCloseable {
     private final List<ClientRunnable> clientList = Collections.synchronizedList(new ArrayList<>());
     private final ServerSocket serverSocket;
     private final IUserCollectionRepository repo;
-    private final UserCollection userCollection = new UserCollection();
+    private final UserLibrary userLibrary = new UserLibrary();
     private Executor executor;
 
     /**
@@ -37,7 +37,7 @@ public class ServerController implements AutoCloseable {
     public ServerController(int port, IUserCollectionRepository repo) throws IOException {
         this.serverSocket = new ServerSocket(port);
         this.repo = repo;
-        this.userCollection.setRegisteredUsers(repo.read()); //remplissage de tous les users inscrits dans la usercollection
+        this.userLibrary.setRegisteredUsers(repo.read()); //remplissage de tous les users inscrits dans la usercollection
         UltraImportantClass.welcome();
         System.out.println("****************************************************************");
         System.out.println("********      SERVER ONLINE ! IP : " +getIp()+"        *********");
@@ -79,8 +79,8 @@ public class ServerController implements AutoCloseable {
      */
     public void registerUser(User user) throws RegistrationImpossibleException {
         try{
-            userCollection.registerUser(user);
-            repo.save(userCollection.getRegisteredUsers().values()); //On sauvegarde le contenu de la userCollection à la fermeture du server
+            userLibrary.registerUser(user);
+            repo.save(userLibrary.getRegisteredUsers().values()); //On sauvegarde le contenu de la userCollection à la fermeture du server
         } catch (UserAlreadyRegisteredException | SaveUserCollectionException e) {
             throw new RegistrationImpossibleException("Inscription impossible!");
         }
@@ -91,8 +91,8 @@ public class ServerController implements AutoCloseable {
      * Retourne la liste des inscrit sur le server
      * @return un objet UserCollection
      */
-    public UserCollection getUserCollection() {
-        return userCollection;
+    public UserLibrary getUserCollection() {
+        return userLibrary;
     }
 
     /**

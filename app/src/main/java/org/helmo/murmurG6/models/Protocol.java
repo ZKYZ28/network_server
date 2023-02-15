@@ -1,11 +1,9 @@
 package org.helmo.murmurG6.models;
 
-import org.helmo.murmurG6.repository.IProtocol;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Protocol implements IProtocol {
+public class Protocol {
 
     /*
      * ACSII Characters
@@ -54,21 +52,24 @@ public class Protocol implements IProtocol {
     private final static String CONFIRM = "CONFIRM" + RX_ESP + RX_SHA3_EX + RX_CRLF;
     private final static String DISCONNECT = "DISCONNECT" + RX_CRLF;
     private final static String MSG = "MSG" + RX_ESP + RX_MESSAGE;
-    private final String[] TYPE_MESSAGE = {CONNECT, REGISTER, FOLLOW, CONFIRM, DISCONNECT, MSG};
+    private static final String[] TYPE_MESSAGE = {CONNECT, REGISTER, FOLLOW, CONFIRM, DISCONNECT, MSG};
 
     /**
      * Méthode qui permet de créer une Objet Message sur base d'une string
-     * @param msg String qui est le message reçu depuis le Client
+     * @param command String qui est le message reçu depuis le Client
      * @return Message(typeMessage, matcher, msg)
      */
-    @Override
-    public Task analyseMessage(String msg){
-        for (int i = 0; i < TYPE_MESSAGE.length; i++) {
-            if(Pattern.matches(TYPE_MESSAGE[i], msg)){
-                return new Task(identifyTypeMessage(i), createMatcher(msg, i), msg);
+    public static Task buildTask(String command){
+        //TODO
+        try {
+            for (int i = 0; i < TYPE_MESSAGE.length; i++) {
+                if (Pattern.matches(TYPE_MESSAGE[i], command)) {
+                    return new Task(identifyMessageType(i), createMatcher(command, i), command);
+                }else{
+
+                }
             }
-        }
-        return null;
+        }catch ()
     }
 
     /**
@@ -76,7 +77,7 @@ public class Protocol implements IProtocol {
      * @param i i qui est l'index dans le tableau des différents types de message
      * @return MessageType qui est le type de message
      */
-    private TaskType identifyTypeMessage(int i){
+    private static TaskType identifyMessageType(int i){
         switch (i){
             case 0:
                 return TaskType.CONNECT;
@@ -101,7 +102,7 @@ public class Protocol implements IProtocol {
      * @param i int qui est l'index dans le tableau des différents types de message
      * @return Matcher qui comporte les différentes parties d'un message
      */
-    private Matcher createMatcher(String msg, int i){
+    private static Matcher createMatcher(String msg, int i){
         Pattern pattern = Pattern.compile(TYPE_MESSAGE[i]);
         Matcher matcher = pattern.matcher(msg);
         matcher.matches();

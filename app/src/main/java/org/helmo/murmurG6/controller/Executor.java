@@ -3,7 +3,7 @@ package org.helmo.murmurG6.controller;
 import org.helmo.murmurG6.models.BCrypt;
 import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.User;
-import org.helmo.murmurG6.models.UserCollection;
+import org.helmo.murmurG6.models.UserLibrary;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 
@@ -12,7 +12,7 @@ public class Executor implements Runnable, AutoCloseable {
     private final ExecutorService executorService; //ExecutorService avec un seul thread pour exécuter les tâches de la file d'attente.
     private final BlockingQueue<Task> taskQueue; //File d'attente BlockingQueue appelée taskQueue pour stocker les tâches à exécuter.
     private final ServerController server;
-    private final UserCollection collection;
+    private final UserLibrary collection;
 
     public Executor (ServerController server) {
         this.taskQueue = new LinkedBlockingQueue<>();
@@ -61,7 +61,7 @@ public class Executor implements Runnable, AutoCloseable {
 
         switch (task.getType()) {
             case REGISTER:
-                user = new User(params.group(1), BCrypt.decomposeHash(params.group(4)));
+                user = new User(params.group(1), BCrypt.of(params.group(4)));
                 client.sendMessage(register(user, client));
                 break;
 
@@ -75,7 +75,7 @@ public class Executor implements Runnable, AutoCloseable {
             case CONFIRM:
                 user = client.getUser();
                 String received = params.group(1);
-                String expected = user.getBcrypt().calculateChallenge(client.getRandom22());
+                String expected = user.getBcrypt().generateChallenge(client.getRandom22());
                 client.sendMessage(confirm(received, expected));
                 break;
 

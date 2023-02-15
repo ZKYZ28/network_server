@@ -11,7 +11,7 @@ import java.util.*;
  * @version 1.0
  * @since 11 février 2023
  */
-public class UserCollection {
+public class UserLibrary implements Map {
 
     private Map<String, User> registeredUsers; //L'ensemble des utilisateur inscrit (KEY: loggin -- VALUE: objet User)
 
