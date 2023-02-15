@@ -1,5 +1,6 @@
 package org.helmo.murmurG6.models;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,57 +52,28 @@ public class Protocol {
     private final static String FOLLOW = "FOLLOW" + RX_ESP + TAG_DOMAIN_OR_RX_USER_DOMAIN + RX_CRLF;
     private final static String CONFIRM = "CONFIRM" + RX_ESP + RX_SHA3_EX + RX_CRLF;
     private final static String DISCONNECT = "DISCONNECT" + RX_CRLF;
-    private final static String MSG = "MSG" + RX_ESP + RX_MESSAGE;
-    private static final String[] TYPE_MESSAGE = {CONNECT, REGISTER, FOLLOW, CONFIRM, DISCONNECT, MSG};
+    private final static String MSG = "MSG" + RX_ESP + RX_MESSAGE + RX_CRLF;
+    private static final Map<String, TaskType> TYPE_MESSAGE_MAP = Map.of(
+            CONNECT, TaskType.CONNECT,
+            REGISTER, TaskType.REGISTER,
+            FOLLOW, TaskType.FOLLOW,
+            CONFIRM, TaskType.CONFIRM,
+            DISCONNECT, TaskType.DISCONNECT,
+            MSG, TaskType.MSG
+    );
 
-    /**
-     * Méthode qui permet de créer une Objet Message sur base d'une string
-     * @param command String qui est le message reçu depuis le Client
-     * @return Message(typeMessage, matcher, msg)
-     */
     public static Task buildTask(String command) throws InvalidTaskException {
-        for (int i = 0; i < TYPE_MESSAGE.length; i++) {
-            if (Pattern.matches(TYPE_MESSAGE[i], command)) {
-                return new Task(identifyMessageType(i), createMatcher(command, i), command);
+        for (Map.Entry<String, TaskType> entry : TYPE_MESSAGE_MAP.entrySet()) {
+            if (Pattern.matches(entry.getKey(), command)) {
+                return new Task(entry.getValue(), createMatcher(command, entry.getKey()), command);
             }
         }
         throw new InvalidTaskException("Tache invalide!");
     }
 
-    /**
-     * Méthode qui permet d'identifier le type d'un message
-     * @param i i qui est l'index dans le tableau des différents types de message
-     * @return MessageType qui est le type de message
-     */
-    private static TaskType identifyMessageType(int i){
-        switch (i){
-            case 0:
-                return TaskType.CONNECT;
-            case 1:
-                return TaskType.REGISTER;
-            case 2:
-                return TaskType.FOLLOW;
-            case 3:
-                return TaskType.CONFIRM;
-            case 4:
-                return TaskType.DISCONNECT;
-            case 5:
-                return TaskType.MSG;
-            default:
-                return null;
-        }
-    }
 
-    /**
-     * Méthode qui permet de créer un Matcher qui reprend les différentes parties d'un message
-     * @param msg String qui est le message reçu depuis le client
-     * @param i int qui est l'index dans le tableau des différents types de message
-     * @return Matcher qui comporte les différentes parties d'un message
-     */
-    private static Matcher createMatcher(String msg, int i){
-        Pattern pattern = Pattern.compile(TYPE_MESSAGE[i]);
-        Matcher matcher = pattern.matcher(msg);
-        matcher.matches();
-        return matcher;
+    private static Matcher createMatcher(String command, String regex){
+        Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(command);
     }
 }
