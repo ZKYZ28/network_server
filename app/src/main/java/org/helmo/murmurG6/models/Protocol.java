@@ -47,20 +47,20 @@ public class Protocol {
 
 
     /*FULL*/
-    private final static Pattern CONNECT = Pattern.compile("CONNECT" + RX_ESP + "(?<username>" + RX_USERNAME + ")" + RX_CRLF);
-    private final static Pattern REGISTER = Pattern.compile("REGISTER" + RX_ESP + "(?<username>" + RX_USERNAME + ")" + RX_ESP + RX_SALT_SIZE + RX_ESP + "(?<bcrypt>" + RX_BCRYPT_HASH + ")" + RX_CRLF);
-    private final static Pattern FOLLOW = Pattern.compile("FOLLOW" + RX_ESP + "(?<domain>" + TAG_DOMAIN_OR_RX_USER_DOMAIN + ")" + RX_CRLF);
-    private final static Pattern CONFIRM = Pattern.compile("CONFIRM" + RX_ESP + "(?<challenge>" + RX_SHA3_EX + ")" + RX_CRLF);
-    private final static Pattern DISCONNECT = Pattern.compile("DISCONNECT" + RX_CRLF);
-    private final static Pattern MSG = Pattern.compile("MSG" + RX_ESP + "(?<message>" + RX_MESSAGE + ")" + RX_CRLF);
+    private final static Pattern RX_CONNECT_TASK = Pattern.compile("CONNECT" + RX_ESP + "(?<username>" + RX_USERNAME + ")" + RX_CRLF);
+    private final static Pattern RX_REGISTER_TASK = Pattern.compile("REGISTER" + RX_ESP + "(?<username>" + RX_USERNAME + ")" + RX_ESP + RX_SALT_SIZE + RX_ESP + "(?<bcrypt>" + RX_BCRYPT_HASH + ")" + RX_CRLF);
+    private final static Pattern RX_FOLLOW_TASK = Pattern.compile("FOLLOW" + RX_ESP + "(?<domain>" + TAG_DOMAIN_OR_RX_USER_DOMAIN + ")" + RX_CRLF);
+    private final static Pattern RX_CONFIRM_TASK = Pattern.compile("CONFIRM" + RX_ESP + "(?<challenge>" + RX_SHA3_EX + ")" + RX_CRLF);
+    private final static Pattern RX_DISCONNECT_TASK = Pattern.compile("DISCONNECT" + RX_CRLF);
+    private final static Pattern RX_MSG_TASK = Pattern.compile("MSG" + RX_ESP + "(?<message>" + RX_MESSAGE + ")" + RX_CRLF);
 
     private static final Map<Pattern, TaskType> TYPE_MESSAGE_MAP = Map.of(
-            CONNECT, TaskType.CONNECT,
-            REGISTER, TaskType.REGISTER,
-            FOLLOW, TaskType.FOLLOW,
-            CONFIRM, TaskType.CONFIRM,
-            DISCONNECT, TaskType.DISCONNECT,
-            MSG, TaskType.MSG
+            RX_CONNECT_TASK, TaskType.CONNECT,
+            RX_REGISTER_TASK, TaskType.REGISTER,
+            RX_FOLLOW_TASK, TaskType.FOLLOW,
+            RX_CONFIRM_TASK, TaskType.CONFIRM,
+            RX_DISCONNECT_TASK, TaskType.DISCONNECT,
+            RX_MSG_TASK, TaskType.MSG
     );
 
     public static Task buildTask(String command) throws InvalidTaskException {
