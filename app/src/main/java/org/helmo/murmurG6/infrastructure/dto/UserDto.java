@@ -1,7 +1,6 @@
 package org.helmo.murmurG6.infrastructure.dto;
 
 import org.helmo.murmurG6.models.User;
-
 import java.util.List;
 
 /**
@@ -20,8 +19,7 @@ public class UserDto {
     public List<String> followedTrends; //liste des hashtags
 
     public static User fromUserDtoToUser(UserDto dto) {
-        User user =  new User(dto.login, Mapper.bcryptDtoToBcrypt(dto.bcryptDto), dto.followedUsers, dto.followedTrends);
-        return user;
+        return new User(dto.login, Mapper.bcryptDtoToBcrypt(dto.bcryptDto), dto.followedUsers, dto.followedTrends);
     }
 
     public static UserDto fromUserToDto(User user) {

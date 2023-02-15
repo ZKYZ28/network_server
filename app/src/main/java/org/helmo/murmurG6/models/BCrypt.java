@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
  * calculer le hachage d'une chaîne de caractères aléatoire et du hachage BCrypt,
  * et convertir un tableau d'octets en une chaîne de caractères hexadécimale.</p>
  *
- * @since 11 février 2023
  * @version 1.0
+ * @since 11 février 2023
  */
 public class BCrypt {
 
@@ -57,7 +57,6 @@ public class BCrypt {
     }
 
 
-
     /**
      * Cette méthode permet de convertir un tableau d'octets en une chaîne de caractères hexadécimale.
      *
@@ -86,6 +85,6 @@ public class BCrypt {
 
     @Override
     public String toString() {
-        return "$2b$"+ this.rounds + "$" + this.salt + this.hash;
+        return "$2b$" + this.rounds + "$" + this.salt + this.hash;
     }
 }

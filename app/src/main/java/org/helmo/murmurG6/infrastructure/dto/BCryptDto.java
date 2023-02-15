@@ -11,20 +11,19 @@ import org.helmo.murmurG6.models.BCrypt;
  */
 public class BCryptDto {
 
-    public  int rounds; //Nombre de tours pour le hachage Bcrypt
+    public int rounds; //Nombre de tours pour le hachage Bcrypt
     public String salt; //La sel associé au hachage Bcrypt
     public String hash; //Le hachage Bcrypt
 
-    public static BCrypt fromDtoToBcrypt(BCryptDto dto){
+    public static BCrypt fromDtoToBcrypt(BCryptDto dto) {
         return new BCrypt(dto.rounds, dto.salt, dto.hash);
     }
 
-    public static BCryptDto fromBcryptToDto(BCrypt bcrypt){
+    public static BCryptDto fromBcryptToDto(BCrypt bcrypt) {
         BCryptDto bc = new BCryptDto();
         bc.salt = bcrypt.getSalt();
         bc.rounds = bcrypt.getRounds();
         bc.hash = bcrypt.getHash();
         return bc;
     }
-
 }

@@ -16,7 +16,9 @@ public class User {
         this.followedTrends = followedTrends;
     }
 
-    public BCrypt getBcrypt() { return this.bCrypt; }
+    public BCrypt getBcrypt() {
+        return this.bCrypt;
+    }
 
     public String getLogin() {
         return this.login;
@@ -36,6 +38,7 @@ public class User {
 
     /**
      * Retourne la liste des utilisateurs suivis par l'utilisateur.
+     *
      * @return liste des utilisateurs suivis par l'utilisateur.
      */
     public List<String> getFollowedUsers() {
@@ -44,6 +47,7 @@ public class User {
 
     /**
      * Retourne la liste des trends suivies par l'utilisateur.
+     *
      * @return liste des trends suivies par l'utilisateur.
      */
     public List<String> getFollowedTrends() {
@@ -53,6 +57,7 @@ public class User {
 
     /**
      * Permet d'ajouter un utilisateur à sa liste d'abonnement
+     *
      * @param userId L'id de l'utilisateur i.e : swila@server1.godswila.guru
      */
     public void followUser(String userId) {
@@ -63,6 +68,7 @@ public class User {
 
     /**
      * Permet d'ajouter une tendance à sa liste d'abonnement
+     *
      * @param trendId L'id de l'utilisateur i.e : #tendance1234@server1.godswila.guru
      */
     public void followTrend(String trendId) {

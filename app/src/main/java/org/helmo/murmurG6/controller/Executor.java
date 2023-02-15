@@ -3,13 +3,10 @@ package org.helmo.murmurG6.controller;
 import org.helmo.murmurG6.models.BCrypt;
 import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.User;
-import org.helmo.murmurG6.models.UserLibrary;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 import org.helmo.murmurG6.utils.RandomSaltGenerator;
-
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 
@@ -20,27 +17,25 @@ public class Executor implements TaskScheduler {
     private final BlockingQueue<Task> taskQueue; //File d'attente BlockingQueue appelée taskQueue pour stocker les tâches à exécuter.
     private ServerController server;
 
-    private Executor () {
+    private Executor() {
         this.taskQueue = new LinkedBlockingQueue<>();
         this.executorService = Executors.newSingleThreadExecutor();
     }
 
-    public static Executor getInstance(){
+    public static Executor getInstance() {
         if (instance == null) {
             instance = new Executor();
         }
         return instance;
     }
 
-    public void setServer(ServerController server){
+    public void setServer(ServerController server) {
         this.server = server;
     }
-
 
     public void addTask(Task task) {
         taskQueue.add(task);
     }
-
 
     @Override
     public void run() {
@@ -99,11 +94,11 @@ public class Executor implements TaskScheduler {
     }
 
 
-    private String confirm(String clientChallenge, String userChallenge){
+    private String confirm(String clientChallenge, String userChallenge) {
         return clientChallenge.equals(userChallenge) ? "+OK" : "-ERR";
     }
 
-    private String register(User user, ClientRunnable client)  {
+    private String register(User user, ClientRunnable client) {
         try {
             server.registerUser(user);
             client.setUser(user);
@@ -113,13 +108,11 @@ public class Executor implements TaskScheduler {
         }
     }
 
-
     public String sayHello(ClientRunnable client) {
         String random22 = RandomSaltGenerator.generateSalt();
         client.sendMessage("HELLO " + server.getIp() + " " + random22);
         return random22;
     }
-
 
     @Override
     public void close() {
