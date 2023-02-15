@@ -4,6 +4,11 @@ import org.helmo.murmurG6.models.BCrypt;
 import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserLibrary;
+import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
+import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 
@@ -61,12 +66,12 @@ public class Executor implements Runnable, AutoCloseable {
 
         switch (task.getType()) {
             case REGISTER:
-                user = new User(params.group(1), BCrypt.of(params.group(4)));
+                user = new User(params.group(1), BCrypt.of(params.group(4)), new ArrayList<String>(), new ArrayList<String>());
                 client.sendMessage(register(user, client));
                 break;
 
             case CONNECT:
-                user = collection.getUserFromLogin(params.group(1));
+                user = collection.get(params.group(1));
                 client.setUser(user);
                 String login = params.group(1);
                 client.sendMessage(connect(login));
@@ -91,8 +96,8 @@ public class Executor implements Runnable, AutoCloseable {
      * @return le message PARAM oubien -ERR
      */
     private String connect(String login) {
-        if (collection.isRegistered(login)) {
-            User user = collection.getUserFromLogin(login);
+        if (collection.containsKey(login)) {
+            User user = collection.get(login);
             return "PARAM " + user.getBcryptRound() + " " + user.getBcryptSalt();
         } else {
             return "-ERR";
@@ -115,7 +120,7 @@ public class Executor implements Runnable, AutoCloseable {
             server.registerUser(user);
             client.setUser(user);
             return "+OK";
-        } catch (RegistrationImpossibleException e) {
+        } catch (SaveUserCollectionException | UserAlreadyRegisteredException e) {
             return "-ERR";
         }
     }

@@ -3,7 +3,7 @@ package org.helmo.murmurG6.controller;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserLibrary;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
-import org.helmo.murmurG6.repository.IUserCollectionRepository;
+import org.helmo.murmurG6.repository.UserRepository;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 import org.helmo.murmurG6.utils.UltraImportantClass;
 
@@ -23,8 +23,8 @@ import java.util.List;
 public class ServerController implements AutoCloseable {
     private final List<ClientRunnable> clientList = Collections.synchronizedList(new ArrayList<>());
     private final ServerSocket serverSocket;
-    private final IUserCollectionRepository repo;
-    private final UserLibrary userLibrary = new UserLibrary();
+    private final UserRepository repo;
+    private final UserLibrary userLibrary;
     private Executor executor;
 
     /**
@@ -34,10 +34,11 @@ public class ServerController implements AutoCloseable {
      * @param repo Le storage d'utilisateurs qui sera utilisé pour enregistrer et lire les informations d'utilisateur.
      * @throws IOException En cas d'échec de la création du socket serveur.
      */
-    public ServerController(int port, IUserCollectionRepository repo) throws IOException {
+    public ServerController(int port, UserRepository repo) throws IOException {
         this.serverSocket = new ServerSocket(port);
         this.repo = repo;
-        this.userLibrary.setRegisteredUsers(repo.read()); //remplissage de tous les users inscrits dans la usercollection
+        this.userLibrary = repo.load(); //remplissage de tous les users inscrits dans la usercollection
+
         UltraImportantClass.welcome();
         System.out.println("****************************************************************");
         System.out.println("********      SERVER ONLINE ! IP : " +getIp()+"        *********");
@@ -74,16 +75,13 @@ public class ServerController implements AutoCloseable {
 
     /**
      * Enregistre un utilisateur dans la liste d'inscription de User du server.
-     * @param user L'utilisateur à inscrire sur le server
-     * @throws RegistrationImpossibleException
+     * @param user
+     * @throws UserAlreadyRegisteredException
+     * @throws SaveUserCollectionException
      */
-    public void registerUser(User user) throws RegistrationImpossibleException {
-        try{
-            userLibrary.registerUser(user);
-            repo.save(userLibrary.getRegisteredUsers().values()); //On sauvegarde le contenu de la userCollection à la fermeture du server
-        } catch (UserAlreadyRegisteredException | SaveUserCollectionException e) {
-            throw new RegistrationImpossibleException("Inscription impossible!");
-        }
+    public void registerUser(User user) throws UserAlreadyRegisteredException, SaveUserCollectionException {
+        userLibrary.register(user);
+        repo.save(userLibrary); //On sauvegarde le contenu de la userCollection à la fermeture du server
     }
 
 

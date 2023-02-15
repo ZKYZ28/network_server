@@ -59,17 +59,13 @@ public class Protocol {
      * @param command String qui est le message reçu depuis le Client
      * @return Message(typeMessage, matcher, msg)
      */
-    public static Task buildTask(String command){
-        //TODO
-        try {
-            for (int i = 0; i < TYPE_MESSAGE.length; i++) {
-                if (Pattern.matches(TYPE_MESSAGE[i], command)) {
-                    return new Task(identifyMessageType(i), createMatcher(command, i), command);
-                }else{
-
-                }
+    public static Task buildTask(String command) throws InvalidTaskException {
+        for (int i = 0; i < TYPE_MESSAGE.length; i++) {
+            if (Pattern.matches(TYPE_MESSAGE[i], command)) {
+                return new Task(identifyMessageType(i), createMatcher(command, i), command);
             }
-        }catch ()
+        }
+        throw new InvalidTaskException("Tache invalide!");
     }
 
     /**
