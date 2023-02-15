@@ -1,7 +1,6 @@
 package org.helmo.murmurG6.models;
 
 import org.helmo.murmurG6.controller.ClientRunnable;
-
 import java.util.regex.Matcher;
 
 public class Task {
@@ -14,12 +13,10 @@ public class Task {
     private ClientRunnable client;
     private final TaskType type;
     private final Matcher matcher;
-    //private final String info;
 
-    public Task(TaskType type, Matcher matcher/*, String info*/){
+    public Task(TaskType type, Matcher matcher){
         this.type = type;
         this.matcher = matcher;
-        //this.info = info;
     }
 
     public void setClient(ClientRunnable client){
@@ -31,12 +28,8 @@ public class Task {
     public TaskType getType() {
         return type;
     }
-
     public Matcher getMatcher() {
         return matcher;
     }
 
-    /*public String getInfo() {
-        return info;
-    }*/
 }
