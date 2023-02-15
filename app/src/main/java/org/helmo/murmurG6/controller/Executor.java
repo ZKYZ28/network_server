@@ -66,26 +66,25 @@ public class Executor implements Runnable, AutoCloseable {
 
         switch (task.getType()) {
             case REGISTER:
-                user = new User(params.group(1), BCrypt.of(params.group(4)), new ArrayList<String>(), new ArrayList<String>());
+                user = new User(params.group("username"), BCrypt.of(params.group("bcrypt")), new ArrayList<>(), new ArrayList<>());
                 client.sendMessage(register(user, client));
                 break;
 
             case CONNECT:
-                user = collection.get(params.group(1));
+                user = collection.get(params.group("username"));
                 client.setUser(user);
-                String login = params.group(1);
-                client.sendMessage(connect(login));
+                client.sendMessage(connect(user.getLogin()));
                 break;
 
             case CONFIRM:
                 user = client.getUser();
-                String received = params.group(1);
+                String received = params.group("challenge");
                 String expected = user.getBcrypt().generateChallenge(client.getRandom22());
                 client.sendMessage(confirm(received, expected));
                 break;
 
             case MSG:
-                server.broadcastToAllClientsExceptMe(client, params.group(1));
+                server.broadcastToAllClientsExceptMe(client, params.group("message"));
                 break;
         }
     }

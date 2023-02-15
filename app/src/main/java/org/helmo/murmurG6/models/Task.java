@@ -14,12 +14,12 @@ public class Task {
     private ClientRunnable client;
     private final TaskType type;
     private final Matcher matcher;
-    private final String info;
+    //private final String info;
 
-    public Task(TaskType type, Matcher matcher, String info){
+    public Task(TaskType type, Matcher matcher/*, String info*/){
         this.type = type;
         this.matcher = matcher;
-        this.info = info;
+        //this.info = info;
     }
 
     public void setClient(ClientRunnable client){
@@ -36,7 +36,7 @@ public class Task {
         return matcher;
     }
 
-    public String getInfo() {
+    /*public String getInfo() {
         return info;
-    }
+    }*/
 }
