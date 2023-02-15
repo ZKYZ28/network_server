@@ -1,6 +1,7 @@
 package org.helmo.murmurG6.controller;
 
 import org.helmo.murmurG6.models.BCrypt;
+import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
@@ -9,6 +10,7 @@ import org.helmo.murmurG6.utils.RandomSaltGenerator;
 import java.util.ArrayList;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Executor implements TaskScheduler {
 
@@ -81,6 +83,17 @@ public class Executor implements TaskScheduler {
             case MSG:
                 server.broadcastToAllClientsExceptMe(client, params.group("message"));
                 break;
+
+            case FOLLOW:
+                try {
+                    follow(client.getUser(), params.group("domain"));
+                    server.saveUsers();
+                } catch (SaveUserCollectionException e) {
+                    client.sendMessage("-ERR");
+                }
+                break;
+            default:
+                client.sendMessage("-ERR");
         }
     }
 
@@ -93,15 +106,15 @@ public class Executor implements TaskScheduler {
         }
     }
 
-
     private String confirm(String clientChallenge, String userChallenge) {
         return clientChallenge.equals(userChallenge) ? "+OK" : "-ERR";
     }
 
     private String register(User user, ClientRunnable client) {
         try {
-            server.registerUser(user);
+            server.getUserCollection().register(user);
             client.setUser(user);
+            server.saveUsers();
             return "+OK";
         } catch (SaveUserCollectionException | UserAlreadyRegisteredException e) {
             return "-ERR";
@@ -112,6 +125,15 @@ public class Executor implements TaskScheduler {
         String random22 = RandomSaltGenerator.generateSalt();
         client.sendMessage("HELLO " + server.getIp() + " " + random22);
         return random22;
+    }
+
+
+    private void follow(User user, String toFollow)  {
+        if(Pattern.matches(Protocol.RX_USER_DOMAIN, toFollow)){
+            user.followUser(toFollow);
+        } else {
+            user.followTrend(toFollow);
+        }
     }
 
     @Override

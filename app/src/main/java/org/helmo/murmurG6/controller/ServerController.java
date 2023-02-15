@@ -65,9 +65,8 @@ public class ServerController implements AutoCloseable {
         }
     }
 
-    public void registerUser(User user) throws UserAlreadyRegisteredException, SaveUserCollectionException {
-        userLibrary.register(user);
-        storage.save(userLibrary); //On sauvegarde le contenu de la userCollection à la fermeture du server
+    public void saveUsers() throws SaveUserCollectionException {
+        storage.save(this.userLibrary);
     }
 
     public UserLibrary getUserCollection() {
