@@ -3,8 +3,9 @@ package org.helmo.murmurG6.controller;
 import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.models.User;
+
+import javax.net.ssl.SSLSocket;
 import java.io.*;
-import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class ClientRunnable implements Runnable {
@@ -14,7 +15,7 @@ public class ClientRunnable implements Runnable {
     private String random22;
 
 
-    public ClientRunnable(Socket client) {
+    public ClientRunnable(SSLSocket client) {
         try {
             in = new BufferedReader(new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8));
             out = new PrintWriter(new OutputStreamWriter(client.getOutputStream(), StandardCharsets.UTF_8), true);

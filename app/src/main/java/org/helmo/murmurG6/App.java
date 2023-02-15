@@ -6,6 +6,11 @@ import java.io.IOException;
 
 public class App {
 
+    static {
+        System.setProperty("javax.net.ssl.keyStore", "app/src/main/resources/star.godswila.guru.p12");
+        System.setProperty("javax.net.ssl.keyStorePassword", "labo2023");
+    }
+
     private static final int DEFAULT_PORT = 12345;
     private static final UserJsonStorage USER_JSON_STORAGE = new UserJsonStorage();
 

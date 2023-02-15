@@ -6,6 +6,11 @@ import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.UserRepository;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 import org.helmo.murmurG6.utils.UltraImportantClass;
+
+import javax.net.ServerSocketFactory;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -19,7 +24,7 @@ import java.util.*;
  */
 public class ServerController implements AutoCloseable {
     private final Set<ClientRunnable> clientList = Collections.synchronizedSet(new HashSet<>());
-    private final ServerSocket serverSocket;
+    private final SSLServerSocket serverSocket;
     private final UserRepository storage;
     private final UserLibrary userLibrary;
 
@@ -31,7 +36,9 @@ public class ServerController implements AutoCloseable {
      * @throws IOException En cas d'échec de la création du socket serveur.
      */
     public ServerController(int port, UserRepository repo) throws IOException {
-        this.serverSocket = new ServerSocket(port);
+        SSLServerSocketFactory sslServerSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+        this.serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(port);
+        //this.serverSocket = new ServerSocket(port);
         this.storage = repo;
         this.userLibrary = repo.load(); //remplissage de tous les users inscrits dans la usercollection
 
@@ -48,7 +55,8 @@ public class ServerController implements AutoCloseable {
         new Thread(executor).start();
 
         while (!this.serverSocket.isClosed()) {
-            Socket client = serverSocket.accept();
+            SSLSocket client = (SSLSocket) serverSocket.accept();
+            //Socket client = serverSocket.accept();
             System.out.println("Quelqu'un s'est connecté!");
             ClientRunnable runnable = new ClientRunnable(client);
             clientList.add(runnable);

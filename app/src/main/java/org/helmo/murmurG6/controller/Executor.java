@@ -92,6 +92,7 @@ public class Executor implements TaskScheduler {
                     client.sendMessage("-ERR");
                 }
                 break;
+
             default:
                 client.sendMessage("-ERR");
         }
@@ -129,10 +130,10 @@ public class Executor implements TaskScheduler {
 
 
     private void follow(User user, String toFollow)  {
-        if(Pattern.matches(Protocol.RX_USER_DOMAIN, toFollow)){
-            user.followUser(toFollow);
-        } else {
+        if(toFollow.charAt(0) == '#'){
             user.followTrend(toFollow);
+        } else {
+            user.followUser(toFollow);
         }
     }
 
