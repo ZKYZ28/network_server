@@ -6,24 +6,34 @@ import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserLibrary;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
+import org.helmo.murmurG6.utils.RandomSaltGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 
-public class Executor implements Runnable, AutoCloseable {
+public class Executor implements TaskScheduler {
 
+    private static Executor instance;
     private final ExecutorService executorService; //ExecutorService avec un seul thread pour exécuter les tâches de la file d'attente.
     private final BlockingQueue<Task> taskQueue; //File d'attente BlockingQueue appelée taskQueue pour stocker les tâches à exécuter.
-    private final ServerController server;
-    private final UserLibrary collection;
+    private ServerController server;
 
-    public Executor (ServerController server) {
+    private Executor () {
         this.taskQueue = new LinkedBlockingQueue<>();
         this.executorService = Executors.newSingleThreadExecutor();
+    }
+
+    public static Executor getInstance(){
+        if (instance == null) {
+            instance = new Executor();
+        }
+        return instance;
+    }
+
+    public void setServer(ServerController server){
         this.server = server;
-        this.collection = server.getUserCollection();
     }
 
     /**
@@ -71,7 +81,7 @@ public class Executor implements Runnable, AutoCloseable {
                 break;
 
             case CONNECT:
-                user = collection.get(params.group("username"));
+                user = server.getUserCollection().get(params.group("username"));
                 client.setUser(user);
                 client.sendMessage(connect(user.getLogin()));
                 break;
@@ -95,8 +105,8 @@ public class Executor implements Runnable, AutoCloseable {
      * @return le message PARAM oubien -ERR
      */
     private String connect(String login) {
-        if (collection.containsKey(login)) {
-            User user = collection.get(login);
+        if (server.getUserCollection().containsKey(login)) {
+            User user = server.getUserCollection().get(login);
             return "PARAM " + user.getBcryptRound() + " " + user.getBcryptSalt();
         } else {
             return "-ERR";
@@ -122,6 +132,13 @@ public class Executor implements Runnable, AutoCloseable {
         } catch (SaveUserCollectionException | UserAlreadyRegisteredException e) {
             return "-ERR";
         }
+    }
+
+
+    public String sayHello(ClientRunnable client) {
+        String random22 = RandomSaltGenerator.generateSalt();
+        client.sendMessage("HELLO " + server.getIp() + " " + random22);
+        return random22;
     }
 
 

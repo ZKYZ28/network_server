@@ -25,7 +25,6 @@ public class ServerController implements AutoCloseable {
     private final ServerSocket serverSocket;
     private final UserRepository repo;
     private final UserLibrary userLibrary;
-    private Executor executor;
 
     /**
      * Le constructeur de la classe ServerController permet de créer un nouveau serveur en spécifiant un numéro de port et un storage d'utilisateurs.
@@ -52,12 +51,14 @@ public class ServerController implements AutoCloseable {
      * @throws IOException en cas d'erreur lors de l'initialisation du ServerSocket
      */
     public void start() throws IOException {
-        this.executor = new Executor(this);
+        TaskScheduler executor = Executor.getInstance();
+        executor.setServer(this);
         new Thread(executor).start();
+
         while(true) {
             Socket client = serverSocket.accept();
             System.out.println("Quelqu'un s'est connecté!");
-            ClientRunnable runnable = new ClientRunnable(client, this);
+            ClientRunnable runnable = new ClientRunnable(client);
             clientList.add(runnable);
             new Thread(runnable).start();
         }
@@ -103,14 +104,6 @@ public class ServerController implements AutoCloseable {
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Recupere l'executor du server
-     * @return un objet Executor
-     */
-    public Executor getExecutor() {
-        return executor;
     }
 
 
