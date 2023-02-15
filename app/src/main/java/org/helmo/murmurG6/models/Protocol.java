@@ -1,23 +1,12 @@
 package org.helmo.murmurG6.models;
 
+import org.helmo.murmurG6.models.exceptions.InvalidTaskException;
+
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Protocol {
-
-    /*
-     * ACSII Characters
-     * [\x21-\x2f] : correspond à la plage des codes hexadécimaux 0x21 à 0x2f, qui comprend les symboles suivants :
-     * ! " # $ % & ' ( ) * + , - . /
-     *
-     * [\x3a-\x40] : correspond à la plage des codes hexadécimaux 0x3a à 0x40, qui comprend les symboles suivants :
-     * : ; < = > ? @
-     *
-     * [\x5B-\x60] : correspond à la plage des codes hexadécimaux 0x5B à 0x60, qui comprend les symboles suivants :
-     * [ \ ] ^ _ `
-     *
-     */
 
     private static final String RX_DIGIT = "[0-9]";
     private static final String RX_LETTER = "[a-zA-Z]";
@@ -39,7 +28,7 @@ public class Protocol {
     /*PARTS*/
     private static final String RX_CRLF = "(\\x0d\\x0a){0,1}";
     private static final String RX_SALT_SIZE = "([0-9]{2})";
-    private static final String RX_BCRYPT_HASH = "(\\$2b\\$\\d{2}\\$(" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){1,70})";
+    public static final String RX_BCRYPT_HASH = "(\\$2b\\$\\d{2}\\$(" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){1,70})";
     private static final String TAG = "#[a-zA-Z0-9]{5,20}";
     private static final String TAG_DOMAIN = "(" + TAG + "@" + RX_DOMAIN + ")";
 

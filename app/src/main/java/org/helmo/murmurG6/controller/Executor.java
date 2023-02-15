@@ -20,19 +20,19 @@ public class Executor implements TaskScheduler {
     private final BlockingQueue<Task> taskQueue; //File d'attente BlockingQueue appelée taskQueue pour stocker les tâches à exécuter.
     private ServerController server;
 
-    private Executor () {
+    private Executor() {
         this.taskQueue = new LinkedBlockingQueue<>();
         this.executorService = Executors.newSingleThreadExecutor();
     }
 
-    public static Executor getInstance(){
+    public static Executor getInstance() {
         if (instance == null) {
             instance = new Executor();
         }
         return instance;
     }
 
-    public void setServer(ServerController server){
+    public void setServer(ServerController server) {
         this.server = server;
     }
 
@@ -42,7 +42,7 @@ public class Executor implements TaskScheduler {
      * @param task La tâche a ajouter à la file d'attente
      */
     public void addTask(Task task) {
-        taskQueue.add(task);
+        this.taskQueue.add(task);
     }
 
     /**
@@ -63,11 +63,6 @@ public class Executor implements TaskScheduler {
         });
     }
 
-
-    /**
-     * Execute la tache passée en paramètre selon son type
-     * @param task la tache à exécuter par l'éxécutor
-     */
     private void executeTask(Task task) {
 
         ClientRunnable client = task.getClient(); //On récupère le client à qui on fait la tache
@@ -75,35 +70,26 @@ public class Executor implements TaskScheduler {
         User user;
 
         switch (task.getType()) {
-            case REGISTER:
+            case REGISTER -> {
                 user = new User(params.group("username"), BCrypt.of(params.group("bcrypt")), new ArrayList<>(), new ArrayList<>());
                 client.sendMessage(register(user, client));
-                break;
-
-            case CONNECT:
+            }
+            case CONNECT -> {
                 user = server.getUserCollection().get(params.group("username"));
                 client.setUser(user);
                 client.sendMessage(connect(user.getLogin()));
-                break;
-
-            case CONFIRM:
+            }
+            case CONFIRM -> {
                 user = client.getUser();
                 String received = params.group("challenge");
                 String expected = user.getBcrypt().generateChallenge(client.getRandom22());
                 client.sendMessage(confirm(received, expected));
-                break;
-
-            case MSG:
-                server.broadcastToAllClientsExceptMe(client, params.group("message"));
-                break;
+            }
+            case MSG -> server.broadcastToAllClientsExceptMe(client, params.group("message"));
         }
     }
 
-    /**
-     * Retourne le message à envoyer au client lorsque celui veut se connecter
-     * @param login le loggin de l'utilisateur qui veut se connecter
-     * @return le message PARAM oubien -ERR
-     */
+
     private String connect(String login) {
         if (server.getUserCollection().containsKey(login)) {
             User user = server.getUserCollection().get(login);
@@ -114,17 +100,11 @@ public class Executor implements TaskScheduler {
     }
 
 
-    /**
-     * Retourne la confirmation ou non de la connexion du client
-     * @param clientChallenge le challenge calculé par le client
-     * @param userChallenge le challenge calculé par le server
-     * @return le message "+OK" si le challenge-client correspond au challenge-server. "-ERR" sinon
-     */
-    private String confirm(String clientChallenge, String userChallenge){
+    private String confirm(String clientChallenge, String userChallenge) {
         return clientChallenge.equals(userChallenge) ? "+OK" : "-ERR";
     }
 
-    private String register(User user, ClientRunnable client)  {
+    private String register(User user, ClientRunnable client) {
         try {
             server.registerUser(user);
             client.setUser(user);

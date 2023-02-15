@@ -2,6 +2,7 @@ package org.helmo.murmurG6.models;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.regex.Pattern;
 
 /**
  * <p>La classe BcryptHash représente un hachage Bcrypt d'un mot de passe.</p><br>
@@ -28,6 +29,49 @@ public class BCrypt {
         this.hash = hash;
     }
 
+    public static BCrypt of(String hashed) {
+        if (!Pattern.matches(Protocol.RX_BCRYPT_HASH, hashed)) {
+            throw new IllegalArgumentException("Le hash bcrypt fourni n'est pas au format attendu. Veuillez vérifier que le hash est une chaîne valide conforme au format bcrypt.");
+        }
+
+        int rounds = Integer.parseInt(hashed.substring(4, 6));
+        String salt = hashed.substring(7, 29);
+        String hash = hashed.substring(29);
+
+        return new BCrypt(rounds, salt, hash);
+    }
+
+
+    public String generateChallenge(String random) {
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA3-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Impossible de générer un challenge. L'algorithme de hachage SHA3-256 n'est pas disponible.", e);
+        }
+
+        byte[] unHashedChallengeBytes = (random + this).getBytes();
+        byte[] hashedBytes = md.digest(unHashedChallengeBytes);
+
+        return bytesToHex(hashedBytes);
+    }
+
+
+
+    /**
+     * Cette méthode permet de convertir un tableau d'octets en une chaîne de caractères hexadécimale.
+     *
+     * @param bytes Le tableau d'octets à convertir.
+     * @return La chaîne de caractères hexadécimale représentant le tableau d'octets.
+     */
+    private String bytesToHex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }
+
     public int getRounds() {
         return rounds;
     }
@@ -38,60 +82,6 @@ public class BCrypt {
 
     public String getHash() {
         return hash;
-    }
-
-
-    /**
-     * Construit un Bcrypt
-     *
-     * @param hashed le hachage Bcrypt à décomposer, qui doit avoir le format suivant : $2a$RR$SALT$HASH
-     * où RR représente le nombre de tours de l'algorithme de hachage, SALT est la valeur de sel utilisée
-     * lors du hachage et HASH est le hachage résultant.
-     *
-     * @return un objet BcryptHash contenant les informations décomposées : le nombre de tours (rounds), la valeur de sel (salt)
-     * et le hachage (hash).
-     */
-    public static BCrypt of(String hashed) {
-        //TODO
-        //try catch regex
-        int rounds = Integer.parseInt(hashed.substring(4, 6));
-        String salt = hashed.substring(7, 29);
-        String hash = hashed.substring(29);
-        return new BCrypt(rounds, salt, hash);
-    }
-
-    /**
-     * La méthode calculateChallenge calcule le hachage de la chaîne de caractères aléatoires et du hachage BCrypt en utilisant l'algorithme SHA3-256.
-     * Le hachage BCrypt inclut le nombre de tours et le sel associé au mot de passe.
-     * Le résultat de la fonction de hachage est retourné sous forme hexadécimale.
-     *
-     * @param random La chaîne de caractères aléatoires reçue lors de la connexion avec le serveur.
-     * @return Le hachage calculé sous forme hexadécimale.
-     */
-    public String generateChallenge(String random) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA3-256");
-            byte[] unHashedChallengeBytes = (random + this.toString()).getBytes();
-            byte[] hashedBytes = md.digest(unHashedChallengeBytes);
-            return bytesToHex(hashedBytes);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    /**
-     * Cette méthode permet de convertir un tableau d'octets en une chaîne de caractères hexadécimale.
-     *
-     * @param bytes Le tableau d'octets à convertir.
-     * @return La chaîne de caractères hexadécimale représentant le tableau d'octets.
-     */
-    private String bytesToHex(byte[] bytes) {
-        StringBuilder sb = new StringBuilder(bytes.length * 2);
-        for (byte b : bytes) {
-            sb.append(String.format("%02x", b & 0xff));
-        }
-        return sb.toString();
     }
 
     @Override
