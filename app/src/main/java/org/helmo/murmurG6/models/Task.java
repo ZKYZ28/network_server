@@ -1,6 +1,6 @@
 package org.helmo.murmurG6.models;
 
-import org.helmo.murmurG6.system.ClientRunnable;
+import org.helmo.murmurG6.controller.ClientRunnable;
 
 import java.util.regex.Matcher;
 

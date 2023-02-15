@@ -1,6 +1,5 @@
-package org.helmo.murmurG6.system;
+package org.helmo.murmurG6.controller;
 
-import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserCollection;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;

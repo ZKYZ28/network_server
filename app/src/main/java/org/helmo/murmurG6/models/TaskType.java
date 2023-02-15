@@ -8,6 +8,6 @@ package org.helmo.murmurG6.models;
 * DISCONNECT => /
 * */
 public enum TaskType {
-     CONNECT, REGISTER, FOLLOW, CONFIRM, DISCONNECT, MSG;
+     CONNECT, REGISTER, FOLLOW, CONFIRM, DISCONNECT, MSG
 }
 

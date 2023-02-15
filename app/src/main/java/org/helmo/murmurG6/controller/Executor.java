@@ -1,4 +1,4 @@
-package org.helmo.murmurG6.system;
+package org.helmo.murmurG6.controller;
 
 import org.helmo.murmurG6.models.BCrypt;
 import org.helmo.murmurG6.models.Task;
@@ -53,7 +53,7 @@ public class Executor implements Runnable, AutoCloseable {
      * Execute la tache passée en paramètre selon son type
      * @param task la tache à exécuter par l'éxécutor
      */
-    public void executeTask(Task task) {
+    private void executeTask(Task task) {
 
         ClientRunnable client = task.getClient(); //On récupère le client à qui on fait la tache
         Matcher params = task.getMatcher();   //On récupère le matcher de la tache à éxécuter
