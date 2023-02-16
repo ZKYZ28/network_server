@@ -3,12 +3,17 @@
     "login": "antho",
     "bcryptDto": {
       "rounds": 14,
-      "salt": "D1vZrgYQvRX5DqerJbwmAe",
-      "hash": "SA.HraPqaf6VgQd2YczEy9Ehp70FAVu"
+      "salt": "5Q.R/oDhND/C4hQ3EYCVfO",
+      "hash": "2vySImpyRB10Mx2WTFeY4wFhp2VnBly"
     },
     "followedUsers": [
-      "antho@star.godswila.guru"
+      "antho@star.godswila.guru",
+      "franchi@star.godswila.guru",
+      "femme@star.godswila.guru",
+      "#hqporner@star.godswila.guru"
     ],
-    "followedTrends": []
+    "followedTrends": [
+      "#femme@star.godswila.guru"
+    ]
   }
 ]
