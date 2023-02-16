@@ -1,5 +1,6 @@
 package org.helmo.murmurG6.controller;
 
+import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserLibrary;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
@@ -17,6 +18,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * La classe ServerController représente le contrôleur principal de l'application serveur.
@@ -121,20 +124,29 @@ public class ServerController implements AutoCloseable {
         return trends;
     }*/
 
+    private Set<String> extractTrends(String message) {
+        Pattern pattern = Pattern.compile(Protocol.TAG);
+        Matcher matcher = pattern.matcher(message);
+        HashSet<String> matches = new HashSet<>();
+
+        while (matcher.find()) {
+            matches.add(matcher.group()); //Ex: #trend
+        }
+
+        return matches;
+    }
+
+    //TODO
     public void castMsg(ClientRunnable senderClient, String message) {
         System.out.printf("Message envoyé : %s\n", message);
-        //Envoyer le message à tous ceux qui follow senderClient
-
+        User sender = senderClient.getUser();
 
         for (ClientRunnable c : clientList) {
-            if (c != senderClient) {
+            if (c != senderClient && (c.getUser().followsUser(sender.getLogin()) || c.getUser().followsTrend(extractTrends(message)))) {
                 c.sendMessage("MSGS admin@192.168.0.19 " + message);
             }
         }
     }
-
-
-
 
     public void saveUsers() throws SaveUserCollectionException {
         storage.save(this.userLibrary);

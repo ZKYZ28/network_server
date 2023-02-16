@@ -1,6 +1,7 @@
 package org.helmo.murmurG6.models;
 
 import java.util.List;
+import java.util.Set;
 
 public class User {
 
@@ -14,6 +15,26 @@ public class User {
         this.bCrypt = bCrypt;
         this.followedUsers = followedUsers;
         this.followedTrends = followedTrends;
+    }
+
+    public boolean followsUser(String sender) {
+        for (String followedLogin : this.followedUsers) {
+            if (followedLogin.contains(sender)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean followsTrend(Set<String> extractedTrends) {
+        for (String trend : extractedTrends) {
+            for (String followedTrend : this.followedTrends) {
+                if (followedTrend.contains(trend)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public BCrypt getBcrypt() {
