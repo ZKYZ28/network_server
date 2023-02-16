@@ -11,7 +11,7 @@ public class App {
         System.setProperty("javax.net.ssl.keyStorePassword", "labo2023");
     }
 
-    private static final int DEFAULT_PORT = 12345;
+    private static final int DEFAULT_PORT = 23106;
     private static final UserJsonStorage USER_JSON_STORAGE = new UserJsonStorage();
 
     public static void main(String[] args){

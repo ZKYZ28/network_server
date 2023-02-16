@@ -143,7 +143,7 @@ public class ServerController implements AutoCloseable {
 
         for (ClientRunnable c : clientList) {
             if (c != senderClient && (c.getUser().followsUser(sender.getLogin()) || c.getUser().followsTrend(extractTrends(message)))) {
-                c.sendMessage("MSGS admin@192.168.0.19 " + message);
+                c.sendMessage("MSGS " + senderClient.getUser().getLogin()+"@"+getIp() + " " + message);
             }
         }
     }

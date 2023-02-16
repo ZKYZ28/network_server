@@ -1,1 +1,42 @@
-[{"login":"gdfgdfgdfgf","bcryptDto":{"rounds":14,"salt":"odU/6JDPrO2bLv8po3jTLu","hash":"M89a1f74cIb6bRrq2vOUd4aL9/cFJvq"},"followedUsers":[],"followedTrends":["#tzesdfg@g6server1.godswila.guru"]},{"login":"loiiiic","bcryptDto":{"rounds":14,"salt":"6j0kfYp90Oj0KvVj/FCFLe","hash":"x2Oo43j4jqssHGGicoIYdjoCIyg6Oyy"},"followedUsers":["franchi@star.godswila.guru"],"followedTrends":["#testfollow@star.godswila.guru"]},{"login":"franchi","bcryptDto":{"rounds":14,"salt":"0W4FZAfFaqRd4w0aEXGyfu","hash":"vBeCXpbimIVMuOPxSxiUhXFwrjyusD."},"followedUsers":["loiiiic@star.godswila.guru"],"followedTrends":["#testfollow@star.godswila.guru"]},{"login":"rgertgreger","bcryptDto":{"rounds":14,"salt":"xb65Xo7zRCo.azqQ5E3.BO","hash":"1NDH2INTFnkFk5qHgKU1xP6AsazLTYm"},"followedUsers":["gdfgdfgdfgf@star.godswila.guru"],"followedTrends":[]}]
+[
+  {
+    "login": "antho",
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "69s4GPnz2FJgy.AQPoJzYO",
+      "hash": "BojrwtA2MJNAxmf8/1YLuOShnlQdoJu"
+    },
+    "followedUsers": [],
+    "followedTrends": [
+      "#tendance123@star.godswila.guru"
+    ]
+  },
+  {
+    "login": "monsieurDeVleeg",
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": ".wSzJgR6.MQx6H6zFDca4u",
+      "hash": "OWuV/Gh4ePOEmFDEuaaHM98ZvFyrIja"
+    },
+    "followedUsers": [
+      "antho@star.godswila.guru"
+    ],
+    "followedTrends": [
+      "#tendance123@star.godswila.guru"
+    ]
+  },
+  {
+    "login": "francis",
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "Ex211TUJyQtHRHwIKjFble",
+      "hash": "O3xN8dIi2dvaUi5g3waaDkffbcp1zrm"
+    },
+    "followedUsers": [
+      "antho@star.godswila.guru"
+    ],
+    "followedTrends": [
+      "#tendance123@star.godswila.guru"
+    ]
+  }
+]
