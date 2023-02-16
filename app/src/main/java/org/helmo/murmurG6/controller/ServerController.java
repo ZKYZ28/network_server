@@ -73,6 +73,69 @@ public class ServerController implements AutoCloseable {
         }
     }
 
+
+    /*public void broadcastOther(ClientRunnable me, String message) {
+        Set<ClientRunnable> needToSend = tellWhoRecevedMessage(me, message);
+        for (ClientRunnable c : needToSend) {
+            c.sendMessage("MSGS " + c.getUser().getLogin() + "@server1.domain.guru " + message);
+        }
+    }
+
+    public Set<ClientRunnable> tellWhoRecevedMessage(ClientRunnable me, String message) {
+        Set<ClientRunnable> needToSend = Collections.synchronizedSet(new HashSet<>());
+        for (ClientRunnable c : clientList) {
+            if (c != me) {
+                if (c.getUser().chekcIfFollowUser(me.getUser().getLogin())) {
+                    needToSend.add(c);
+                }
+                Set<String> trendsInMessage = detectTrends(message);
+                if(trendsInMessage.size() != 0) {
+                    for (FollowInformation follow : me.getUser().getFollowedTrends()) {
+                        if (c.getUser().chekcIfFollowTrend(follow) && trendsInMessage.contains(follow.getInformationFollow())) {
+                            needToSend.add(c);
+                        }
+                    }
+                }
+            }
+        }
+        return needToSend;
+    }
+
+    private Set<String> detectTrends(String message) {
+        Set<String> trends = new HashSet<>();
+        int index = 0;
+        while (index < message.length()) {
+            index = message.indexOf("#", index);
+            if (index == -1) {
+                break;
+            }
+            index++;
+            int debutMot = index;
+            int finMot = message.indexOf(" ", index);
+            if (finMot == -1) {
+                finMot = message.length();
+            }
+            String mot = message.substring(debutMot, finMot);
+            trends.add(mot);
+        }
+        return trends;
+    }*/
+
+    public void castMsg(ClientRunnable senderClient, String message) {
+        System.out.printf("Message envoyé : %s\n", message);
+        //Envoyer le message à tous ceux qui follow senderClient
+
+
+        for (ClientRunnable c : clientList) {
+            if (c != senderClient) {
+                c.sendMessage("MSGS admin@192.168.0.19 " + message);
+            }
+        }
+    }
+
+
+
+
     public void saveUsers() throws SaveUserCollectionException {
         storage.save(this.userLibrary);
     }

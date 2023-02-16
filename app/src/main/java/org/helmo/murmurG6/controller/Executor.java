@@ -81,7 +81,8 @@ public class Executor implements TaskScheduler {
                 break;
 
             case MSG:
-                server.broadcastToAllClientsExceptMe(client, params.group("message"));
+                //server.broadcastToAllClientsExceptMe(client, params.group("message"));
+                server.castMsg(client, params.group("message"));
                 break;
 
             case FOLLOW:
