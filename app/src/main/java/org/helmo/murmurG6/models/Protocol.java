@@ -1,24 +1,12 @@
 package org.helmo.murmurG6.models;
 
-import org.helmo.murmurG6.repository.IProtocol;
+import org.helmo.murmurG6.models.exceptions.InvalidTaskException;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Protocol implements IProtocol {
-
-    /*
-     * ACSII Characters
-     * [\x21-\x2f] : correspond à la plage des codes hexadécimaux 0x21 à 0x2f, qui comprend les symboles suivants :
-     * ! " # $ % & ' ( ) * + , - . /
-     *
-     * [\x3a-\x40] : correspond à la plage des codes hexadécimaux 0x3a à 0x40, qui comprend les symboles suivants :
-     * : ; < = > ? @
-     *
-     * [\x5B-\x60] : correspond à la plage des codes hexadécimaux 0x5B à 0x60, qui comprend les symboles suivants :
-     * [ \ ] ^ _ `
-     *
-     */
+public class Protocol {
 
     private static final String RX_DIGIT = "[0-9]";
     private static final String RX_LETTER = "[a-zA-Z]";
@@ -32,83 +20,45 @@ public class Protocol implements IProtocol {
     private static final String RX_BCRYPT_SALT = "((" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){22})";
     private final static String RX_ESP = "\\s";
     private static final String RX_DOMAIN = "((" + RX_LETTER_DIGIT + "|\\.){5,200})";
-    private static final String RX_USERNAME = "((" + RX_LETTER_DIGIT + "){5,20})";
-    private static final String RX_USER_DOMAIN = "(" + RX_USERNAME + "@" + RX_DOMAIN + ")";
+    public static final String RX_USERNAME = "((" + RX_LETTER_DIGIT + "){5,20})";
+    public static final Pattern RX_USER_DOMAIN = Pattern.compile("(" + "(?<login>"+RX_USERNAME + ")" + "@" + RX_DOMAIN + ")");
     private static final String RX_MESSAGE = "((" + RX_VISIBLE_CHARACTER + "){1,250})";
-    private static final String RX_SHA3_EX = "((" + RX_LETTER_DIGIT+ "){30,200})";
+    private static final String RX_SHA3_EX = "((" + RX_LETTER_DIGIT + "){30,200})";
 
     /*PARTS*/
     private static final String RX_CRLF = "(\\x0d\\x0a){0,1}";
     private static final String RX_SALT_SIZE = "([0-9]{2})";
-    private static final String RX_BCRYPT_HASH = "(\\$2b\\$\\d{2}\\$(" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){1,70})";
-    private static final String TAG = "#[a-zA-Z0-9]{5,20}";
-    private static final String TAG_DOMAIN = "(" + "(" + TAG + ")" + "@" + RX_DOMAIN + ")";
+    public static final String RX_BCRYPT_HASH = "(\\$2b\\$\\d{2}\\$(" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){1,70})";
+    public static final String TAG = "#[a-zA-Z0-9]{5,20}";
+    public static final String TAG_DOMAIN = "(" + TAG + "@" + RX_DOMAIN + ")";
 
     private static final String TAG_DOMAIN_OR_RX_USER_DOMAIN = "(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")";
 
 
     /*FULL*/
-    private final static String CONNECT = "CONNECT" + RX_ESP + RX_USERNAME + RX_CRLF;
-    private final static String REGISTER = "REGISTER" + RX_ESP + RX_USERNAME + RX_ESP + RX_SALT_SIZE + RX_ESP + RX_BCRYPT_HASH + RX_CRLF;
-    private final static String FOLLOW = "FOLLOW" + RX_ESP + TAG_DOMAIN_OR_RX_USER_DOMAIN + RX_CRLF;
-    private final static String CONFIRM = "CONFIRM" + RX_ESP + RX_SHA3_EX + RX_CRLF;
-    private final static String DISCONNECT = "DISCONNECT" + RX_CRLF;
-    private final static String MSG = "MSG" + RX_ESP + RX_MESSAGE;
-    private final String[] TYPE_MESSAGE = {CONNECT, REGISTER, FOLLOW, CONFIRM, DISCONNECT, MSG};
+    private final static Pattern RX_CONNECT_TASK = Pattern.compile("CONNECT" + RX_ESP + "(?<username>" + RX_USERNAME + ")" + RX_CRLF);
+    private final static Pattern RX_REGISTER_TASK = Pattern.compile("REGISTER" + RX_ESP + "(?<username>" + RX_USERNAME + ")" + RX_ESP + RX_SALT_SIZE + RX_ESP + "(?<bcrypt>" + RX_BCRYPT_HASH + ")" + RX_CRLF);
+    private final static Pattern RX_FOLLOW_TASK = Pattern.compile("FOLLOW" + RX_ESP + "(?<domain>" + TAG_DOMAIN_OR_RX_USER_DOMAIN + ")" + RX_CRLF);
+    private final static Pattern RX_CONFIRM_TASK = Pattern.compile("CONFIRM" + RX_ESP + "(?<challenge>" + RX_SHA3_EX + ")" + RX_CRLF);
+    private final static Pattern RX_DISCONNECT_TASK = Pattern.compile("DISCONNECT" + RX_CRLF);
+    private final static Pattern RX_MSG_TASK = Pattern.compile("MSG" + RX_ESP + "(?<message>" + RX_MESSAGE + ")" + RX_CRLF);
 
-    /**
-     * Méthode qui permet de créer une Objet Message sur base d'une string
-     * @param msg String qui est le message reçu depuis le Client
-     * @return Message(typeMessage, matcher, msg)
-     */
-    @Override
-    public Task analyseMessage(String msg){
-        for (int i = 0; i < TYPE_MESSAGE.length; i++) {
-            if(Pattern.matches(TYPE_MESSAGE[i], msg)){
-                return new Task(identifyTypeMessage(i), createMatcher(msg, i), msg);
+    private static final Map<Pattern, TaskType> TYPE_MESSAGE_MAP = Map.of(
+            RX_CONNECT_TASK, TaskType.CONNECT,
+            RX_REGISTER_TASK, TaskType.REGISTER,
+            RX_FOLLOW_TASK, TaskType.FOLLOW,
+            RX_CONFIRM_TASK, TaskType.CONFIRM,
+            RX_DISCONNECT_TASK, TaskType.DISCONNECT,
+            RX_MSG_TASK, TaskType.MSG
+    );
+
+    public static Task buildTask(String command) /*throws InvalidTaskException */{
+        for (Map.Entry<Pattern, TaskType> entry : TYPE_MESSAGE_MAP.entrySet()) {
+            Matcher matcher = entry.getKey().matcher(command);
+            if (matcher.matches()) {
+                return new Task(entry.getValue(), matcher);
             }
         }
-        return null;
-    }
-
-    /**
-     * Méthode qui permet d'identifier le type d'un message
-     * @param i i qui est l'index dans le tableau des différents types de message
-     * @return MessageType qui est le type de message
-     */
-    private TaskType identifyTypeMessage(int i){
-        switch (i){
-            case 0:
-                return TaskType.CONNECT;
-            case 1:
-                return TaskType.REGISTER;
-            case 2:
-                return TaskType.FOLLOW;
-            case 3:
-                return TaskType.CONFIRM;
-            case 4:
-                return TaskType.DISCONNECT;
-            case 5:
-                return TaskType.MSG;
-            default:
-                return null;
-        }
-    }
-
-    /**
-     * Méthode qui permet de créer un Matcher qui reprend les différentes parties d'un message
-     * @param msg String qui est le message reçu depuis le client
-     * @param i int qui est l'index dans le tableau des différents types de message
-     * @return Matcher qui comporte les différentes parties d'un message
-     */
-    private Matcher createMatcher(String msg, int i){
-        Pattern pattern = Pattern.compile(TYPE_MESSAGE[i]);
-        Matcher matcher = pattern.matcher(msg);
-        matcher.matches();
-        return matcher;
-    }
-
-    public static boolean isFollowUser(String msg){
-        return msg.charAt(0) != '#';
+        throw new InvalidTaskException("Tache invalide!");
     }
 }

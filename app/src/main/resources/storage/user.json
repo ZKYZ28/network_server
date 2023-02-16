@@ -1,22 +1,42 @@
 [
   {
+    "login": "antho",
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "69s4GPnz2FJgy.AQPoJzYO",
+      "hash": "BojrwtA2MJNAxmf8/1YLuOShnlQdoJu"
+    },
+    "followedUsers": [],
+    "followedTrends": [
+      "#tendance123@star.godswila.guru"
+    ]
+  },
+  {
     "login": "monsieurDeVleeg",
     "bcryptDto": {
       "rounds": 14,
-      "salt": "hbfQB24W2w9ZIjB6OKKF0.",
-      "hash": "/fiiam7eMLONf/6a6oGnJ/kQhAr1eYq"
+      "salt": ".wSzJgR6.MQx6H6zFDca4u",
+      "hash": "OWuV/Gh4ePOEmFDEuaaHM98ZvFyrIja"
     },
-    "followedUsers": [],
-    "followedTrends": []
+    "followedUsers": [
+      "antho@star.godswila.guru"
+    ],
+    "followedTrends": [
+      "#tendance123@star.godswila.guru"
+    ]
   },
   {
-    "login": "test1",
+    "login": "francis",
     "bcryptDto": {
       "rounds": 14,
-      "salt": "8It8N2ARUVOfl9rmYC5Nju",
-      "hash": "jX1unhjd56qOh9nK7Yadt/LG6Hz5y0O"
+      "salt": "Ex211TUJyQtHRHwIKjFble",
+      "hash": "O3xN8dIi2dvaUi5g3waaDkffbcp1zrm"
     },
-    "followedUsers": [],
-    "followedTrends": []
+    "followedUsers": [
+      "antho@star.godswila.guru"
+    ],
+    "followedTrends": [
+      "#tendance123@star.godswila.guru"
+    ]
   }
 ]
