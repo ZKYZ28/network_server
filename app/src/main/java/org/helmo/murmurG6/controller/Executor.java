@@ -89,7 +89,7 @@ public class Executor implements TaskScheduler {
                 try {
                     follow(client.getUser(), params.group("domain"));
                     server.saveUsers();
-                } catch (SaveUserCollectionException e) {
+                } catch (SaveUserCollectionException | UnableToFollowUser e) {
                     client.sendMessage("-ERR");
                 }
                 break;
@@ -130,13 +130,25 @@ public class Executor implements TaskScheduler {
     }
 
 
-    private void follow(User user, String toFollow)  {
-        if(toFollow.charAt(0) == '#'){
-            user.followTrend(toFollow);
+    private void follow(User user, String itemToBeFollowed) throws UnableToFollowUser {
+        if(itemToBeFollowed.charAt(0) == '#'){
+            user.followTrend(itemToBeFollowed);
         } else {
-            user.followUser(toFollow);
+            followUser(user, itemToBeFollowed);
         }
     }
+
+        //TODO: Gérer le cas ou le login a suivre n'existe pas (checker sur TOUS les servers)
+        private void followUser(User user, String loginToBeFollowed) throws UnableToFollowUser{
+            if(loginToBeFollowed.equals(user.getLogin())){
+                throw new UnableToFollowUser("login d'utilisateur à suivre invalide!");
+            }else{
+                user.followUser(loginToBeFollowed);
+            }
+        }
+
+
+
 
     @Override
     public void close() {
