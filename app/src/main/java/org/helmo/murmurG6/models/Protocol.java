@@ -20,8 +20,8 @@ public class Protocol {
     private static final String RX_BCRYPT_SALT = "((" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){22})";
     private final static String RX_ESP = "\\s";
     private static final String RX_DOMAIN = "((" + RX_LETTER_DIGIT + "|\\.){5,200})";
-    private static final String RX_USERNAME = "((" + RX_LETTER_DIGIT + "){5,20})";
-    public static final String RX_USER_DOMAIN = "(" + RX_USERNAME + "@" + RX_DOMAIN + ")";
+    public static final String RX_USERNAME = "((" + RX_LETTER_DIGIT + "){5,20})";
+    public static final Pattern RX_USER_DOMAIN = Pattern.compile("(" + "(?<login>"+RX_USERNAME + ")" + "@" + RX_DOMAIN + ")");
     private static final String RX_MESSAGE = "((" + RX_VISIBLE_CHARACTER + "){1,250})";
     private static final String RX_SHA3_EX = "((" + RX_LETTER_DIGIT + "){30,200})";
 

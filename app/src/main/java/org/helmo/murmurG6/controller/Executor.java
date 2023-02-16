@@ -1,9 +1,6 @@
 package org.helmo.murmurG6.controller;
 
-import org.helmo.murmurG6.models.BCrypt;
-import org.helmo.murmurG6.models.Protocol;
-import org.helmo.murmurG6.models.Task;
-import org.helmo.murmurG6.models.User;
+import org.helmo.murmurG6.models.*;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 import org.helmo.murmurG6.utils.RandomSaltGenerator;
@@ -90,6 +87,7 @@ public class Executor implements TaskScheduler {
                     follow(client.getUser(), params.group("domain"));
                     server.saveUsers();
                 } catch (SaveUserCollectionException | UnableToFollowUser e) {
+                    System.out.println(e.getMessage());
                     client.sendMessage("-ERR");
                 }
                 break;
@@ -119,6 +117,7 @@ public class Executor implements TaskScheduler {
             server.saveUsers();
             return "+OK";
         } catch (SaveUserCollectionException | UserAlreadyRegisteredException e) {
+            System.out.println(e.getMessage());
             return "-ERR";
         }
     }
@@ -140,7 +139,8 @@ public class Executor implements TaskScheduler {
 
         //TODO: Gérer le cas ou le login a suivre n'existe pas (checker sur TOUS les servers)
         private void followUser(User user, String loginToBeFollowed) throws UnableToFollowUser{
-            if(loginToBeFollowed.equals(user.getLogin())){
+            Matcher matcher = Protocol.RX_USER_DOMAIN.matcher(loginToBeFollowed);
+            if(matcher.matches() && matcher.group("login").equals(user.getLogin())){
                 throw new UnableToFollowUser("login d'utilisateur à suivre invalide!");
             }else{
                 user.followUser(loginToBeFollowed);
