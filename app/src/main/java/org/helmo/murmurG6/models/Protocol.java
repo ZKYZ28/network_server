@@ -43,6 +43,41 @@ public class Protocol {
     private final static Pattern RX_DISCONNECT_TASK = Pattern.compile("DISCONNECT" + RX_CRLF);
     private final static Pattern RX_MSG_TASK = Pattern.compile("MSG" + RX_ESP + "(?<message>" + RX_MESSAGE + ")" + RX_CRLF);
 
+    private final static String MSGS = "MSGS <message>\r\n";
+    private final static String HELLO = "HELLO <ip> <salt>\r\n";
+    private final static String PARAM = "PARAM <round> <salt>\r\n";
+    private final static String SEND = "SEND <ip_domain> <nom_domaine> <nom/tag_domain> <message_interne>\r\n";
+    private final static String ERROR = "-ERR\r\n";
+    private final static String OK = "+OK\r\n";
+
+
+
+
+    public static String build_MSGS(String msg){
+        return MSGS.replace("<message>", msg);
+    }
+
+    public static String build_HELLO(String ip, String salt){
+        return HELLO.replace("<ip>", ip).replace("<salt>", salt);
+    }
+
+    public static String build_PARAM(int round, String salt){
+        return PARAM.replace("<round>", String.valueOf(round)).replace("<salt>", salt);
+    }
+
+    public static String build_SEND(String ip_domain, String nom_domain, String nomOrTag_domain, String message_interne){
+        return SEND.replace("<ip_domain>", ip_domain).replace("<nom_domaine>", nom_domain).replace("<nom/tag_domain>", nomOrTag_domain).replace("<message_interne>", message_interne);
+    }
+
+    public static String build_ERROR(){
+        return ERROR;
+    }
+
+    public static String build_OK(){
+        return OK;
+    }
+
+
     private static final Map<Pattern, TaskType> TYPE_MESSAGE_MAP = Map.of(
             RX_CONNECT_TASK, TaskType.CONNECT,
             RX_REGISTER_TASK, TaskType.REGISTER,

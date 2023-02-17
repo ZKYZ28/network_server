@@ -143,9 +143,9 @@ public class ServerController implements AutoCloseable {
         for (ClientRunnable c : clientList) {
             if (c != senderClient && (c.getUser().followsUser(sender.getLogin()) || c.getUser().followsTrend(extractTrends(message)))) {
                 try {
-                    c.sendMessage("MSGS " + senderClient.getUser().getLogin()+"@"+getIp() + " " + AESCrypt.encrypt(message, new ServerJsonStorage().loadKeyAes()));
+                    c.sendMessage(Protocol.build_MSGS(senderClient.getUser().getLogin()+"@"+getIp() + " " + AESCrypt.encrypt(message, new ServerJsonStorage().loadKeyAes())));
                 } catch (ReadServerConfigurationException e) {
-                    System.out.println("ERREUR " + e.getMessage());
+                    System.out.println("ERREUR LORS DE L'ENVOIE D'UN MESSAGE" + e.getMessage());
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

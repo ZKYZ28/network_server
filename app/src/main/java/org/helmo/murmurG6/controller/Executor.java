@@ -88,26 +88,26 @@ public class Executor implements TaskScheduler {
                     server.saveUsers();
                 } catch (SaveUserCollectionException | UnableToFollowUser e) {
                     System.out.println(e.getMessage());
-                    client.sendMessage("-ERR");
+                    client.sendMessage(Protocol.build_ERROR());
                 }
                 break;
 
             default:
-                client.sendMessage("-ERR");
+                client.sendMessage(Protocol.build_ERROR());
         }
     }
 
     private String connect(String login) {
         if (server.getUserCollection().containsKey(login)) {
             User user = server.getUserCollection().get(login);
-            return "PARAM " + user.getBcryptRound() + " " + user.getBcryptSalt();
+            return Protocol.build_PARAM(user.getBcryptRound(), user.getBcryptSalt());
         } else {
-            return "-ERR";
+            return Protocol.build_ERROR();
         }
     }
 
     private String confirm(String clientChallenge, String userChallenge) {
-        return clientChallenge.equals(userChallenge) ? "+OK" : "-ERR";
+        return clientChallenge.equals(userChallenge) ? Protocol.build_OK() : Protocol.build_ERROR();
     }
 
     private String register(User user, ClientRunnable client) {
@@ -115,16 +115,16 @@ public class Executor implements TaskScheduler {
             server.getUserCollection().register(user);
             client.setUser(user);
             server.saveUsers();
-            return "+OK";
+            return Protocol.build_OK();
         } catch (SaveUserCollectionException | UserAlreadyRegisteredException e) {
             System.out.println(e.getMessage());
-            return "-ERR";
+            return Protocol.build_ERROR();
         }
     }
 
     public String sayHello(ClientRunnable client) {
         String random22 = RandomSaltGenerator.generateSalt();
-        client.sendMessage("HELLO " + server.getIp() + " " + random22);
+        client.sendMessage(Protocol.build_HELLO(server.getIp(), random22));
         return random22;
     }
 
