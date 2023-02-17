@@ -1,21 +1,20 @@
 package org.helmo.murmurG6.controller;
 
+import org.helmo.murmurG6.infrastructure.ServerJsonStorage;
+import org.helmo.murmurG6.models.AESCrypt;
 import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserLibrary;
-import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.UserRepository;
+import org.helmo.murmurG6.repository.exceptions.ReadServerConfigurationException;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 import org.helmo.murmurG6.utils.UltraImportantClass;
 
-import javax.net.ServerSocketFactory;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -143,7 +142,13 @@ public class ServerController implements AutoCloseable {
 
         for (ClientRunnable c : clientList) {
             if (c != senderClient && (c.getUser().followsUser(sender.getLogin()) || c.getUser().followsTrend(extractTrends(message)))) {
-                c.sendMessage("MSGS " + senderClient.getUser().getLogin()+"@"+getIp() + " " + message);
+                try {
+                    c.sendMessage("MSGS " + senderClient.getUser().getLogin()+"@"+getIp() + " " + AESCrypt.encrypt(message, new ServerJsonStorage().loadKeyAes()));
+                } catch (ReadServerConfigurationException e) {
+                    System.out.println(e.getMessage());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
