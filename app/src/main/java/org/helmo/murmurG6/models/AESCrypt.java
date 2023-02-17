@@ -16,8 +16,6 @@ public class AESCrypt {
     private static final int GCM_IV_LENGTH = 12;
     private static final int GCM_TAG_LENGTH = 16;
 
-    private static final String base64AES = "P3FXqAUgfhy5cTjYdWlPQBJ/d6fdpbR88YsDPWPbo14\u003d";
-
     /**
      * Cette méthode prend un message en clair, une clé secrète et un vecteur d'initialisation (IV) en entrée.
      * Elle utilise la clé et l'IV pour chiffrer le message en utilisant l'algorithme de chiffrement AES-GCM.
@@ -132,14 +130,6 @@ public class AESCrypt {
         // Effectue le déchiffrement
         return cipher.doFinal(cipherText);
 
-    }
-
-    public static void main(String[] args) throws Exception {
-        String msg = "Coucou le pote";
-        String msgEncrpt = encrypt(msg, base64AES);
-        System.out.println("msgEcnrypt " + msgEncrpt);
-        String msgDecrypt = decrypt(msgEncrpt, base64AES);
-        System.out.println("msgDectypt " + msgDecrypt);
     }
 }
 

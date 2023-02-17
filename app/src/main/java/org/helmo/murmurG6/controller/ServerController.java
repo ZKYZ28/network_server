@@ -145,7 +145,7 @@ public class ServerController implements AutoCloseable {
                 try {
                     c.sendMessage("MSGS " + senderClient.getUser().getLogin()+"@"+getIp() + " " + AESCrypt.encrypt(message, new ServerJsonStorage().loadKeyAes()));
                 } catch (ReadServerConfigurationException e) {
-                    System.out.println(e.getMessage());
+                    System.out.println("ERREUR " + e.getMessage());
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
