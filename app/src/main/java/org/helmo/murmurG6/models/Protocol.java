@@ -30,7 +30,7 @@ public class Protocol {
     private static final String RX_SALT_SIZE = "([0-9]{2})";
     public static final String RX_BCRYPT_HASH = "(\\$2b\\$\\d{2}\\$(" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){1,70})";
     public static final String TAG = "#[a-zA-Z0-9]{5,20}";
-    public static final Pattern TAG_DOMAIN = Pattern.compile("(" + TAG + "@" + "(?<TrendServerDomain>" + RX_DOMAIN + "))");
+    public static final Pattern TAG_DOMAIN = Pattern.compile("(" + "(?<tagName>" +  TAG + ")" + "@" + "(?<TrendServerDomain>" + RX_DOMAIN + "))");
 
     public static final Pattern TAG_DOMAIN_OR_RX_USER_DOMAIN = Pattern.compile("(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")");
 

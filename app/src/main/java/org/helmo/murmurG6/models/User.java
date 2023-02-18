@@ -2,24 +2,25 @@ package org.helmo.murmurG6.models;
 
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
 
 public class User {
 
     private final String login; //Login de l'utilisateur.
     private final BCrypt bCrypt;
-    private final List<String> userFollowers; //Liste des utilisateurs suivis par l'utilisateur.
-    private final List<String> followedTrends; //Liste des tendances suivies par l'utilisateur.
+    private final Set<String> userFollowers; //Liste des utilisateurs suivis par l'utilisateur.
+    private final Set<Trend> followedTrends; //Liste des tendances suivies par l'utilisateur.
 
-    public User(String login, BCrypt bCrypt, List<String> userFollowers, List<String> followedTrends) {
+    public User(String login, BCrypt bCrypt, Set<String> userFollowers, Set<Trend> followedTrends) {
         this.login = login;
         this.bCrypt = bCrypt;
         this.userFollowers = userFollowers;
         this.followedTrends = followedTrends;
     }
 
-    public boolean followsTrend(Set<String> extractedTrends) {
-        for (String trend : extractedTrends) {
-            for (String followedTrend : this.followedTrends) {
+    public boolean followsTrend(Set<Trend> extractedTrends) {
+        for (Trend trend : extractedTrends) {
+            for (Trend followedTrend : this.followedTrends) {
                 if (followedTrend.contains(trend)) {
                     return true;
                 }
@@ -29,15 +30,26 @@ public class User {
     }
 
     public void addFollower(String follower) {
-        if (!this.userFollowers.contains(follower)) {
-            this.userFollowers.add(follower);
-        }
+        this.userFollowers.add(follower);
     }
 
-    public void followTrend(String trendId) {
-        if (!this.followedTrends.contains(trendId)) {
-            this.followedTrends.add(trendId);
+    public void followTrend(Trend trend) {
+        this.followedTrends.add(trend);
+    }
+
+    /**
+     * Retourne la trend (tag@domain) suivie par l'utilisateur en fonction du tag passé en paramètre
+     * @param tag le tag de la trend recherché dans la liste de trend suivie par l'utilisateur
+     * @return La trend
+     * @throws InexistantTrendTagException Exception lancée si le tag de la trend recherché n'est pas suivi par l'utilisateur
+     */
+    public Trend getTrendByTag(String tag) throws InexistantTrendTagException {
+        for(Trend trend: followedTrends){
+            if(tag.equals(trend.getTrendName())) {
+                return trend;
+            }
         }
+        throw new InexistantTrendTagException("Tag inexistant!");
     }
 
 
@@ -64,11 +76,17 @@ public class User {
         return this.bCrypt.getSalt();
     }
 
-    public List<String> getUserFollowers() {
+    public Set<String> getUserFollowers() {
         return userFollowers;
     }
 
-    public List<String> getFollowedTrends() {
+    public Set<Trend> getFollowedTrends() {
         return followedTrends;
+    }
+
+    private static class InexistantTrendTagException extends Throwable {
+        public InexistantTrendTagException(String message) {
+            super(message);
+        }
     }
 }
