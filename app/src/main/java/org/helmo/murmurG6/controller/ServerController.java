@@ -2,6 +2,7 @@ package org.helmo.murmurG6.controller;
 
 import org.helmo.murmurG6.infrastructure.ServerJsonStorage;
 import org.helmo.murmurG6.models.*;
+import org.helmo.murmurG6.repository.TrendRepository;
 import org.helmo.murmurG6.repository.UserRepository;
 import org.helmo.murmurG6.repository.exceptions.ReadServerConfigurationException;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
@@ -24,22 +25,26 @@ import java.util.regex.Pattern;
 public class ServerController implements AutoCloseable {
     private final Set<ClientRunnable> clientList = Collections.synchronizedSet(new HashSet<>());
     private final SSLServerSocket serverSocket;
-    private final UserRepository storage;
+    private final UserRepository userRepository;
+    private final TrendRepository trendRepository;
     private final UserLibrary userLibrary;
+    private final TrendLibrary trendLibrary;
     private final ServerConfig serverConfig;
 
     /**
      * Le constructeur de la classe ServerController permet de créer un nouveau serveur en spécifiant un numéro de port et un storage d'utilisateurs.
      *
      * @param port Le numéro de port sur lequel le serveur écoutera les connexions entrantes.
-     * @param repo Le storage d'utilisateurs qui sera utilisé pour enregistrer et lire les informations d'utilisateur.
+     * @param userRepository Le storage d'utilisateurs qui sera utilisé pour enregistrer et lire les informations d'utilisateur.
      * @throws IOException En cas d'échec de la création du socket serveur.
      */
-    public ServerController(int port, UserRepository repo) throws IOException {
+    public ServerController(int port, UserRepository userRepository, TrendRepository trendRepository) throws IOException {
         SSLServerSocketFactory sslServerSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
         this.serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(port);
-        this.storage = repo;
-        this.userLibrary = repo.load(); //remplissage de tous les users inscrits dans la usercollection
+        this.userRepository = userRepository;
+        this.trendRepository = trendRepository;
+        this.userLibrary = userRepository.load(); //remplissage de tous les users inscrits dans la usercollection
+        this.trendLibrary = trendRepository.load();
 
         this.serverConfig = new ServerJsonStorage().loadServerConfiguration();
         this.serverConfig.setServerIp(getIp());
@@ -100,12 +105,17 @@ public class ServerController implements AutoCloseable {
         }
     }
 
-    public void saveUsers() throws SaveUserCollectionException {
-        storage.save(this.userLibrary);
+    public void save() throws SaveUserCollectionException {
+        userRepository.save(this.userLibrary);
+        trendRepository.save(this.trendLibrary);
     }
 
-    public UserLibrary getUserCollection() {
+    public UserLibrary getUserLibrary() {
         return userLibrary;
+    }
+
+    public TrendLibrary getTrendLibrary() {
+        return trendLibrary;
     }
 
     public String getIp() {

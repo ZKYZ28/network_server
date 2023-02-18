@@ -1,16 +1,24 @@
 package org.helmo.murmurG6.models;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import org.helmo.murmurG6.models.UserCredentials;
+import java.util.*;
 
-public class TrendLibrary extends HashMap<String, Set<String>> {
+public class TrendLibrary {
 
-    public void addUserToTrend(String trendName, String user) {
-        if (!this.containsKey(trendName)) {
-            this.put(trendName, new HashSet<>());
+    private final Map<String, Set<UserCredentials>> trendMap;
+
+    public TrendLibrary() {
+        this.trendMap = Collections.synchronizedMap(new HashMap<>());
+    }
+
+    public void addUserToTrend(String trendName, UserCredentials user) {
+        if (!trendMap.containsKey(trendName)) {
+            trendMap.put(trendName, new HashSet<>());
         }
+        trendMap.get(trendName).add(user);
+    }
 
-        this.get(trendName).add(user);
+    public Set<UserCredentials> getUsersForTrend(String trendName) {
+        return this.trendMap.get(trendName);
     }
 }

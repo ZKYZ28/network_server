@@ -64,7 +64,7 @@ public class Executor implements TaskScheduler {
                 break;
 
             case CONNECT:
-                user = server.getUserCollection().get(params.group("username"));
+                user = server.getUserLibrary().getUser(params.group("username"));
                 client.setUser(user);
                 client.sendMessage(connect(user.getLogin()));
                 break;
@@ -83,9 +83,8 @@ public class Executor implements TaskScheduler {
             case FOLLOW:
                 try {
                     follow(client.getUser(), params.group("domain"));
-                    server.saveUsers();
+                    server.save();
                 } catch (SaveUserCollectionException | UnableToFollowUser e) {
-                    System.out.println(e.getMessage());
                     client.sendMessage(Protocol.build_ERROR());
                 }
                 break;
@@ -96,8 +95,8 @@ public class Executor implements TaskScheduler {
     }
 
     private String connect(String login) {
-        if (server.getUserCollection().containsKey(login)) {
-            User user = server.getUserCollection().get(login);
+        if (server.getUserLibrary().isRegistered(login)) {
+            User user = server.getUserLibrary().getUser(login);
             return Protocol.build_PARAM(user.getBcryptRound(), user.getBcryptSalt());
         } else {
             return Protocol.build_ERROR();
@@ -110,9 +109,9 @@ public class Executor implements TaskScheduler {
 
     private String register(User user, ClientRunnable client) {
         try {
-            server.getUserCollection().register(user);
+            server.getUserLibrary().register(user);
             client.setUser(user);
-            server.saveUsers();
+            server.save();
             return Protocol.build_OK();
         } catch (SaveUserCollectionException | UserAlreadyRegisteredException e) {
             return Protocol.build_ERROR();
@@ -126,42 +125,46 @@ public class Executor implements TaskScheduler {
     }
 
 
-    //test@server1 || #test@server2
-    private void follow(User user, String itemToBeFollowed) throws UnableToFollowUser {
-        Matcher matcher = Protocol.TAG_DOMAIN_OR_RX_USER_DOMAIN.matcher(itemToBeFollowed);
-        if (!matcher.matches()) {
-            return;
-        }
-
-        String domain = matcher.group("UserServerDomain");
-        if (!domain.equals(server.getServerConfig().getServerName())) {
-            Protocol.build_SEND("", "", "", "");
+    private void follow(User user, String target) {
+        if (target.startsWith("#")) {
+            followTrend(user, target);
         } else {
-            String login = matcher.group("login");
-            String userDomain = user.getLogin() + "@" + server.getServerConfig().getServerName();
-
-            if (itemToBeFollowed.charAt(0) == '#') {
-                user.followTrend(itemToBeFollowed);
-            } else {
-                User followedUser = server.getUserCollection().get(login);
-                followedUser.addFollower(userDomain);
-            }
+            followUser(user, target);
         }
     }
 
 
-    //TODO: Gérer le cas ou le login a suivre n'existe pas (checker sur TOUS les servers)
-   /* private void followUser(User user, String loginToBeFollowed) throws UnableToFollowUser{
-        Matcher matcher = Protocol.RX_USER_DOMAIN.matcher(loginToBeFollowed);
-        if(matcher.matches() && matcher.group("login").equals(user.getLogin())){
-            throw new UnableToFollowUser("login d'utilisateur à suivre invalide!");
-        }else{
-            user.followUser(loginToBeFollowed);
+    //test@server1 || #test@server2
+    private void followUser(User user, String userToFollow) throws UnableToFollowUser {
+        Matcher matcher = Protocol.TAG_DOMAIN_OR_RX_USER_DOMAIN.matcher(userToFollow);
+        if (matcher.matches()) {
+            String login = matcher.group("login");
+            String domain = matcher.group("userServerDomain");
+            if (!domain.equals(server.getServerConfig().getServerName())) {
+                Protocol.build_SEND("", "", "", "");
+            } else {
+                if (server.getUserLibrary().isRegistered(login)) {
+                    User followedUser = server.getUserLibrary().getUser(login);
+                    followedUser.addFollower(new UserCredentials(user.getLogin(), server.getServerConfig().getServerName()));
+                }
+            }
         }
-    }*/
+    }
 
+    private void followTrend(User user, String trendToFollow) throws UnableToFollowUser {
+        Matcher matcher = Protocol.TAG_DOMAIN_OR_RX_USER_DOMAIN.matcher(trendToFollow);
+        if (matcher.matches()) {
+            String trendName = matcher.group("tagName");
+            String domain = matcher.group("trendServerDomain");
+            user.followTrend(new Trend(trendName, domain));
 
-
+            if (!domain.equals(server.getServerConfig().getServerName())) {
+                Protocol.build_SEND("sdfsdf", "sdfsdf", "sdfsdf", "sdfsdf");
+            } else {
+                server.getTrendLibrary().addUserToTrend(trendName, new UserCredentials(user.getLogin(), server.getServerConfig().getServerName()));
+            }
+        }
+    }
 
     @Override
     public void close() {

@@ -84,10 +84,10 @@ public class User {
     public Set<Trend> getFollowedTrends() {
         return followedTrends;
     }
+}
 
-    private static class InexistantTrendTagException extends Throwable {
-        public InexistantTrendTagException(String message) {
-            super(message);
-        }
+class InexistantTrendTagException extends Throwable {
+    public InexistantTrendTagException(String message) {
+        super(message);
     }
 }

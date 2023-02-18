@@ -11,21 +11,38 @@ import java.util.*;
  * @version 1.0
  * @since 11 février 2023
  */
-public class UserLibrary extends HashMap<String, User> {
+public class UserLibrary {
+
+    private final Map<String, User> userMap;
+
+    public UserLibrary() {
+        this.userMap = Collections.synchronizedMap(new HashMap<>());
+    }
 
     public void register(User user) throws UserAlreadyRegisteredException {
-        if(this.containsKey(user.getLogin())){
+        if(this.userMap.containsKey(user.getLogin())){
             throw new UserAlreadyRegisteredException("L'utilisateur est déja inscrit!");
         }else{
-            this.put(user.getLogin(), user);
+            this.userMap.put(user.getLogin(), user);
         }
     }
 
     public static UserLibrary of(Iterable<User> users) {
         UserLibrary library = new UserLibrary();
         for(User u : users){
-            library.put(u.getLogin(), u);
+            library.userMap.put(u.getLogin(), u);
         }
         return library;
+    }
+
+    public User getUser(String login) {
+        if (this.userMap.containsKey(login)) {
+            return this.userMap.get(login);
+        }
+        return null;
+    }
+
+    public boolean isRegistered(String login) {
+        return this.userMap.containsKey(login);
     }
 }

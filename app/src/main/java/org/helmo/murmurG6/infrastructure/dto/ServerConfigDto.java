@@ -10,6 +10,6 @@ public class ServerConfigDto {
     }
 
     public ServerConfigDto(){
-    }
 
+    }
 }
