@@ -1,9 +1,6 @@
 package org.helmo.murmurG6.infrastructure.dto;
 
-import org.helmo.murmurG6.models.BCrypt;
-import org.helmo.murmurG6.models.Trend;
-import org.helmo.murmurG6.models.User;
-import org.helmo.murmurG6.models.UserCredentials;
+import org.helmo.murmurG6.models.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -93,5 +90,25 @@ public class Mapper {
             }
         }
         return dtos;
+    }
+
+    public static TrendLibraryDto toDto(TrendLibrary library) {
+        TrendLibraryDto dto = new TrendLibraryDto();
+
+        for (var entry : library.getTrendMap().keySet()) {
+            dto.trendMap.put(entry, Mapper.userCredentialsListToDto(library.getTrendMap().get(entry)));
+        }
+        return dto;
+    }
+
+    public static TrendLibrary fromDto(TrendLibraryDto dto) {
+        TrendLibrary library = new TrendLibrary();
+
+        if (dto != null) {
+            for (var entry : dto.trendMap.keySet()) {
+                library.getTrendMap().put(entry, Mapper.dtoListTouserCredentials(dto.trendMap.get(entry)));
+            }
+        }
+        return library;
     }
 }

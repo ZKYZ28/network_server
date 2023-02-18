@@ -6,12 +6,12 @@ public class ServerConfig {
     private String serverIp;
     private final String base64KeyAES;
 
-    public ServerConfig(String serverName, String base64KeyAES){
+    public ServerConfig(String serverName, String base64KeyAES) {
         this.serverName = serverName;
         this.base64KeyAES = base64KeyAES;
     }
 
-    public void setServerIp(String ip){
+    public void setServerIp(String ip) {
         this.serverIp = ip;
     }
 

@@ -1,6 +1,7 @@
 package org.helmo.murmurG6.models;
 
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
+
 import java.util.*;
 
 /**
@@ -20,16 +21,16 @@ public class UserLibrary {
     }
 
     public void register(User user) throws UserAlreadyRegisteredException {
-        if(this.userMap.containsKey(user.getLogin())){
+        if (this.userMap.containsKey(user.getLogin())) {
             throw new UserAlreadyRegisteredException("L'utilisateur est déja inscrit!");
-        }else{
+        } else {
             this.userMap.put(user.getLogin(), user);
         }
     }
 
     public static UserLibrary of(Iterable<User> users) {
         UserLibrary library = new UserLibrary();
-        for(User u : users){
+        for (User u : users) {
             library.userMap.put(u.getLogin(), u);
         }
         return library;

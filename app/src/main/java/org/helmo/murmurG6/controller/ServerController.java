@@ -34,7 +34,7 @@ public class ServerController implements AutoCloseable {
     /**
      * Le constructeur de la classe ServerController permet de créer un nouveau serveur en spécifiant un numéro de port et un storage d'utilisateurs.
      *
-     * @param port Le numéro de port sur lequel le serveur écoutera les connexions entrantes.
+     * @param port           Le numéro de port sur lequel le serveur écoutera les connexions entrantes.
      * @param userRepository Le storage d'utilisateurs qui sera utilisé pour enregistrer et lire les informations d'utilisateur.
      * @throws IOException En cas d'échec de la création du socket serveur.
      */

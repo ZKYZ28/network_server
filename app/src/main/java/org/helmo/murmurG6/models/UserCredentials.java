@@ -5,7 +5,7 @@ public class UserCredentials {
     private final String login;
     private final String domain;
 
-    public UserCredentials(String login, String domain){
+    public UserCredentials(String login, String domain) {
         this.login = login;
         this.domain = domain;
     }
@@ -34,6 +34,4 @@ public class UserCredentials {
         UserCredentials userCredentials = (UserCredentials) obj;
         return userCredentials.login.equals(this.login);
     }
-
-
 }

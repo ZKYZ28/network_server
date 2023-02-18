@@ -1,7 +1,6 @@
 package org.helmo.murmurG6.infrastructure.dto;
 
 import org.helmo.murmurG6.models.BCrypt;
-import org.helmo.murmurG6.models.Trend;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.UserCredentials;
 
@@ -17,7 +16,7 @@ import java.util.Set;
  */
 public class UserDto {
 
-    public String login;
+    public UserCredentials login;
     public BCryptDto bcryptDto;
     public Set<UserCredentialsDto> followedUsers;
     public Set<TrendDto> followedTrends;
@@ -29,7 +28,8 @@ public class UserDto {
 
     public static UserDto toDto(User user) {
         UserDto dto = new UserDto();
-        dto.login = user.getLogin();
+
+        dto.login = user.getCredentials();
         dto.bcryptDto = Mapper.bcryptToBcryptDto(user.getBcrypt());
         dto.followedUsers = Mapper.userCredentialsListToDto(user.getUserFollowers());
         dto.followedTrends = Mapper.trendsToDto(user.getFollowedTrends());
@@ -52,40 +52,6 @@ class BCryptDto {
         bc.rounds = bcrypt.getRounds();
         bc.hash = bcrypt.getHash();
         return bc;
-    }
-}
-
-class UserCredentialsDto {
-
-    public String login;
-    public String domain;
-
-    public static UserCredentials fromDto(UserCredentialsDto dto) {
-        return new UserCredentials(dto.login, dto.domain);
-    }
-
-    public static UserCredentialsDto toDto(UserCredentials user) {
-        UserCredentialsDto dto = new UserCredentialsDto();
-        dto.login = user.getLogin();
-        dto.domain = user.getDomain();
-        return dto;
-    }
-}
-
-class TrendDto {
-
-    public String trendName;
-    public String domain;
-
-    public static Trend fromDto(TrendDto dto) {
-        return new Trend(dto.trendName, dto.domain);
-    }
-
-    public static TrendDto toDto(Trend trend) {
-        TrendDto dto = new TrendDto();
-        dto.trendName = trend.getTrendName();
-        dto.domain = trend.getDomain();
-        return dto;
     }
 }
 

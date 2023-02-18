@@ -2,6 +2,8 @@ package org.helmo.murmurG6.infrastructure;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.helmo.murmurG6.infrastructure.dto.Mapper;
+import org.helmo.murmurG6.infrastructure.dto.TrendLibraryDto;
 import org.helmo.murmurG6.models.TrendLibrary;
 import org.helmo.murmurG6.repository.TrendRepository;
 import org.helmo.murmurG6.repository.exceptions.ReadUserCollectionException;
@@ -25,7 +27,7 @@ public class TrendJsonStorage implements TrendRepository {
         createFile(FILE_PATH);
 
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(FILE_PATH, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING)) {
-            gson.toJson(library, new TypeToken<TrendLibrary>() {
+            gson.toJson(Mapper.toDto(library), new TypeToken<TrendLibraryDto>() {
             }.getType(), bufferedWriter);
         } catch (IOException e) {
             throw new SaveUserCollectionException("Impossible de sauvegarder la liste d'utilisateur!");
@@ -37,7 +39,7 @@ public class TrendJsonStorage implements TrendRepository {
         createFile(FILE_PATH);
 
         try (BufferedReader reader = Files.newBufferedReader(FILE_PATH, StandardCharsets.UTF_8)) {
-            TrendLibrary trendLibrary = gson.fromJson(reader, new TypeToken<TrendLibrary>() {}.getType());
+            TrendLibrary trendLibrary = Mapper.fromDto(gson.fromJson(reader, new TypeToken<TrendLibrary>() {}.getType()));
             return trendLibrary != null ? trendLibrary : new TrendLibrary();
         } catch (IOException e) {
             throw new ReadUserCollectionException("Impossible de charger la liste d'utilisateurs!");

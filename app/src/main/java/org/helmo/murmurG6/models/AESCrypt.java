@@ -126,7 +126,6 @@ public class AESCrypt {
 
         // Effectue le déchiffrement
         return cipher.doFinal(cipherText);
-
     }
 }
 

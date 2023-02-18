@@ -4,6 +4,7 @@ import org.helmo.murmurG6.models.*;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 import org.helmo.murmurG6.utils.RandomSaltGenerator;
+
 import java.util.HashSet;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
@@ -59,7 +60,7 @@ public class Executor implements TaskScheduler {
 
         switch (task.getType()) {
             case REGISTER:
-                user = new User(params.group("username"), BCrypt.of(params.group("bcrypt")), new HashSet<>(), new HashSet<>());
+                user = new User(new UserCredentials(params.group("username"), server.getServerConfig().getServerName()), BCrypt.of(params.group("bcrypt")), new HashSet<>(), new HashSet<>());
                 client.sendMessage(register(user, client));
                 break;
 

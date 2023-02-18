@@ -17,6 +17,10 @@ public class TrendLibrary {
         trendMap.get(trendName).add(user);
     }
 
+    public Map<String, Set<UserCredentials>> getTrendMap() {
+        return trendMap;
+    }
+
     public Set<UserCredentials> getUsersForTrend(String trendName) {
         return this.trendMap.get(trendName);
     }

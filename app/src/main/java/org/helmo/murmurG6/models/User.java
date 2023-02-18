@@ -4,12 +4,12 @@ import java.util.Set;
 
 public class User {
 
-    private final String login; //Login de l'utilisateur.
+    private final UserCredentials login; //Login de l'utilisateur.
     private final BCrypt bCrypt;
     private final Set<UserCredentials> userFollowers; //Liste des utilisateurs suivis par l'utilisateur.
     private final Set<Trend> followedTrends; //Liste des tendances suivies par l'utilisateur.
 
-    public User(String login, BCrypt bCrypt, Set<UserCredentials> userFollowers, Set<Trend> followedTrends) {
+    public User(UserCredentials login, BCrypt bCrypt, Set<UserCredentials> userFollowers, Set<Trend> followedTrends) {
         this.login = login;
         this.bCrypt = bCrypt;
         this.userFollowers = userFollowers;
@@ -17,7 +17,6 @@ public class User {
     }
 
     /**
-     *
      * @param extractedTrends Un set de trends contenu dans un messages (Ex: Message = Yo les gars #devs #yo #salut, le Set contiendrait #devs, #yo, et #salut)
      * @return True si au moins une des trends du set est parmis les trend suivies par l'utilisateur
      */
@@ -40,19 +39,19 @@ public class User {
 
     /**
      * Retourne la trend (tag@domain) suivie par l'utilisateur en fonction du tag passé en paramètre
+     *
      * @param tag le tag de la trend recherché dans la liste de trend suivie par l'utilisateur
      * @return La trend
      * @throws InexistantTrendTagException Exception lancée si le tag de la trend recherché n'est pas suivi par l'utilisateur
      */
     public Trend getTrendByTag(String tag) throws InexistantTrendTagException {
-        for(Trend trend: followedTrends){
-            if(tag.equals(trend.getTrendName())) {
+        for (Trend trend : followedTrends) {
+            if (tag.equals(trend.getTrendName())) {
                 return trend;
             }
         }
         throw new InexistantTrendTagException("Tag inexistant!");
     }
-
 
 
     /***************** GETTERS *****************/
@@ -62,6 +61,10 @@ public class User {
     }
 
     public String getLogin() {
+        return this.login.getLogin();
+    }
+
+    public UserCredentials getCredentials(){
         return this.login;
     }
 
@@ -83,6 +86,11 @@ public class User {
 
     public Set<Trend> getFollowedTrends() {
         return followedTrends;
+    }
+
+    @Override
+    public String toString() {
+        return this.login.toString();
     }
 }
 
