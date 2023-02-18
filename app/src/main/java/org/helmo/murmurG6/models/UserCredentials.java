@@ -1,17 +1,17 @@
 package org.helmo.murmurG6.models;
 
-public class Trend {
+public class UserCredentials {
 
-    private String trendName;
-    private String domain;
+    private final String login;
+    private final String domain;
 
-    public Trend(String trendName, String domain) {
-        this.trendName = trendName;
+    public UserCredentials(String login, String domain){
+        this.login = login;
         this.domain = domain;
     }
 
-    public String getTrendName() {
-        return trendName;
+    public String getLogin() {
+        return login;
     }
 
     public String getDomain() {
@@ -20,7 +20,7 @@ public class Trend {
 
     @Override
     public String toString() {
-        return trendName + "@" + domain;
+        return login + "@" + domain;
     }
 
     @Override
@@ -31,7 +31,9 @@ public class Trend {
         if (obj == null || obj.getClass() != this.getClass()) {
             return false;
         }
-        Trend trend = (Trend) obj;
-        return trend.trendName.equals(this.trendName);
+        UserCredentials userCredentials = (UserCredentials) obj;
+        return userCredentials.login.equals(this.login);
     }
+
+
 }

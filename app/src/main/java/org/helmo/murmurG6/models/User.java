@@ -1,17 +1,15 @@
 package org.helmo.murmurG6.models;
 
-import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
 
 public class User {
 
     private final String login; //Login de l'utilisateur.
     private final BCrypt bCrypt;
-    private final Set<String> userFollowers; //Liste des utilisateurs suivis par l'utilisateur.
+    private final Set<UserCredentials> userFollowers; //Liste des utilisateurs suivis par l'utilisateur.
     private final Set<Trend> followedTrends; //Liste des tendances suivies par l'utilisateur.
 
-    public User(String login, BCrypt bCrypt, Set<String> userFollowers, Set<Trend> followedTrends) {
+    public User(String login, BCrypt bCrypt, Set<UserCredentials> userFollowers, Set<Trend> followedTrends) {
         this.login = login;
         this.bCrypt = bCrypt;
         this.userFollowers = userFollowers;
@@ -32,7 +30,7 @@ public class User {
         return false;
     }
 
-    public void addFollower(String follower) {
+    public void addFollower(UserCredentials follower) {
         this.userFollowers.add(follower);
     }
 
@@ -79,7 +77,7 @@ public class User {
         return this.bCrypt.getSalt();
     }
 
-    public Set<String> getUserFollowers() {
+    public Set<UserCredentials> getUserFollowers() {
         return userFollowers;
     }
 
