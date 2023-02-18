@@ -34,7 +34,7 @@ public class UserJsonStorage implements UserRepository {
         createFile(FILE_PATH);
 
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(FILE_PATH, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING)) {
-            gson.toJson(Mapper.userListFromDto(new ArrayList<>(uc.values())), new TypeToken<ArrayList<UserDto>>() {
+            gson.toJson(Mapper.userListFromDto(new ArrayList<>(uc.getUsers())), new TypeToken<ArrayList<UserDto>>() {
             }.getType(), bufferedWriter);
         } catch (IOException e) {
             throw new SaveUserCollectionException("Impossible de sauvegarder la liste d'utilisateur!");

@@ -45,4 +45,8 @@ public class UserLibrary {
     public boolean isRegistered(String login) {
         return this.userMap.containsKey(login);
     }
+
+    public Set<User> getUsers() {
+        return new HashSet<>(this.userMap.values());
+    }
 }

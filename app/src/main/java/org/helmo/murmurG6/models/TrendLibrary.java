@@ -1,6 +1,5 @@
 package org.helmo.murmurG6.models;
 
-import org.helmo.murmurG6.models.UserCredentials;
 import java.util.*;
 
 public class TrendLibrary {

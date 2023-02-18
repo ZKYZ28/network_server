@@ -37,8 +37,8 @@ public class TrendJsonStorage implements TrendRepository {
         createFile(FILE_PATH);
 
         try (BufferedReader reader = Files.newBufferedReader(FILE_PATH, StandardCharsets.UTF_8)) {
-            return gson.fromJson(reader, new TypeToken<TrendLibrary>() {
-            }.getType());
+            TrendLibrary trendLibrary = gson.fromJson(reader, new TypeToken<TrendLibrary>() {}.getType());
+            return trendLibrary != null ? trendLibrary : new TrendLibrary();
         } catch (IOException e) {
             throw new ReadUserCollectionException("Impossible de charger la liste d'utilisateurs!");
         }
