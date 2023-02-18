@@ -10,7 +10,6 @@ public class TrendLibrary extends HashMap<String, Set<String>> {
         if (!this.containsKey(trendName)) {
             this.put(trendName, new HashSet<>());
         }
-
         this.get(trendName).add(user);
     }
 }
