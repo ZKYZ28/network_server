@@ -22,10 +22,10 @@ public class UserLibrary extends HashMap<String, User> {
     }
 
     public static UserLibrary of(Iterable<User> users) {
-        UserLibrary ulib = new UserLibrary();
+        UserLibrary library = new UserLibrary();
         for(User u : users){
-            ulib.put(u.getLogin(), u);
+            library.put(u.getLogin(), u);
         }
-        return ulib;
+        return library;
     }
 }

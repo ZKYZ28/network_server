@@ -38,7 +38,6 @@ public class ServerController implements AutoCloseable {
     public ServerController(int port, UserRepository repo) throws IOException {
         SSLServerSocketFactory sslServerSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
         this.serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(port);
-        //this.serverSocket = new ServerSocket(port);
         this.storage = repo;
         this.userLibrary = repo.load(); //remplissage de tous les users inscrits dans la usercollection
 
@@ -59,70 +58,12 @@ public class ServerController implements AutoCloseable {
 
         while (!this.serverSocket.isClosed()) {
             SSLSocket client = (SSLSocket) serverSocket.accept();
-            //Socket client = serverSocket.accept();
             System.out.println("Quelqu'un s'est connecté!");
             ClientRunnable runnable = new ClientRunnable(client);
             clientList.add(runnable);
             new Thread(runnable).start();
         }
     }
-
-    public void broadcastToAllClientsExceptMe(ClientRunnable me, String message) {
-        System.out.printf("[broadcastAll] Message envoyé : %s\n", message);
-        for (ClientRunnable c : clientList) {
-            if (c != me) {
-                c.sendMessage("MSGS admin@192.168.0.19 " + message);
-            }
-        }
-    }
-
-
-    /*public void broadcastOther(ClientRunnable me, String message) {
-        Set<ClientRunnable> needToSend = tellWhoRecevedMessage(me, message);
-        for (ClientRunnable c : needToSend) {
-            c.sendMessage("MSGS " + c.getUser().getLogin() + "@server1.domain.guru " + message);
-        }
-    }
-
-    public Set<ClientRunnable> tellWhoRecevedMessage(ClientRunnable me, String message) {
-        Set<ClientRunnable> needToSend = Collections.synchronizedSet(new HashSet<>());
-        for (ClientRunnable c : clientList) {
-            if (c != me) {
-                if (c.getUser().chekcIfFollowUser(me.getUser().getLogin())) {
-                    needToSend.add(c);
-                }
-                Set<String> trendsInMessage = detectTrends(message);
-                if(trendsInMessage.size() != 0) {
-                    for (FollowInformation follow : me.getUser().getFollowedTrends()) {
-                        if (c.getUser().chekcIfFollowTrend(follow) && trendsInMessage.contains(follow.getInformationFollow())) {
-                            needToSend.add(c);
-                        }
-                    }
-                }
-            }
-        }
-        return needToSend;
-    }
-
-    private Set<String> detectTrends(String message) {
-        Set<String> trends = new HashSet<>();
-        int index = 0;
-        while (index < message.length()) {
-            index = message.indexOf("#", index);
-            if (index == -1) {
-                break;
-            }
-            index++;
-            int debutMot = index;
-            int finMot = message.indexOf(" ", index);
-            if (finMot == -1) {
-                finMot = message.length();
-            }
-            String mot = message.substring(debutMot, finMot);
-            trends.add(mot);
-        }
-        return trends;
-    }*/
 
     private Set<String> extractTrends(String message) {
         Pattern pattern = Pattern.compile(Protocol.TAG);
@@ -144,11 +85,11 @@ public class ServerController implements AutoCloseable {
         for (ClientRunnable c : clientList) {
             try {
 
-                if (c != senderClient && (c.getUser().followsUser(sender.getLogin() + "@" + serverConfig.getServerName())) || c.getUser().followsTrend(extractTrends(message))) {  //TODO A CHANGER LA PARTIE DES TRENDS
+                /*if (c != senderClient && (c.getUser().followsUser(sender.getLogin() + "@" + serverConfig.getServerName())) || c.getUser().followsTrend(extractTrends(message))) {  //TODO A CHANGER LA PARTIE DES TRENDS
                     c.sendMessage(Protocol.build_MSGS(senderClient.getUser().getLogin() + "@" + getIp() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
                 } else if (c != senderClient && (c.getUser().followsUser("") || c.getUser().followsTrend(extractTrends(message)))) {  //TODO A CHANGER LA PARTIE DES TRENDS ET DU USER
                     c.sendMessage(Protocol.build_SEND("","","",""));  //TODO A CHANGER QUAND ON VEUT SEND
-                }
+                }*/
 
             } catch (ReadServerConfigurationException e) {
                 System.out.println("ERREUR LORS DE L'ENVOIE D'UN MESSAGE" + e.getMessage());
@@ -172,6 +113,10 @@ public class ServerController implements AutoCloseable {
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public ServerConfig getServerConfig() {
+        return serverConfig;
     }
 
     @Override

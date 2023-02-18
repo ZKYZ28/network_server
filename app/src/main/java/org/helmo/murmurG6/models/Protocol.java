@@ -21,7 +21,7 @@ public class Protocol {
     private final static String RX_ESP = "\\s";
     private static final String RX_DOMAIN = "((" + RX_LETTER_DIGIT + "|\\.){5,200})";
     public static final String RX_USERNAME = "((" + RX_LETTER_DIGIT + "){5,20})";
-    public static final Pattern RX_USER_DOMAIN = Pattern.compile("(" + "(?<login>"+RX_USERNAME + ")" + "@" + RX_DOMAIN + ")");
+    public static final Pattern RX_USER_DOMAIN = Pattern.compile("(" + "(?<login>"+RX_USERNAME + ")" + "@" + "(?<UserServerDomain>" + RX_DOMAIN + "))");
     private static final String RX_MESSAGE = "((" + RX_VISIBLE_CHARACTER + "){1,250})";
     private static final String RX_SHA3_EX = "((" + RX_LETTER_DIGIT + "){30,200})";
 
@@ -30,9 +30,9 @@ public class Protocol {
     private static final String RX_SALT_SIZE = "([0-9]{2})";
     public static final String RX_BCRYPT_HASH = "(\\$2b\\$\\d{2}\\$(" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){1,70})";
     public static final String TAG = "#[a-zA-Z0-9]{5,20}";
-    public static final String TAG_DOMAIN = "(" + TAG + "@" + RX_DOMAIN + ")";
+    public static final Pattern TAG_DOMAIN = Pattern.compile("(" + TAG + "@" + "(?<TrendServerDomain>" + RX_DOMAIN + "))");
 
-    private static final String TAG_DOMAIN_OR_RX_USER_DOMAIN = "(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")";
+    public static final Pattern TAG_DOMAIN_OR_RX_USER_DOMAIN = Pattern.compile("(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")");
 
 
     /*FULL*/
@@ -87,7 +87,7 @@ public class Protocol {
             RX_MSG_TASK, TaskType.MSG
     );
 
-    public static Task buildTask(String command) /*throws InvalidTaskException */{
+    public static Task buildTask(String command) {
         for (Map.Entry<Pattern, TaskType> entry : TYPE_MESSAGE_MAP.entrySet()) {
             Matcher matcher = entry.getKey().matcher(command);
             if (matcher.matches()) {

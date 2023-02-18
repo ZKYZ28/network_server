@@ -26,7 +26,7 @@ public class UserDto {
         UserDto dto = new UserDto();
         dto.login = user.getLogin();
         dto.bcryptDto = Mapper.bcryptToBcryptDto(user.getBcrypt());
-        dto.followedUsers = user.getFollowedUsers();
+        dto.followedUsers = user.getUserFollowers();
         dto.followedTrends = user.getFollowedTrends();
         return dto;
     }

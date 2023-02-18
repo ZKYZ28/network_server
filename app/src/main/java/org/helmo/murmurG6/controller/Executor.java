@@ -7,7 +7,6 @@ import org.helmo.murmurG6.utils.RandomSaltGenerator;
 import java.util.ArrayList;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Executor implements TaskScheduler {
 
@@ -78,7 +77,6 @@ public class Executor implements TaskScheduler {
                 break;
 
             case MSG:
-                //server.broadcastToAllClientsExceptMe(client, params.group("message"));
                 server.castMsg(client, params.group("message"));
                 break;
 
@@ -130,22 +128,37 @@ public class Executor implements TaskScheduler {
 
 
     private void follow(User user, String itemToBeFollowed) throws UnableToFollowUser {
-        if(itemToBeFollowed.charAt(0) == '#'){
-            user.followTrend(itemToBeFollowed);
+        Matcher matcher = Protocol.TAG_DOMAIN_OR_RX_USER_DOMAIN.matcher(itemToBeFollowed);
+        if (!matcher.matches()) {
+            return;
+        }
+
+        String domain = matcher.group("UserServerDomain");
+        if (!domain.equals(server.getServerConfig().getServerName())) {
+            Protocol.build_SEND("", "", "", "");
         } else {
-            followUser(user, itemToBeFollowed);
+            String login = matcher.group("login");
+            String userDomain = user.getLogin() + "@" + server.getServerConfig().getServerName();
+
+            if (itemToBeFollowed.charAt(0) == '#') {
+                user.followTrend(itemToBeFollowed);
+            } else {
+                User followedUser = server.getUserCollection().get(login);
+                followedUser.addFollower(userDomain);
+            }
         }
     }
 
-        //TODO: Gérer le cas ou le login a suivre n'existe pas (checker sur TOUS les servers)
-        private void followUser(User user, String loginToBeFollowed) throws UnableToFollowUser{
-            Matcher matcher = Protocol.RX_USER_DOMAIN.matcher(loginToBeFollowed);
-            if(matcher.matches() && matcher.group("login").equals(user.getLogin())){
-                throw new UnableToFollowUser("login d'utilisateur à suivre invalide!");
-            }else{
-                user.followUser(loginToBeFollowed);
-            }
+
+    //TODO: Gérer le cas ou le login a suivre n'existe pas (checker sur TOUS les servers)
+   /* private void followUser(User user, String loginToBeFollowed) throws UnableToFollowUser{
+        Matcher matcher = Protocol.RX_USER_DOMAIN.matcher(loginToBeFollowed);
+        if(matcher.matches() && matcher.group("login").equals(user.getLogin())){
+            throw new UnableToFollowUser("login d'utilisateur à suivre invalide!");
+        }else{
+            user.followUser(loginToBeFollowed);
         }
+    }*/
 
 
 

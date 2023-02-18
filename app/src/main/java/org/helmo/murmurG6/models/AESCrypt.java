@@ -23,10 +23,8 @@ public class AESCrypt {
      * @param plaintext le message que l'on souhaite chiffrer
      * @param keyBase64AES clé sous la forme base64
      * @return le message chiffré sous forme d'une chaine de caractères
-     * @throws Exception
      */
-    public static String encrypt(String plaintext, String keyBase64AES) throws Exception
-    {
+    public static String encrypt(String plaintext, String keyBase64AES) throws Exception {
         // Conversion du message en tableau d'octets
         byte[] plaintextBytes = plaintext.getBytes();
         // Décoder la clé en base64 sous la forme d'un tableau d'octets
@@ -60,7 +58,6 @@ public class AESCrypt {
      * @param cipherMessage le message chiffré (chaine de caractères)
      * @param keyBase64AES la clé sous la forme base64
      * @return le message déchiffré sous forme d'une chaine de caractères
-     * @throws Exception
      */
     public static String decrypt(String cipherMessage, String keyBase64AES) throws Exception
     {
