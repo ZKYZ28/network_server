@@ -28,7 +28,6 @@ public class ServerController implements AutoCloseable {
     private final UserLibrary userLibrary;
     private final TrendLibrary trendLibrary = new TrendLibrary(); //TODO Executor: quand follow, enregistrer le follower de la trend
     private final ServerConfig serverConfig;
-    private final MessageHistoryBuffer messageHistoryBuffer = new MessageHistoryBuffer();
 
     /**
      * Le constructeur de la classe ServerController permet de créer un nouveau serveur en spécifiant un numéro de port et un storage d'utilisateurs.
@@ -81,96 +80,74 @@ public class ServerController implements AutoCloseable {
         return matches;
     }
 
-    //TODO
+
+    /**
+     * Cast un message à des utilisateurs locaux ou distant
+     * @param senderClient Le thread Client Emetteur du message
+     * @param message le message à caster
+     */
     public void castMsg(ClientRunnable senderClient, String message) throws Exception {
+        //Tactique: on gère d'abord l'envoi des message aux followers du sender, ensuite on gerera les messages aux followers des trends
+
         System.out.printf("Message envoyé : %s\n", message);
         User sender = senderClient.getUser();
+        UUID idMessage = UUID.randomUUID();
 
-
-
-       //1. Si message contient au moins 1 trend ET que ce trend est follow par des User d'un autre server -> Historique
-       //car il y a un risque qu'une personne recoive deux fois le message (follow le sender ET soit abonnée à la trend)
-       if(extractTrends(message).size() > 0){
-
-
-           //Mise en place de l'historique pour palier le risque de message double
-
-           //Generation de l'id du message qui va etre envoyé
-           UUID messageID = UUID.randomUUID();
-           messageHistoryBuffer.createMessageHistory(messageID);
-
-            //On envoi d'abord le message aux follower LOCAL!!! du sender et on ajoute ceux ci dans l'historique
-           for(UserCredentials follower: sender.getUserFollowers()){
-               ClientRunnable client = getClientRunnableByLogin(follower.toString());
-
-               //Si le follower est connecté et est un follower local: on lui envoi le msg + on l'ajoute à l'historique
-               if(client != null){
-                   if(follower.getDomain().equals(serverConfig.getServerName())){
-                       client.sendMessage(Protocol.build_MSGS(senderClient.getUser().getLogin() + "@" + getIp() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
-                       messageHistoryBuffer.addUsertoHistory(messageID, follower.getLogin());
-                   }
-               }
-           }
-
-
-           //On traite les message par rapport aux trends
-           for(String trend: extractTrends(message)){
-
-               //Cas ou la trend appartient au server
-               if(trendLibrary.containsKey(trend)){
-
-                   //Le server envoi les message aux follower de la trend
-                   for(UserCredentials follower: trendLibrary.get(trend)){
-                       ClientRunnable client = getClientRunnableByLogin(follower.toString());
-
-                       if(client != null){
-                           //on regarde si le client est sur ce server ou sur un autre domaine
-                           if(follower.getDomain().equals(serverConfig.getServerName())){
-
-                               //On regarde si le client a deja recu le message (si il est deja present dans l'historique de ce message
-                               if(!messageHistoryBuffer.hasAlreadyReceived(messageID, follower.toString())){
-                                   client.sendMessage(Protocol.build_MSGS(senderClient.getUser().getLogin() + "@" + getIp() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
-                                   messageHistoryBuffer.addUsertoHistory(messageID, follower.getLogin());
-                               }
-                           }else{
-                               relay.sendMessage(Protocol.build_SEND("","","",""));
-                           }
-                       }
-                   }
-
-
-
-               //Cas ou la trend n'appartient pas au server
-               }else{
-                   relay.sendMessage(Protocol.build_SEND("","","",""));
-               }
-           }
-
-
-
-
-
-
-       //Cas ou il n'y a pas de trend, le sender cast ses followers (pas de risque de double message)
-       }else{
-
-           //Parcours de la liste des followers du sender + envoi des message
-           for(UserCredentials follower: sender.getUserFollowers()){
-               ClientRunnable client = getClientRunnableByLogin(follower.toString());
-
-               if(client != null){
-                   //on regarde si le client est sur ce server ou sur un autre domaine
-                   if(follower.getDomain().equals(serverConfig.getServerName())){
-                       client.sendMessage(Protocol.build_MSGS(senderClient.getUser().getLogin() + "@" + getIp() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
-                   }else{
-                       relay.sendMessage(Protocol.build_SEND("","","",""));
-                   }
-               }
-
-           }
-       }
-
+        castToFollowers(senderClient, sender.getUserFollowers(), message, idMessage);
+        castToTrendFollowers(senderClient, sender.getUserFollowers(), message, idMessage);
     }
+
+    private void castToFollowers(ClientRunnable senderClient, Set<User> followers, String message, UUID idMessage) throws Exception {
+        //Parcours de la liste des followers du sender + envoi des message
+        for(User follower: followers){
+
+            manageMessageSending(senderClient, message, idMessage, follower);
+        }
+    }
+
+
+
+
+
+    private void castToTrendFollowers(ClientRunnable senderClient, Set<User> followers, String message, UUID idMessage) {
+        //On parcours les trends du message
+        for(String trendName: extractTrends(message)){
+
+            //On regarde si la trend appartient à ce server
+            if(trendLibrary.containsKey(trendName)){
+
+                //Si oui, alors on itère sur les followers de cette trends afin de leur écrire
+                for(UserCredentials userCredentials: trendLibrary.get(trendName)){
+
+                    manageMessageSending(senderClient, message, idMessage, userCredentials);
+                }
+            }
+        }
+    }
+
+
+    private void manageMessageSending(ClientRunnable senderClient, String message, UUID idMessage, User follower) throws Exception {
+        //on regarde si le client est sur ce server ou sur un autre domaine
+        if(follower.getDomain().equals(serverConfig.getServerName())){
+
+            //On recupere le threadClient sur le server du follower afin de lui écrire
+            ClientRunnable client = getClientRunnableByLogin(follower.getLogin());
+
+            //Si le client est connecté, alors on lui écrit
+            if(client != null && !follower.hasAlreadyReceived) {
+                client.sendMessage(Protocol.build_MSGS(senderClient.getUser().getLogin() + "@" + getIp() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
+                follower.saveReceivedMessageId(idMessage);
+            }else{
+                //TODO : Extension file de message quand le client n'est pas connecté (quand il est nul dans ce cas ci)
+            }
+        }else{
+            relay.sendMessage(Protocol.build_SEND(idMessage.toString(), senderClient.getUser().getLogin(), follower.getLogin(), message));
+        }
+    }
+
+
+
+
 
     public void saveUsers() throws SaveUserCollectionException {
         storage.save(this.userLibrary);
