@@ -18,12 +18,15 @@ public class User {
         this.followedTrends = followedTrends;
     }
 
+    /**
+     *
+     * @param extractedTrends Un set de trends contenu dans un messages (Ex: Message = Yo les gars #devs #yo #salut, le Set contiendrait #devs, #yo, et #salut)
+     * @return True si au moins une des trends du set est parmis les trend suivies par l'utilisateur
+     */
     public boolean followsTrend(Set<Trend> extractedTrends) {
-        for (Trend trend : extractedTrends) {
-            for (Trend followedTrend : this.followedTrends) {
-                if (followedTrend.contains(trend)) {
-                    return true;
-                }
+        for (Trend trend : extractedTrends) { //On parcours les trends du set (#devs, #yo, et #salut)
+            if (this.followedTrends.contains(trend)) {
+                return true;
             }
         }
         return false;

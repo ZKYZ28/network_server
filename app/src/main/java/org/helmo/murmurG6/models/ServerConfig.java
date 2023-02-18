@@ -2,9 +2,9 @@ package org.helmo.murmurG6.models;
 
 public class ServerConfig {
 
-    private String serverName;
+    private final String serverName;
     private String serverIp;
-    private String base64KeyAES;
+    private final String base64KeyAES;
 
     public ServerConfig(String serverName, String base64KeyAES){
         this.serverName = serverName;

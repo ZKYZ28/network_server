@@ -26,7 +26,7 @@ public class ServerController implements AutoCloseable {
     private final SSLServerSocket serverSocket;
     private final UserRepository storage;
     private final UserLibrary userLibrary;
-    private ServerConfig serverConfig;
+    private final ServerConfig serverConfig;
 
     /**
      * Le constructeur de la classe ServerController permet de créer un nouveau serveur en spécifiant un numéro de port et un storage d'utilisateurs.
