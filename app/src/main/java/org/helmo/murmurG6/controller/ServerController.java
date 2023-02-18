@@ -84,6 +84,7 @@ public class ServerController implements AutoCloseable {
 
         for (ClientRunnable c : clientList) {
             try {
+                sender.getUserFollowers().contains(c.getUser());
 
                 /*if (c != senderClient && (c.getUser().followsUser(sender.getLogin() + "@" + serverConfig.getServerName())) || c.getUser().followsTrend(extractTrends(message))) {  //TODO A CHANGER LA PARTIE DES TRENDS
                     c.sendMessage(Protocol.build_MSGS(senderClient.getUser().getLogin() + "@" + getIp() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));

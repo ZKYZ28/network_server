@@ -1,9 +1,8 @@
 package org.helmo.murmurG6.infrastructure;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.helmo.murmurG6.infrastructure.dto.ServerConfigDto;
-import org.helmo.murmurG6.models.ServerConfig;
+import org.helmo.murmurG6.controller.ServerConfig;
 import org.helmo.murmurG6.repository.ServerRepository;
 import org.helmo.murmurG6.repository.exceptions.ReadServerConfigurationException;
 

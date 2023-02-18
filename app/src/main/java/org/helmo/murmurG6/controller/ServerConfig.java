@@ -1,4 +1,4 @@
-package org.helmo.murmurG6.models;
+package org.helmo.murmurG6.controller;
 
 public class ServerConfig {
 

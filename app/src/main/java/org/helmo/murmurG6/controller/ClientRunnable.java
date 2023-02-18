@@ -1,7 +1,6 @@
 package org.helmo.murmurG6.controller;
 
 import org.helmo.murmurG6.models.Task;
-import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.models.User;
 import org.helmo.murmurG6.models.exceptions.InvalidTaskException;
 import java.io.*;

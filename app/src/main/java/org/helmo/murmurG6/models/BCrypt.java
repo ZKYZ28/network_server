@@ -1,5 +1,7 @@
 package org.helmo.murmurG6.models;
 
+import org.helmo.murmurG6.controller.Protocol;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
@@ -30,7 +32,7 @@ public class BCrypt {
     }
 
     public static BCrypt of(String hashed) {
-        if (!Pattern.matches(Protocol.RX_BCRYPT_HASH, hashed)) {
+        if (!Pattern.matches("(\\$2b\\$\\d{2}\\$([a-zA-Z]|[0-9]|[\\x21-\\x2f]|[\\x3a-\\x40]|[\\x5B-\\x60]){1,70})", hashed)) {
             throw new IllegalArgumentException("Le hash bcrypt fourni n'est pas au format attendu. Veuillez vérifier que le hash est une chaîne valide conforme au format bcrypt.");
         }
 
