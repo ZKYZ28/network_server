@@ -1,1 +1,1 @@
-[{"login":"francis","bcryptDto":{"rounds":14,"salt":"zr1dY1Zd1BFMYZj3e023He","hash":"kguOllAKaIAG8txA6JD6QgysWRgD836"},"followedUsers":[],"followedTrends":[]}]
+[{"login":"monsieurDeVleeg","bcryptDto":{"rounds":14,"salt":"em.7XWnJWXfJR8ySc6vHQu","hash":"YoigWH1NYA9FpEDt8YyMGdAaqriwi3a"},"followedUsers":[],"followedTrends":["#tendance123@g6server1.godswila.guru"]},{"login":"francis","bcryptDto":{"rounds":14,"salt":"zr1dY1Zd1BFMYZj3e023He","hash":"kguOllAKaIAG8txA6JD6QgysWRgD836"},"followedUsers":[],"followedTrends":["#tendance123@g6server1.godswila.guru"]}]

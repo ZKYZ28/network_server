@@ -1,10 +1,7 @@
 package org.helmo.murmurG6.controller;
 
 import org.helmo.murmurG6.infrastructure.ServerJsonStorage;
-import org.helmo.murmurG6.models.AESCrypt;
-import org.helmo.murmurG6.models.Protocol;
-import org.helmo.murmurG6.models.User;
-import org.helmo.murmurG6.models.UserLibrary;
+import org.helmo.murmurG6.models.*;
 import org.helmo.murmurG6.repository.UserRepository;
 import org.helmo.murmurG6.repository.exceptions.ReadServerConfigurationException;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
@@ -29,6 +26,7 @@ public class ServerController implements AutoCloseable {
     private final SSLServerSocket serverSocket;
     private final UserRepository storage;
     private final UserLibrary userLibrary;
+    private ServerConfig serverConfig;
 
     /**
      * Le constructeur de la classe ServerController permet de créer un nouveau serveur en spécifiant un numéro de port et un storage d'utilisateurs.
@@ -43,6 +41,9 @@ public class ServerController implements AutoCloseable {
         //this.serverSocket = new ServerSocket(port);
         this.storage = repo;
         this.userLibrary = repo.load(); //remplissage de tous les users inscrits dans la usercollection
+
+        this.serverConfig = new ServerJsonStorage().loadServerConfiguration();
+        this.serverConfig.setServerIp(getIp());
 
         UltraImportantClass.welcome();
         System.out.println("****************************************************************");
@@ -141,14 +142,18 @@ public class ServerController implements AutoCloseable {
         User sender = senderClient.getUser();
 
         for (ClientRunnable c : clientList) {
-            if (c != senderClient && (c.getUser().followsUser(sender.getLogin()) || c.getUser().followsTrend(extractTrends(message)))) {
-                try {
-                    c.sendMessage(Protocol.build_MSGS(senderClient.getUser().getLogin()+"@"+getIp() + " " + AESCrypt.encrypt(message, new ServerJsonStorage().loadKeyAes())));
-                } catch (ReadServerConfigurationException e) {
-                    System.out.println("ERREUR LORS DE L'ENVOIE D'UN MESSAGE" + e.getMessage());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+            try {
+
+                if (c != senderClient && (c.getUser().followsUser(sender.getLogin() + "@" + serverConfig.getServerName())) || c.getUser().followsTrend(extractTrends(message))) {  //TODO A CHANGER LA PARTIE DES TRENDS
+                    c.sendMessage(Protocol.build_MSGS(senderClient.getUser().getLogin() + "@" + getIp() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
+                } else if (c != senderClient && (c.getUser().followsUser("") || c.getUser().followsTrend(extractTrends(message)))) {  //TODO A CHANGER LA PARTIE DES TRENDS ET DU USER
+                    c.sendMessage(Protocol.build_SEND("","","",""));  //TODO A CHANGER QUAND ON VEUT SEND
                 }
+
+            } catch (ReadServerConfigurationException e) {
+                System.out.println("ERREUR LORS DE L'ENVOIE D'UN MESSAGE" + e.getMessage());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
     }

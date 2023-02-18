@@ -2,6 +2,8 @@ package org.helmo.murmurG6.infrastructure;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.helmo.murmurG6.infrastructure.dto.ServerConfigDto;
+import org.helmo.murmurG6.models.ServerConfig;
 import org.helmo.murmurG6.repository.ServerRepository;
 import org.helmo.murmurG6.repository.exceptions.ReadServerConfigurationException;
 
@@ -21,19 +23,13 @@ public class ServerJsonStorage implements ServerRepository {
 
 
     @Override
-    public String loadKeyAes() throws ReadServerConfigurationException {
-        StringBuilder jsonString = new StringBuilder(); // The JSON string read from the file
-
+    public ServerConfig loadServerConfiguration() throws ReadServerConfigurationException {
+        ServerConfigDto serverConfigDto = null;
         try (BufferedReader reader = Files.newBufferedReader(FILE_PATH, StandardCharsets.UTF_8)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                jsonString.append(line);
-            }
+            serverConfigDto = gson.fromJson(reader, ServerConfigDto.class);
         } catch (IOException e) {
             throw new ReadServerConfigurationException("Impossible de charger les informations de configuration du serveur !");
         }
-        JsonObject jsonObject = gson.fromJson(jsonString.toString(), JsonObject.class);
-        return jsonObject.get("base64KeyAES").getAsString();
+        return new ServerConfig(serverConfigDto.serverName, serverConfigDto.base64KeyAES);
     }
-
 }
