@@ -34,7 +34,7 @@ public class Protocol {
     private static final String TAG = "#[a-zA-Z0-9]{5,20}";
     private static final Pattern TAG_DOMAIN = Pattern.compile("(" + "(?<tagName>" +  TAG + ")" + "@" + "(?<TrendServerDomain>" + RX_DOMAIN + "))");
 
-    private static final Pattern TAG_DOMAIN_OR_RX_USER_DOMAIN = Pattern.compile("(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")");
+    public static final Pattern TAG_DOMAIN_OR_RX_USER_DOMAIN = Pattern.compile("(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")");
 
 
     /*FULL*/

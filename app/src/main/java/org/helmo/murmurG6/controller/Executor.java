@@ -126,6 +126,7 @@ public class Executor implements TaskScheduler {
     }
 
 
+    //test@server1 || #test@server2
     private void follow(User user, String itemToBeFollowed) throws UnableToFollowUser {
         Matcher matcher = Protocol.TAG_DOMAIN_OR_RX_USER_DOMAIN.matcher(itemToBeFollowed);
         if (!matcher.matches()) {
