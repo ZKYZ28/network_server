@@ -50,7 +50,7 @@ public class User {
                 return trend;
             }
         }
-        throw new InexistantTrendTagException("Tag inexistant!");
+        return null;
     }
 
 
@@ -91,11 +91,5 @@ public class User {
     @Override
     public String toString() {
         return this.login.toString();
-    }
-}
-
-class InexistantTrendTagException extends Throwable {
-    public InexistantTrendTagException(String message) {
-        super(message);
     }
 }

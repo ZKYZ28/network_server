@@ -129,18 +129,22 @@ public class ServerController implements AutoCloseable {
         //On parcours les trends mentionné dans le message
         for(String trendName: trends){
 
-            //On regarde si la trend appartient à ce server
-            if(trendLibrary.containsKey(trendName)){
+            //Si l'emetteur du message est bien abonné à la trend on gère l'envoi, sinon on ne fait rien
+            if(senderClient.getTrendByTag(trendName) != null) {
+                //On regarde si la trend appartient à ce server
+                if (trendLibrary.containsKey(trendName)) {
 
-                //Si oui, alors on itère sur les followers de cette trends afin de leur écrire
-                for(UserCredentials trendFollowersCredential: trendLibrary.get(trendName)){
-                    manageMessageSending(senderClient, trendFollowersCredential, idMessage, message);
+                    //Si oui, alors on itère sur les followers de cette trends afin de leur écrire
+                    for (UserCredentials trendFollowersCredential : trendLibrary.get(trendName)) {
+                        manageMessageSending(senderClient, trendFollowersCredential, idMessage, message);
+                    }
+
+
+                //Si non (cas ou la trend n'appartient PAS à ce server) -> on passe la trend au relay
+                } else {
+                    Trend t = senderClient.getTrendByTag(trendName);
+                    relay.sendMessage(Protocol.build_SEND(idMessage.toString(), senderClient.getLogin(), t.toString(), message));
                 }
-
-
-            //Si non (cas ou la trend n'appartient PAS à ce server) -> on passe la trend au relay
-            }else{
-                relay.sendMessage(Protocol.build_SEND(idMessage.toString(), senderClient.getLogin(), trendLibrary.get(trendName).toString(), message));
             }
         }
     }
@@ -179,7 +183,7 @@ public class ServerController implements AutoCloseable {
             User follower = client.getUser();
 
             //Si le destinataire n'a pas déja recu ce message, alors on lui écrit et enregistre cet événement dans son historique
-            if(!follower.hasAlreadyReceived)
+            if(!follower.hasAlreadyReceived(idMessage))
                 try {
                     client.sendMessage(Protocol.build_MSGS(sender.getLogin() + "@" + getIp() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
                     follower.saveReceivedMessageId(idMessage);
