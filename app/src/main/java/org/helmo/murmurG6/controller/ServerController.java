@@ -184,7 +184,7 @@ public class ServerController implements AutoCloseable {
             //Si le destinataire n'a pas déja recu ce message, alors on lui écrit et enregistre cet événement dans son historique
             if(!follower.hasAlreadyReceivedMessage(idMessage))
                 try {
-                    client.sendMessage(Protocol.build_MSGS(sender.getUserCredentials() + "@" + getDomain() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
+                    client.sendMessage(Protocol.build_MSGS(sender.getUserCredentials() + "@" + serverConfig.getServerName() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
                     follower.saveReceivedMessageId(idMessage);
                 }catch (Exception e){
                     System.out.println("Erreur lors de l'envoi du message (encryption error)");
@@ -265,7 +265,7 @@ public class ServerController implements AutoCloseable {
 
     public String getDomain() {
         try {
-            return InetAddress.getLocalHost().getCanonicalHostName();
+            return InetAddress.getLocalHost().getCanonicalHostName() + " " + InetAddress.getLocalHost().getHostAddress();
         } catch (UnknownHostException e) {
             return null;
         }

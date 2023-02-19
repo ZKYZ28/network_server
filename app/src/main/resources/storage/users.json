@@ -1,0 +1,15 @@
+[
+  {
+    "login": {
+      "login": "franchi",
+      "domain": "g6server1.godswila.guru"
+    },
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "3HSpbz9JR1WuGm9yC1NyAu",
+      "hash": "0P3AgAzXgsG9rB9Mm3/VWx95kPEWRRu"
+    },
+    "followedUsers": [],
+    "followedTrends": []
+  }
+]
