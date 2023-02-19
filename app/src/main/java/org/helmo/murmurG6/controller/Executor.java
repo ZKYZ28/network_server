@@ -69,12 +69,16 @@ public class Executor implements TaskScheduler {
                 break;
 
             case MSG:
-                server.castMsg(client, params.group("message"));
+                server.castMsg(client.getUser(), params.group("message"));
                 break;
 
             case FOLLOW:
                 follow(client.getUser(), params.group("domain"));
                 break;
+
+
+            case DISCONNECT:
+                //TODO retirer le client de la clientlist
 
             default:
                 client.sendMessage(Protocol.build_ERROR());
