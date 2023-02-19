@@ -75,7 +75,6 @@ public class ServerController implements AutoCloseable {
         try {
             TaskScheduler executor = Executor.getInstance();
             new Thread(executor).start();
-            new Thread(new ServerAnnouncer(this, "224.1.1.255", 23106)).start();
 
             while (!this.serverSocket.isClosed()) {
                 SSLSocket client = (SSLSocket) serverSocket.accept();
