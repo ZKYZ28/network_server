@@ -23,8 +23,10 @@ public class AESCrypt {
      * @param plaintext le message que l'on souhaite chiffrer
      * @param keyBase64AES clé sous la forme base64
      * @return le message chiffré sous forme d'une chaine de caractères
+     * @throws Exception
      */
-    public static String encrypt(String plaintext, String keyBase64AES) throws Exception {
+    public static byte[] encrypt(String plaintext, String keyBase64AES) throws Exception
+    {
         // Conversion du message en tableau d'octets
         byte[] plaintextBytes = plaintext.getBytes();
         // Décoder la clé en base64 sous la forme d'un tableau d'octets
@@ -45,24 +47,22 @@ public class AESCrypt {
         ByteBuffer byteBuffer = ByteBuffer.allocate(IV.length + cipherTextBytes.length);
         byteBuffer.put(IV);
         byteBuffer.put(cipherTextBytes);
-        byte[] cipherMessage = byteBuffer.array();
 
         // Encodage du tableau d'octets combiné en base64 et renvoi du résultat
-        return Base64.getEncoder().encodeToString(cipherMessage);
+        return byteBuffer.array();
     }
 
     /**
      * Cette méthode prend un texte chiffré, une clé secrète et un vecteur d'initialisation (IV) en entrée.
      * Elle utilise la clé et l'IV pour déchiffrer le texte en utilisant l'algorithme de chiffrement AES-GCM.
      * Elle renvoie le message en clair résultant.
-     * @param cipherMessage le message chiffré (chaine de caractères)
+     * @param cipherMessageBytes le message chiffré en octets (chaine de caractères)
      * @param keyBase64AES la clé sous la forme base64
      * @return le message déchiffré sous forme d'une chaine de caractères
+     * @throws Exception
      */
-    public static String decrypt(String cipherMessage, String keyBase64AES) throws Exception
+    public static String decrypt(byte[] cipherMessageBytes, String keyBase64AES) throws Exception
     {
-        // Décodage du message chiffré en base64 sous la forme d'un tableau d'octets
-        byte[] cipherMessageBytes = Base64.getDecoder().decode(cipherMessage);
         // Décodage de la clé en base64 sous la forme d'un tableau d'octets
         byte[] keyBytes = Base64.getDecoder().decode(keyBase64AES);
         // Récupération de l'IV et du texte chiffré à partir du tableau d'octets
@@ -126,6 +126,7 @@ public class AESCrypt {
 
         // Effectue le déchiffrement
         return cipher.doFinal(cipherText);
+
     }
 }
 
