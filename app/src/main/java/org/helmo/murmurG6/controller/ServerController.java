@@ -265,7 +265,7 @@ public class ServerController implements AutoCloseable {
 
     public String getDomain() {
         try {
-            return InetAddress.getLocalHost().getCanonicalHostName() + " " + InetAddress.getLocalHost().getHostAddress();
+            return InetAddress.getLocalHost().getCanonicalHostName();
         } catch (UnknownHostException e) {
             return null;
         }
