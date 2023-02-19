@@ -125,6 +125,7 @@ public class Executor implements TaskScheduler {
             this.server.save();
         } catch (UnableToSaveTrendLibraryException | UnableToSaveUserLibraryException e) {
             //TODO TREATMENT
+            e.printStackTrace();
         }
     }
 
@@ -140,7 +141,7 @@ public class Executor implements TaskScheduler {
 
                 if (userLibrary.isRegistered(login)) {
                     User followedUser = userLibrary.getUser(login);
-                    followedUser.addFollower(new UserCredentials(user.getUserCredentials(), server.getServerConfig().getServerName()));
+                    followedUser.addFollower(user.getCredentials());
                 }
             }
         }
@@ -156,7 +157,7 @@ public class Executor implements TaskScheduler {
             if (!domain.equals(server.getServerConfig().getServerName())) {
                 Protocol.build_SEND("sdfsdf", "sdfsdf", "sdfsdf", "sdfsdf");
             } else {
-                server.getTrendLibrary().addUserToTrend(trendName, new UserCredentials(user.getUserCredentials(), server.getServerConfig().getServerName()));
+                server.getTrendLibrary().addUserToTrend(trendName, user.getCredentials());
             }
         }
     }
