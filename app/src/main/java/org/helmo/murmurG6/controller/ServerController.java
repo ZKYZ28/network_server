@@ -138,11 +138,8 @@ public class ServerController implements AutoCloseable {
             //On recupere le threadClient sur le server du destinataire afin de lui écrire
             ClientRunnable client = getClientRunnableByLogin(followerCredential.getLogin());
 
-            //On recupere l'objet User associé à ce followerCreditential afin de pourvoir gérer son historique
-            User follower = userLibrary.get(followerCredential.getLogin());
-
             //Gere l'envoi du message en local (aux user de CE server)
-            operateLocalMessageSend(sender, idMessage, message, client, follower);
+            operateLocalMessageSend(sender, idMessage, message, client);
 
 
             //Si le destinataire n'appartient pas à ce server
@@ -158,11 +155,14 @@ public class ServerController implements AutoCloseable {
      * @param idMessage L'id du message
      * @param message Le message
      * @param client Le thread ClientRunnable du destinataire sur ce server
-     * @param follower L'instance User de ce server du destinataire
      */
-    private void operateLocalMessageSend(User sender, UUID idMessage, String message, ClientRunnable client, User follower) {
+    private void operateLocalMessageSend(User sender, UUID idMessage, String message, ClientRunnable client) {
         //Si le client est connecté
         if(client != null) {
+
+            //On recupere l'objet User associé à ce thread client afin de pourvoir gérer son historique
+            User follower = client.getUser();
+
             //Si le destinataire n'a pas déja recu ce message, alors on lui écrit et enregistre cet événement dans son historique
             if(!follower.hasAlreadyReceived)
                 try {

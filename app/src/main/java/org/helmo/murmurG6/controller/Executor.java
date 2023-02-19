@@ -90,6 +90,10 @@ public class Executor implements TaskScheduler {
                 }
                 break;
 
+
+            case DISCONNECT:
+                //TODO retirer le client de la clientlist
+
             default:
                 client.sendMessage(Protocol.build_ERROR());
         }
