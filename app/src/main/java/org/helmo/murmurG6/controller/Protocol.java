@@ -48,7 +48,7 @@ public class Protocol {
     private final static String MSGS = "MSGS <message>\r\n";
     private final static String HELLO = "HELLO <ip> <salt>\r\n";
     private final static String PARAM = "PARAM <round> <salt>\r\n";
-    private final static String SEND = "SEND <ip_domain> <nom_domaine> <nom/tag_domain> <message_interne>\r\n";
+    private final static String SEND = "SEND <id> <nom_domaine> <nom/tag_domain> <message_interne>\r\n";
     private final static String ERROR = "-ERR\r\n";
     private final static String OK = "+OK\r\n";
 
@@ -65,8 +65,8 @@ public class Protocol {
         return PARAM.replace("<round>", String.valueOf(round)).replace("<salt>", salt);
     }
 
-    public static String build_SEND(String ip_domain, String nom_domain, String nomOrTag_domain, String message_interne) {
-        return SEND.replace("<ip_domain>", ip_domain).replace("<nom_domaine>", nom_domain).replace("<nom/tag_domain>", nomOrTag_domain).replace("<message_interne>", message_interne);
+    public static String build_SEND(String id, String nom_domain, String nomOrTag_domain, String message_interne) {
+        return SEND.replace("<id>", id).replace("<nom_domaine>", nom_domain).replace("<nom/tag_domain>", nomOrTag_domain).replace("<message_interne>", message_interne);
     }
 
     public static String build_ERROR() {
@@ -78,22 +78,29 @@ public class Protocol {
     }
 
 
-    private static final Map<Pattern, TaskType> TYPE_MESSAGE_MAP = Map.of(
-            RX_CONNECT_TASK, TaskType.CONNECT,
-            RX_REGISTER_TASK, TaskType.REGISTER,
-            RX_FOLLOW_TASK, TaskType.FOLLOW,
-            RX_CONFIRM_TASK, TaskType.CONFIRM,
-            RX_DISCONNECT_TASK, TaskType.DISCONNECT,
-            RX_MSG_TASK, TaskType.MSG
+    private static final Map<TaskType, Pattern> TYPE_MESSAGE_MAP = Map.of(
+            TaskType.CONNECT, RX_CONNECT_TASK,
+            TaskType.REGISTER, RX_REGISTER_TASK,
+            TaskType.FOLLOW, RX_FOLLOW_TASK,
+            TaskType.CONFIRM, RX_CONFIRM_TASK,
+            TaskType.DISCONNECT, RX_DISCONNECT_TASK,
+            TaskType.MSG, RX_MSG_TASK
     );
 
-    public static Task buildTask(String command) {
-        for (Map.Entry<Pattern, TaskType> entry : TYPE_MESSAGE_MAP.entrySet()) {
-            Matcher matcher = entry.getKey().matcher(command);
-            if (matcher.matches()) {
-                return new Task(entry.getValue(), matcher);
+    public static Matcher getMatcher(TaskType type, String command){
+        Matcher matcher = TYPE_MESSAGE_MAP.get(type).matcher(command);
+        if(matcher.matches()){
+            return matcher;
+        }
+        return null;
+    }
+
+    public static TaskType detectTaskType(String command){
+        for(TaskType type: TYPE_MESSAGE_MAP.keySet()){
+            if(Pattern.matches(String.valueOf(TYPE_MESSAGE_MAP.get(type)), command)){
+                return type;
             }
         }
-        throw new InvalidTaskException("Tache invalide!");
+        return TaskType.UNKNOWN;
     }
 }

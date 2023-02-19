@@ -6,4 +6,5 @@ module org.helmo {
     opens org.helmo.murmurG6.models.exceptions to com.google.gson;
     opens org.helmo.murmurG6.controller to com.google.gson;
     opens org.helmo.murmurG6.controller.exceptions to com.google.gson;
+    opens org.helmo.murmurG6.executor to com.google.gson;
 }

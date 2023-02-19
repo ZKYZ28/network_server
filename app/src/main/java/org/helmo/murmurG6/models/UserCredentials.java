@@ -32,6 +32,6 @@ public class UserCredentials {
             return false;
         }
         UserCredentials userCredentials = (UserCredentials) obj;
-        return userCredentials.login.equals(this.login);
+        return userCredentials.login.equals(this.login) && userCredentials.domain.equals(this.domain);
     }
 }

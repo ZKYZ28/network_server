@@ -1,6 +1,7 @@
 package org.helmo.murmurG6.models;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -63,7 +64,7 @@ public class User {
         return this.bCrypt;
     }
 
-    public String getUserCredentials() {
+    public String getLogin() {
         return this.userCredentials.getLogin();
     }
 
@@ -103,4 +104,13 @@ public class User {
     public void saveReceivedMessageId(UUID idMessage) {
         this.messageIdHistory.add(idMessage);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userCredentials.equals(user.userCredentials);
+    }
+
 }
