@@ -6,8 +6,6 @@ public interface TaskScheduler extends Runnable, AutoCloseable {
 
     void addTask(Task task);
 
-    void setServer(ServerController server);
-
     String sayHello(ClientRunnable client);
 
 }

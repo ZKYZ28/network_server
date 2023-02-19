@@ -21,17 +21,17 @@ public class UserLibrary {
     }
 
     public void register(User user) throws UserAlreadyRegisteredException {
-        if (this.userMap.containsKey(user.getUserCredentials())) {
+        if (this.userMap.containsKey(user.getLogin())) {
             throw new UserAlreadyRegisteredException("L'utilisateur est déja inscrit!");
         } else {
-            this.userMap.put(user.getUserCredentials(), user);
+            this.userMap.put(user.getLogin(), user);
         }
     }
 
     public static UserLibrary of(Iterable<User> users) {
         UserLibrary library = new UserLibrary();
         for (User u : users) {
-            library.userMap.put(u.getUserCredentials(), u);
+            library.userMap.put(u.getLogin(), u);
         }
         return library;
     }
