@@ -3,7 +3,6 @@ package org.helmo.murmurG6.controller;
 import org.helmo.murmurG6.infrastructure.ServerJsonStorage;
 import org.helmo.murmurG6.models.*;
 import org.helmo.murmurG6.repository.UserRepository;
-import org.helmo.murmurG6.repository.exceptions.ReadServerConfigurationException;
 import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
 import org.helmo.murmurG6.utils.UltraImportantClass;
 
@@ -80,10 +79,22 @@ public class ServerController implements AutoCloseable {
         System.out.printf("Message envoyé : %s\n", message);
         UUID idMessage = UUID.randomUUID();
 
+        //Envoi du message au followers de l'emmetteur du message
         castToFollowers(sender, sender.getUserFollowers(), message, idMessage);
-        castToTrendFollowers(sender, sender.getUserFollowers(), message, idMessage);
+
+        //Si le message fait mention d'au moins 1 trend -> envoi des message aux abonnés de la trend
+        if(extractTrends(message).size() > 0){
+            castToTrendFollowers(sender, extractTrends(message), message, idMessage);
+        }
     }
 
+    /**
+     * Gère le casting de message pour à des followers d'un user
+     * @param senderClient L'emetteur du message
+     * @param followers La liste des creditentials des followers (ex: antho123@server1)
+     * @param message Le message à caster
+     * @param idMessage L'id unique associé à ce message
+     */
     private void castToFollowers(User senderClient, Set<UserCredentials> followers, String message, UUID idMessage) {
         //Parcours de la liste des followers du sender + envoi des message
         for(UserCredentials followerCreditential: followers){
@@ -92,12 +103,16 @@ public class ServerController implements AutoCloseable {
     }
 
 
-
-
-
-    private void castToTrendFollowers(User senderClient, Set<UserCredentials> followers, String message, UUID idMessage) {
-        //On parcours les trends du message
-        for(String trendName: extractTrends(message)){
+    /**
+     * Gère le casting de message pour à des followers d'une Trend
+     * @param senderClient L'emetteur du message
+     * @param followers La liste des creditentials des followers de la trend(ex: antho123@server1)
+     * @param message Le message à caster
+     * @param idMessage L'id unique associé à ce message
+     */
+    private void castToTrendFollowers(User senderClient, Set<String> trends, String message, UUID idMessage) {
+        //On parcours les trends mentionné dans le message
+        for(String trendName: trends){
 
             //On regarde si la trend appartient à ce server
             if(trendLibrary.containsKey(trendName)){
@@ -108,7 +123,7 @@ public class ServerController implements AutoCloseable {
                 }
 
 
-            //Cas ou la trend n'appartient pas à ce server -> on délègue au relay
+            //Si non (cas ou la trend n'appartient PAS à ce server) -> on passe la trend au relay
             }else{
                 relay.sendMessage(Protocol.build_SEND(idMessage.toString(), senderClient.getLogin(), trendLibrary.get(trendName).toString(), message));
             }
@@ -117,29 +132,49 @@ public class ServerController implements AutoCloseable {
 
 
     private void manageMessageSending(User sender, UserCredentials followerCredential, UUID idMessage, String message) {
-        //on regarde si le client est sur ce server ou sur un autre domaine
+        //on regarde si le destinataire est sur ce server ou sur un autre domaine
         if(followerCredential.getDomain().equals(serverConfig.getServerName())){
 
-            //On recupere le threadClient sur le server du follower afin de lui écrire
+            //On recupere le threadClient sur le server du destinataire afin de lui écrire
             ClientRunnable client = getClientRunnableByLogin(followerCredential.getLogin());
 
             //On recupere l'objet User associé à ce followerCreditential afin de pourvoir gérer son historique
             User follower = userLibrary.get(followerCredential.getLogin());
 
-            //Si le client est connecté et qu'il n'a pas déja recu ce message, alors on lui écrit et enregistre cet événement dans son historique
-            if(client != null && !follower.hasAlreadyReceived) {
+            //Gere l'envoi du message en local (aux user de CE server)
+            operateLocalMessageSend(sender, idMessage, message, client, follower);
 
+
+            //Si le destinataire n'appartient pas à ce server
+        }else{
+            relay.sendMessage(Protocol.build_SEND(idMessage.toString(), sender.getCreditential.toString(), followerCredential.toString(), message));
+        }
+    }
+
+
+    /**
+     * Gère l'envoi du message localement (aux utilisateur de CE server)
+     * @param sender L'emetteur du message
+     * @param idMessage L'id du message
+     * @param message Le message
+     * @param client Le thread ClientRunnable du destinataire sur ce server
+     * @param follower L'instance User de ce server du destinataire
+     */
+    private void operateLocalMessageSend(User sender, UUID idMessage, String message, ClientRunnable client, User follower) {
+        //Si le client est connecté
+        if(client != null) {
+            //Si le destinataire n'a pas déja recu ce message, alors on lui écrit et enregistre cet événement dans son historique
+            if(!follower.hasAlreadyReceived)
                 try {
                     client.sendMessage(Protocol.build_MSGS(sender.getLogin() + "@" + getIp() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
                     follower.saveReceivedMessageId(idMessage);
                 }catch (Exception e){
                     System.out.println("Erreur lors de l'envoi du message (encryption error)");
                 }
-            }else{
-                //TODO : Extension file de message quand le client n'est pas connecté (quand il est nul dans ce cas ci)
-            }
+
+        //Si le destinataire n'est pas actuellement connecté
         }else{
-            relay.sendMessage(Protocol.build_SEND(idMessage.toString(), sender.getCreditential.toString(), followerCredential.toString(), message));
+            //TODO : Extension file de message quand le client n'est pas connecté (quand il est nul dans ce cas ci)
         }
     }
 
@@ -159,6 +194,11 @@ public class ServerController implements AutoCloseable {
     }
 
 
+    /**
+     * Recupere un objet ClientRunnable en fonction du login (ex: antho123) passé en paramètre
+     * @param login le login du client recherché
+     * @return Un ClientRunnable si le client est bien trouvé dans la liste des clients connecté du server, null sinon
+     */
     private ClientRunnable getClientRunnableByLogin(String login){
         for(ClientRunnable cr : clientList){
             if(cr.getUser().getLogin().equals(login)){
@@ -167,6 +207,12 @@ public class ServerController implements AutoCloseable {
         }
         return null;
     }
+
+
+
+
+
+
 
 
 

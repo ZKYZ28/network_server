@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80d6a6b1-98ac-4076-b856-98bb2db1ca20" name="Changes" comment="cast msg v2 (non fonctionnel)">
+    <list default="true" id="80d6a6b1-98ac-4076-b856-98bb2db1ca20" name="Changes" comment="cast msg v3 Algorithme fini (non optimisé)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/Executor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/Executor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -133,7 +132,7 @@
       <workItem from="1676717063661" duration="356000" />
       <workItem from="1676717439369" duration="5475000" />
       <workItem from="1676741320215" duration="9199000" />
-      <workItem from="1676802492227" duration="1445000" />
+      <workItem from="1676802492227" duration="2547000" />
     </task>
     <task id="LOCAL-00001" summary="-">
       <created>1676482100001</created>
@@ -324,7 +323,14 @@
       <option name="project" value="LOCAL" />
       <updated>1676755430721</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="cast msg v3 Algorithme fini (non optimisé)">
+      <created>1676803975872</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1676803975872</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -352,7 +358,8 @@
     <MESSAGE value="cast msg v1 (non fonctionnel-" />
     <MESSAGE value="cast msg v2 (non fonctionnel-" />
     <MESSAGE value="cast msg v2 (non fonctionnel)" />
-    <option name="LAST_COMMIT_MESSAGE" value="cast msg v2 (non fonctionnel)" />
+    <MESSAGE value="cast msg v3 Algorithme fini (non optimisé)" />
+    <option name="LAST_COMMIT_MESSAGE" value="cast msg v3 Algorithme fini (non optimisé)" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
