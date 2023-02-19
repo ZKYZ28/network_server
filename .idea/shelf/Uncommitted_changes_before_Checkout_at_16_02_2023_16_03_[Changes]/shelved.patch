@@ -1,0 +1,51 @@
+Index: app/src/main/java/org/helmo/murmurG6/system/ServerController.java
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/system/ServerController.java b/app/src/main/java/org/helmo/murmurG6/system/ServerController.java
+--- a/app/src/main/java/org/helmo/murmurG6/system/ServerController.java	
++++ b/app/src/main/java/org/helmo/murmurG6/system/ServerController.java	
+@@ -71,8 +71,9 @@
+         }
+     }
+ 
++    //TODO: REFACTOR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     public Set<ClientRunnable> tellWhoRecevedMessage(ClientRunnable me, String message) {
+-        Set<ClientRunnable> needToSend = Collections.synchronizedSet(new HashSet<>());
++        Set<ClientRunnable> needToSend = Collections.synchronizedSet(new HashSet<>()); //Pourquoi set synchronized ?
+         for (ClientRunnable c : clientList) {
+             if (c != me) {
+                 if (c.getUser().chekcIfFollowUser(me.getUser().getLogin())) {
+@@ -91,6 +92,7 @@
+         return needToSend;
+     }
+ 
++    //Method identique a broadcastToAllClientsExceptMe ?
+     public void broadcastOther(ClientRunnable me, String message) {
+         Set<ClientRunnable> needToSend = tellWhoRecevedMessage(me, message);
+         for (ClientRunnable c : needToSend) {
+@@ -98,6 +100,12 @@
+         }
+     }
+ 
++
++    /**Exemple de message avec trends : Hello World ! #devs #bandeDeCodeurs #caTaff   -> L'ensemble de trends a detecter sont : #devs #bandeDeCodeurs et #caTaff
++     * TODO: Refactor
++     * @param message
++     * @return
++     */
+     private Set<String> detectTrends(String message) {
+         Set<String> trends = new HashSet<>();
+         int index = 0;
+@@ -119,10 +127,12 @@
+     }
+ 
+ 
++
++
++
+     /**
+      * Enregistre un utilisateur dans la liste d'inscription de User du server.
+      * @param user L'utilisateur à inscrire sur le server
+-     * @throws RegistrationImpossibleException
+      */
+     public void registerUser(User user) throws RegistrationImpossibleException {
+         try{

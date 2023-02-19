@@ -1,0 +1,83 @@
+Index: app/src/main/java/org/helmo/murmurG6/models/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/models/User.java b/app/src/main/java/org/helmo/murmurG6/models/User.java
+--- a/app/src/main/java/org/helmo/murmurG6/models/User.java	
++++ b/app/src/main/java/org/helmo/murmurG6/models/User.java	
+@@ -16,6 +16,28 @@
+         this.followedTrends = followedTrends;
+     }
+ 
++    /**
++     * Permet d'ajouter un utilisateur à sa liste d'abonnement
++     *
++     * @param userId L'id de l'utilisateur i.e : swila@server1.godswila.guru
++     */
++    public void followUser(String userId) {
++        if (!this.followedUsers.contains(userId)) {
++            this.followedUsers.add(userId);
++        }
++    }
++
++    /**
++     * Permet d'ajouter une tendance à sa liste d'abonnement
++     *
++     * @param trendId L'id de l'utilisateur i.e : #tendance1234@server1.godswila.guru
++     */
++    public void followTrend(String trendId) {
++        if (!this.followedTrends.contains(trendId)) {
++            this.followedUsers.add(trendId);
++        }
++    }
++
+     public BCrypt getBcrypt() {
+         return this.bCrypt;
+     }
+@@ -36,44 +58,11 @@
+         return this.bCrypt.getSalt();
+     }
+ 
+-    /**
+-     * Retourne la liste des utilisateurs suivis par l'utilisateur.
+-     *
+-     * @return liste des utilisateurs suivis par l'utilisateur.
+-     */
+     public List<String> getFollowedUsers() {
+         return followedUsers;
+     }
+ 
+-    /**
+-     * Retourne la liste des trends suivies par l'utilisateur.
+-     *
+-     * @return liste des trends suivies par l'utilisateur.
+-     */
+     public List<String> getFollowedTrends() {
+         return followedTrends;
+     }
+-
+-
+-    /**
+-     * Permet d'ajouter un utilisateur à sa liste d'abonnement
+-     *
+-     * @param userId L'id de l'utilisateur i.e : swila@server1.godswila.guru
+-     */
+-    public void followUser(String userId) {
+-        if (!this.followedUsers.contains(userId)) {
+-            this.followedUsers.add(userId);
+-        }
+-    }
+-
+-    /**
+-     * Permet d'ajouter une tendance à sa liste d'abonnement
+-     *
+-     * @param trendId L'id de l'utilisateur i.e : #tendance1234@server1.godswila.guru
+-     */
+-    public void followTrend(String trendId) {
+-        if (!this.followedTrends.contains(trendId)) {
+-            this.followedUsers.add(trendId);
+-        }
+-    }
+ }
+\ No newline at end of file

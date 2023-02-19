@@ -1,0 +1,13 @@
+Index: app/src/main/resources/storage/user.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[{\"login\":\"monsieurDeVleeg\",\"bcryptDto\":{\"rounds\":14,\"salt\":\"1nVLXg0yZa0Yc4uJaFfAkO\",\"hash\":\"/aXeRIVeJROI7bMuGJUDP5R53Y/eh/q\"},\"followedUsers\":[{\"informationFollow\":\"test1\",\"serverDomain\":\"server1.domain.guru\"}],\"followedTrends\":[]},{\"login\":\"test1\",\"bcryptDto\":{\"rounds\":14,\"salt\":\"ZKkOitz0PY1Z2TWcnugmIO\",\"hash\":\"l65VRYYDnjiUcvy4Ic/0SX9lYGPiicq\"},\"followedUsers\":[],\"followedTrends\":[]}]
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/resources/storage/user.json b/app/src/main/resources/storage/user.json
+--- a/app/src/main/resources/storage/user.json	(revision 956b126553edee2bce49e77b26688ac6e8af899a)
++++ b/app/src/main/resources/storage/user.json	(date 1676464595638)
+@@ -1,1 +1,0 @@
+-[{"login":"monsieurDeVleeg","bcryptDto":{"rounds":14,"salt":"1nVLXg0yZa0Yc4uJaFfAkO","hash":"/aXeRIVeJROI7bMuGJUDP5R53Y/eh/q"},"followedUsers":[{"informationFollow":"test1","serverDomain":"server1.domain.guru"}],"followedTrends":[]},{"login":"test1","bcryptDto":{"rounds":14,"salt":"ZKkOitz0PY1Z2TWcnugmIO","hash":"l65VRYYDnjiUcvy4Ic/0SX9lYGPiicq"},"followedUsers":[],"followedTrends":[]}]
+\ No newline at end of file
