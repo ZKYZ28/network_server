@@ -67,7 +67,6 @@ public class ServerController implements AutoCloseable {
             TaskScheduler executor = Executor.getInstance();
             executor.setServer(this);
             new Thread(executor).start();
-            new Thread(new ServerAnnouncer(this, "224.1.1.255", 23106)).start();
 
             while (!this.serverSocket.isClosed()) {
                 SSLSocket client = (SSLSocket) serverSocket.accept();
@@ -224,7 +223,7 @@ public class ServerController implements AutoCloseable {
      * @param login le login du client recherché
      * @return Un ClientRunnable si le client est bien trouvé dans la liste des clients connecté du server, null sinon
      */
-    private ClientRunnable getClientRunnableByLogin(String login){
+    public ClientRunnable getClientRunnableByLogin(String login){
         for(ClientRunnable cr : clientList){
             if(cr.getUser().getUserCredentials().equals(login)){
                 return cr;

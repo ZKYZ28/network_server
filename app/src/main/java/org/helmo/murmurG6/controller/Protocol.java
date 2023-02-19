@@ -26,6 +26,7 @@ public class Protocol {
     public static final Pattern RX_USER_DOMAIN = Pattern.compile("(" + "(?<login>" + RX_USERNAME + ")" + "@" + "(?<userServerDomain>" + RX_DOMAIN + "))");
     private static final String RX_MESSAGE = "((" + RX_VISIBLE_CHARACTER + "){1,250})";
     private static final String RX_SHA3_EX = "((" + RX_LETTER_DIGIT + "){30,200})";
+    private static final String RX_ID_DOMAIN = "((" + RX_DIGIT + "){1,5})" + "@" + RX_DOMAIN;
 
     /*PARTS*/
     private static final String RX_CRLF = "(\\x0d\\x0a){0,1}";
@@ -44,6 +45,13 @@ public class Protocol {
     private final static Pattern RX_CONFIRM_TASK = Pattern.compile("CONFIRM" + RX_ESP + "(?<challenge>" + RX_SHA3_EX + ")" + RX_CRLF);
     private final static Pattern RX_DISCONNECT_TASK = Pattern.compile("DISCONNECT" + RX_CRLF);
     private final static Pattern RX_MSG_TASK = Pattern.compile("MSG" + RX_ESP + "(?<message>" + RX_MESSAGE + ")" + RX_CRLF);
+
+    //"MSGS" esp nom_domaine esp message crlf
+    private final static Pattern RX_MSGS = Pattern.compile("MSGS" + RX_ESP + RX_USER_DOMAIN + RX_ESP + RX_MESSAGE + RX_CRLF);
+
+    public final static Pattern RX_SEND = Pattern.compile("SEND" + RX_ESP + "(?<id>" + RX_ID_DOMAIN + ")" + RX_ESP + "(?<sender>" + RX_USER_DOMAIN + ")" + RX_ESP + "(?<receiver>" +TAG_DOMAIN_OR_RX_USER_DOMAIN + ")" + RX_ESP + "(?<content>" + RX_FOLLOW_TASK + "|" +RX_MSGS + ")" + RX_CRLF);
+    //"SEND" esp id_domaine esp nom_domaine esp (nom_domaine / tag_domaine) esp message_interne crlf
+
 
     private final static String MSGS = "MSGS <message>\r\n";
     private final static String HELLO = "HELLO <ip> <salt>\r\n";
