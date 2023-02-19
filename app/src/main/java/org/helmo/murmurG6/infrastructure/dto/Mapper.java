@@ -104,7 +104,7 @@ public class Mapper {
     public static TrendLibrary fromDto(TrendLibraryDto dto) {
         TrendLibrary library = new TrendLibrary();
 
-        if (dto != null) {
+        if (dto != null && dto.trendMap != null) {
             for (var entry : dto.trendMap.keySet()) {
                 library.getTrendMap().put(entry, Mapper.dtoListTouserCredentials(dto.trendMap.get(entry)));
             }

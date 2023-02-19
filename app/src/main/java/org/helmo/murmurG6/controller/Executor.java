@@ -76,7 +76,6 @@ public class Executor implements TaskScheduler {
                 follow(client.getUser(), params.group("domain"));
                 break;
 
-
             case DISCONNECT:
                 //TODO retirer le client de la clientlist
 
@@ -88,7 +87,7 @@ public class Executor implements TaskScheduler {
 
     public String sayHello(ClientRunnable client) {
         String random22 = RandomSaltGenerator.generateSalt();
-        client.sendMessage(Protocol.build_HELLO(server.getDomain(), random22));
+        client.sendMessage(Protocol.build_HELLO(server.getServerConfig().getServerName(), random22));
         return random22;
     }
 
@@ -117,10 +116,15 @@ public class Executor implements TaskScheduler {
     }
 
     private void follow(User user, String target) {
-        if (target.startsWith("#")) {
-            followTrend(user, target);
-        } else {
-            followUser(user, target);
+        try {
+            if (target.startsWith("#")) {
+                followTrend(user, target);
+            } else {
+                followUser(user, target);
+            }
+            this.server.save();
+        } catch (UnableToSaveTrendLibraryException | UnableToSaveUserLibraryException e) {
+            //TODO TREATMENT
         }
     }
 
