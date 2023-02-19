@@ -2,6 +2,7 @@ package org.helmo.murmurG6.controller;
 
 import org.helmo.murmurG6.executor.Executor;
 import org.helmo.murmurG6.models.AESCrypt;
+import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.models.Task;
 
 import java.io.IOException;
@@ -97,7 +98,7 @@ public class RelayThread implements Runnable, AutoCloseable {
 
             if (args.matches()) {
                 //1. Retrieve the ClientRunnable
-                ClientRunnable receiver = ServerController.getClientRunnableByLogin("senderLogin");
+                ClientRunnable receiver = ServerController.getClientRunnableByLogin("login");
 
                 if (receiver != null) {
 

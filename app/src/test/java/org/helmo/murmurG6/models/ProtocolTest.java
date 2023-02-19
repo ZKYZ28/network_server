@@ -1,6 +1,5 @@
 package org.helmo.murmurG6.models;
 
-import org.helmo.murmurG6.controller.Protocol;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

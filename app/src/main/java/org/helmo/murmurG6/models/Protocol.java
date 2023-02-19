@@ -1,6 +1,5 @@
-package org.helmo.murmurG6.controller;
+package org.helmo.murmurG6.models;
 
-import org.helmo.murmurG6.models.TaskType;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +20,6 @@ public class Protocol {
     private static final String RX_DOMAIN = "((" + RX_LETTER_DIGIT + "|\\.){5,200})";
     private static final String RX_USERNAME = "((" + RX_LETTER_DIGIT + "){5,20})";
     public static final Pattern RX_USER_DOMAIN = Pattern.compile("(" + "(?<login>" + RX_USERNAME + ")" + "@" + "(?<userServerDomain>" + RX_DOMAIN + "))");
-    public static final Pattern RX_RELAY_SENDER = Pattern.compile("(" + "(?<senderLogin>" + RX_USERNAME + ")" + "@" + "(?<userServerDomain>" + RX_DOMAIN + "))");
     private static final String RX_MESSAGE = "((" + RX_VISIBLE_CHARACTER + "){1,250})";
     private static final String RX_SHA3_EX = "((" + RX_LETTER_DIGIT + "){30,200})";
     private static final String RX_ID_DOMAIN = "((" + RX_DIGIT + "){1,5})" + "@" + RX_DOMAIN;
@@ -47,7 +45,7 @@ public class Protocol {
     //"MSGS" esp nom_domaine esp message crlf
     private final static Pattern RX_MSGS = Pattern.compile("MSGS" + RX_ESP + RX_USER_DOMAIN + RX_ESP + RX_MESSAGE + RX_CRLF);
 
-    public final static Pattern RX_SEND = Pattern.compile("SEND" + RX_ESP + "(?<id>" + RX_ID_DOMAIN + ")" + RX_ESP + "(?<sender>" + RX_RELAY_SENDER + ")" + RX_ESP + "(?<receiver>" +TAG_DOMAIN_OR_RX_USER_DOMAIN + ")" + RX_ESP + "(?<content>" + RX_FOLLOW_TASK + "|" +RX_MSGS + ")" + RX_CRLF);
+    public final static Pattern RX_SEND = Pattern.compile("SEND" + RX_ESP + "(?<id>" + RX_ID_DOMAIN + ")" + RX_ESP + "(?<sender>" + RX_USER_DOMAIN + ")" + RX_ESP + "(?<receiver>" +TAG_DOMAIN_OR_RX_USER_DOMAIN + ")" + RX_ESP + "(?<content>" + RX_FOLLOW_TASK + "|" +RX_MSGS + ")" + RX_CRLF);
     //"SEND" esp id_domaine esp nom_domaine esp (nom_domaine / tag_domaine) esp message_interne crlf
 
 
