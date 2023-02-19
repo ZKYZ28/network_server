@@ -1,5 +1,6 @@
 package org.helmo.murmurG6.controller;
 
+import org.helmo.murmurG6.executor.Executor;
 import org.helmo.murmurG6.models.AESCrypt;
 import org.helmo.murmurG6.models.Task;
 
@@ -96,15 +97,11 @@ public class RelayThread implements Runnable, AutoCloseable {
 
             if (args.matches()) {
                 //1. Retrieve the ClientRunnable
-                ClientRunnable receiver = server.getClientRunnableByLogin("login");
+                ClientRunnable receiver = ServerController.getClientRunnableByLogin("login");
 
                 if (receiver != null) {
 
-                    //2. Retrieve the TaskType
-                    Task task = Protocol.buildTask(args.group("content"));
-
-                    //3. Attach the client to the task
-                    task.setClient(receiver);
+                    Task task = new Task(receiver, Protocol.detectTaskType(args.group("content")), args.group("content"));
 
                     //4. Give the task to the executor
                     executor.addTask(task);

@@ -8,8 +8,6 @@ import org.helmo.murmurG6.infrastructure.ServerJsonStorage;
 import org.helmo.murmurG6.models.*;
 import org.helmo.murmurG6.repository.TrendRepository;
 import org.helmo.murmurG6.repository.UserRepository;
-import org.helmo.murmurG6.repository.exceptions.UnableToLoadTrendLibraryException;
-import org.helmo.murmurG6.repository.exceptions.UnableToLoadUserLibraryException;
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveTrendLibraryException;
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveUserLibraryException;
 import org.helmo.murmurG6.utils.UltraImportantClass;
@@ -21,8 +19,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * La classe ServerController représente le contrôleur principal de l'application serveur.
@@ -148,9 +144,5 @@ public class ServerController implements AutoCloseable {
 
     public ServerConfig getServerConfig() {
         return serverConfig;
-    }
-
-    public Set<ClientRunnable> getClientList() {
-        return this.clientList;
     }
 }

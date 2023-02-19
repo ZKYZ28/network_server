@@ -5,14 +5,8 @@ import org.helmo.murmurG6.controller.Protocol;
 import org.helmo.murmurG6.controller.ServerController;
 import org.helmo.murmurG6.controller.TaskScheduler;
 import org.helmo.murmurG6.controller.exceptions.UnableToExecuteTaskException;
-import org.helmo.murmurG6.controller.exceptions.UnableToFollowUserException;
 import org.helmo.murmurG6.models.*;
-import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
-import org.helmo.murmurG6.repository.exceptions.UnableToSaveTrendLibraryException;
-import org.helmo.murmurG6.repository.exceptions.UnableToSaveUserLibraryException;
 import org.helmo.murmurG6.utils.RandomSaltGenerator;
-
-import java.util.HashSet;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 
