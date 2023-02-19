@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80d6a6b1-98ac-4076-b856-98bb2db1ca20" name="Changes" comment="cast msg v7 Algorithme fini (non optimisé)">
+    <list default="true" id="80d6a6b1-98ac-4076-b856-98bb2db1ca20" name="Changes" comment="commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/trends.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/trends.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/Executor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/Executor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/Protocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/Protocol.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,12 +24,7 @@
       <state>
         <projects_view>
           <tree_state>
-            <expand>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="murmurG6" type="f1a62948:ProjectNode" />
-              </path>
-            </expand>
+            <expand />
             <select />
           </tree_state>
         </projects_view>
@@ -46,13 +41,10 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="SEND" />
+        <entry key="$PROJECT_DIR$" value="SEND_MERGE_REFACTOR_FRANCHI" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="MacroExpansionManager">
-    <option name="directoryName" value="ayq4sstk" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -67,9 +59,9 @@
     "Git.Branch.Popup.ShowAllRemotes": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "last_opened_file_path": "C:/Users/loic/OneDrive/murmur_reseau_2023",
-    "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Project",
     "project.structure.proportion": "0.0",
@@ -79,6 +71,9 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="org.helmo.murmurG6.infrastructure" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\loic\OneDrive\murmur_reseau_2023\app\src\main\resources" />
     </key>
@@ -106,12 +101,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="murmurG6" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="murmurG6" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Application.Server" />
       <item itemvalue="JUnit.ProtocolTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ProtocolTest" />
         <item itemvalue="JUnit.ProtocolTest" />
       </list>
     </recent_temporary>
@@ -134,6 +143,7 @@
       <workItem from="1676645843145" duration="5547000" />
       <workItem from="1676717063661" duration="356000" />
       <workItem from="1676717439369" duration="5475000" />
+      <workItem from="1676808322318" duration="4033000" />
     </task>
     <task id="LOCAL-00001" summary="-">
       <created>1676482100001</created>
@@ -289,28 +299,21 @@
       <option name="project" value="LOCAL" />
       <updated>1676717385553</updated>
     </task>
-    <task id="LOCAL-00023" summary="cast msg v6 Algorithme fini (non optimisé)">
-      <created>1676806924388</created>
+    <task id="LOCAL-00023" summary="commit">
+      <created>1676803620381</created>
       <option name="number" value="00023" />
       <option name="presentableId" value="LOCAL-00023" />
       <option name="project" value="LOCAL" />
-      <updated>1676806924388</updated>
+      <updated>1676803620381</updated>
     </task>
-    <task id="LOCAL-00024" summary="cast msg v7 Algorithme fini (non optimisé)">
-      <created>1676807924310</created>
+    <task id="LOCAL-00024" summary="commit">
+      <created>1676811236686</created>
       <option name="number" value="00024" />
       <option name="presentableId" value="LOCAL-00024" />
       <option name="project" value="LOCAL" />
-      <updated>1676807924310</updated>
+      <updated>1676811236686</updated>
     </task>
-    <task id="LOCAL-00025" summary="cast msg v7 Algorithme fini (non optimisé)">
-      <created>1676814358943</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1676814358943</updated>
-    </task>
-    <option name="localTasksCounter" value="26" />
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -346,26 +349,24 @@
     <MESSAGE value="Refactored" />
     <MESSAGE value="[ServerController] castMsg et extractTrends" />
     <MESSAGE value="commit" />
-    <MESSAGE value="cast msg v6 Algorithme fini (non optimisé)" />
-    <MESSAGE value="cast msg v7 Algorithme fini (non optimisé)" />
-    <option name="LAST_COMMIT_MESSAGE" value="cast msg v7 Algorithme fini (non optimisé)" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/Executor.java</url>
-          <line>117</line>
-          <properties class="org.helmo.murmurG6.controller.Executor" method="follow">
+          <url>file://$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java</url>
+          <line>240</line>
+          <properties class="org.helmo.murmurG6.controller.ServerController" method="save">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
-          <option name="timeStamp" value="9" />
+          <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java</url>
-          <line>96</line>
-          <option name="timeStamp" value="10" />
+          <url>file://$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/dto/Mapper.java</url>
+          <line>106</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -23,7 +23,7 @@ public class Protocol {
     private final static String RX_ESP = "\\s";
     private static final String RX_DOMAIN = "((" + RX_LETTER_DIGIT + "|\\.){5,200})";
     private static final String RX_USERNAME = "((" + RX_LETTER_DIGIT + "){5,20})";
-    private static final Pattern RX_USER_DOMAIN = Pattern.compile("(" + "(?<login>" + RX_USERNAME + ")" + "@" + "(?<userServerDomain>" + RX_DOMAIN + "))");
+    public static final Pattern RX_USER_DOMAIN = Pattern.compile("(" + "(?<login>" + RX_USERNAME + ")" + "@" + "(?<userServerDomain>" + RX_DOMAIN + "))");
     private static final String RX_MESSAGE = "((" + RX_VISIBLE_CHARACTER + "){1,250})";
     private static final String RX_SHA3_EX = "((" + RX_LETTER_DIGIT + "){30,200})";
 
@@ -32,7 +32,7 @@ public class Protocol {
     private static final String RX_SALT_SIZE = "([0-9]{2})";
     private static final String RX_BCRYPT_HASH = "(\\$2b\\$\\d{2}\\$(" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){1,70})";
     public static final String TAG = "#[a-zA-Z0-9]{5,20}";
-    private static final Pattern TAG_DOMAIN = Pattern.compile("(" + "(?<tagName>" + TAG + ")" + "@" + "(?<trendServerDomain>" + RX_DOMAIN + "))");
+    public static final Pattern TAG_DOMAIN = Pattern.compile("(" + "(?<tagName>" + TAG + ")" + "@" + "(?<trendServerDomain>" + RX_DOMAIN + "))");
 
     public static final Pattern TAG_DOMAIN_OR_RX_USER_DOMAIN = Pattern.compile("(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")");
 

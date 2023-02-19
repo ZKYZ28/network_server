@@ -129,7 +129,7 @@ public class Executor implements TaskScheduler {
     }
 
     private void followUser(User user, String userToFollow) throws UnableToFollowUserException {
-        Matcher matcher = Protocol.TAG_DOMAIN_OR_RX_USER_DOMAIN.matcher(userToFollow);
+        Matcher matcher = Protocol.RX_USER_DOMAIN.matcher(userToFollow);
         if (matcher.matches()) {
             String login = matcher.group("login");
             String domain = matcher.group("userServerDomain");
@@ -147,7 +147,7 @@ public class Executor implements TaskScheduler {
     }
 
     private void followTrend(User user, String trendToFollow) throws UnableToFollowUserException {
-        Matcher matcher = Protocol.TAG_DOMAIN_OR_RX_USER_DOMAIN.matcher(trendToFollow);
+        Matcher matcher = Protocol.TAG_DOMAIN.matcher(trendToFollow);
         if (matcher.matches()) {
             String trendName = matcher.group("tagName");
             String domain = matcher.group("trendServerDomain");
