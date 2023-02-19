@@ -1,6 +1,5 @@
 package org.helmo.murmurG6.models;
 
-import org.helmo.murmurG6.controller.Protocol;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

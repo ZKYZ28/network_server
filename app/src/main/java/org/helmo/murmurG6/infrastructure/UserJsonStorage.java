@@ -6,8 +6,8 @@ import org.helmo.murmurG6.infrastructure.dto.Mapper;
 import org.helmo.murmurG6.infrastructure.dto.UserDto;
 import org.helmo.murmurG6.models.UserLibrary;
 import org.helmo.murmurG6.repository.UserRepository;
-import org.helmo.murmurG6.repository.exceptions.ReadUserCollectionException;
-import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
+import org.helmo.murmurG6.repository.exceptions.UnableToLoadUserLibraryException;
+import org.helmo.murmurG6.repository.exceptions.UnableToSaveUserLibraryException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -30,14 +30,14 @@ public class UserJsonStorage implements UserRepository {
     private final Gson gson = new Gson();
 
     @Override
-    public void save(UserLibrary uc) throws SaveUserCollectionException {
+    public void save(UserLibrary uc) throws UnableToSaveUserLibraryException {
         createFile(FILE_PATH);
 
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(FILE_PATH, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING)) {
             gson.toJson(Mapper.userListFromDto(new ArrayList<>(uc.getUsers())), new TypeToken<ArrayList<UserDto>>() {
             }.getType(), bufferedWriter);
         } catch (IOException e) {
-            throw new SaveUserCollectionException("Impossible de sauvegarder la liste d'utilisateur!");
+            throw new UnableToSaveUserLibraryException("Impossible de sauvegarder la liste d'utilisateur!");
         }
     }
 
@@ -47,7 +47,7 @@ public class UserJsonStorage implements UserRepository {
      * Si le fichier n'existe pas, il sera créé.
      */
     @Override
-    public UserLibrary load() throws ReadUserCollectionException {
+    public UserLibrary load() throws UnableToLoadUserLibraryException {
         createFile(FILE_PATH);
 
         try (BufferedReader reader = Files.newBufferedReader(FILE_PATH, StandardCharsets.UTF_8)) {
@@ -55,7 +55,7 @@ public class UserJsonStorage implements UserRepository {
             }.getType());
             return UserLibrary.of(Mapper.dtoToUserList(resultDto));
         } catch (IOException e) {
-            throw new ReadUserCollectionException("Impossible de charger la liste d'utilisateurs!");
+            throw new UnableToLoadUserLibraryException("Impossible de charger la liste d'utilisateurs!");
         }
     }
 

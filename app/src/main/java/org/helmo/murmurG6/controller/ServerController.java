@@ -1,11 +1,15 @@
 package org.helmo.murmurG6.controller;
 
+import org.helmo.murmurG6.controller.exceptions.UnableToConnectToClientException;
+import org.helmo.murmurG6.controller.exceptions.UnableToExecuteTaskException;
+import org.helmo.murmurG6.controller.exceptions.UnableToRunClientException;
 import org.helmo.murmurG6.infrastructure.ServerJsonStorage;
 import org.helmo.murmurG6.models.*;
 import org.helmo.murmurG6.repository.TrendRepository;
 import org.helmo.murmurG6.repository.UserRepository;
-import org.helmo.murmurG6.repository.exceptions.ReadServerConfigurationException;
-import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
+import org.helmo.murmurG6.repository.exceptions.UnableToLoadServerConfigurationException;
+import org.helmo.murmurG6.repository.exceptions.UnableToSaveTrendLibraryException;
+import org.helmo.murmurG6.repository.exceptions.UnableToSaveUserLibraryException;
 import org.helmo.murmurG6.utils.UltraImportantClass;
 
 import javax.net.ssl.SSLServerSocket;
@@ -34,39 +38,45 @@ public class ServerController implements AutoCloseable {
     /**
      * Le constructeur de la classe ServerController permet de créer un nouveau serveur en spécifiant un numéro de port et un storage d'utilisateurs.
      *
-     * @param port           Le numéro de port sur lequel le serveur écoutera les connexions entrantes.
-     * @param userRepository Le storage d'utilisateurs qui sera utilisé pour enregistrer et lire les informations d'utilisateur.
+     * @param port            Le numéro de port sur lequel le serveur écoutera les connexions entrantes.
+     * @param userRepository  Le storage d'utilisateurs qui sera utilisé pour enregistrer et lire les informations d'utilisateur.
+     * @param trendRepository Le storage de tendances qui sera utilisé pour enregistrer et lire les informations de tendances.
      * @throws IOException En cas d'échec de la création du socket serveur.
      */
     public ServerController(int port, UserRepository userRepository, TrendRepository trendRepository) throws IOException {
         SSLServerSocketFactory sslServerSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
         this.serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(port);
+
         this.userRepository = userRepository;
         this.trendRepository = trendRepository;
-        this.userLibrary = userRepository.load(); //remplissage de tous les users inscrits dans la usercollection
+
+        this.userLibrary = userRepository.load();
         this.trendLibrary = trendRepository.load();
 
-        this.serverConfig = new ServerJsonStorage().loadServerConfiguration();
-        this.serverConfig.setServerIp(getIp());
+        this.serverConfig = new ServerJsonStorage().load();
+        this.serverConfig.setServerIp(getDomain());
 
         UltraImportantClass.welcome();
         System.out.println("****************************************************************");
-        System.out.println("********      SERVER ONLINE ! IP : " + getIp() + "        *********");
+        System.out.println("********     SERVER ONLINE ! IP : " + getDomain() + "     ********");
         System.out.println("****************************************************************");
     }
 
 
     public void start() throws IOException {
-        TaskScheduler executor = Executor.getInstance();
-        executor.setServer(this);
-        new Thread(executor).start();
-
-        while (!this.serverSocket.isClosed()) {
-            SSLSocket client = (SSLSocket) serverSocket.accept();
-            System.out.println("Quelqu'un s'est connecté!");
-            ClientRunnable runnable = new ClientRunnable(client);
-            clientList.add(runnable);
-            new Thread(runnable).start();
+        try {
+            TaskScheduler executor = Executor.getInstance();
+            executor.setServer(this);
+            new Thread(executor).start();
+            while (!this.serverSocket.isClosed()) {
+                SSLSocket client = (SSLSocket) serverSocket.accept();
+                System.out.println("Quelqu'un s'est connecté!");
+                ClientRunnable runnable = new ClientRunnable(client);
+                clientList.add(runnable);
+                new Thread(runnable).start();
+            }
+        } catch (UnableToConnectToClientException | UnableToRunClientException | UnableToExecuteTaskException e) {
+            e.printStackTrace();
         }
     }
 
@@ -97,7 +107,7 @@ public class ServerController implements AutoCloseable {
                     c.sendMessage(Protocol.build_SEND("","","",""));  //TODO A CHANGER QUAND ON VEUT SEND
                 }*/
 
-            } catch (ReadServerConfigurationException e) {
+            } catch (UnableToLoadServerConfigurationException e) {
                 System.out.println("ERREUR LORS DE L'ENVOIE D'UN MESSAGE" + e.getMessage());
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -105,29 +115,13 @@ public class ServerController implements AutoCloseable {
         }
     }
 
-    public void save() throws SaveUserCollectionException {
+    public boolean isRunning() {
+        return !this.serverSocket.isClosed();
+    }
+
+    public void save() throws UnableToSaveUserLibraryException, UnableToSaveTrendLibraryException {
         userRepository.save(this.userLibrary);
         trendRepository.save(this.trendLibrary);
-    }
-
-    public UserLibrary getUserLibrary() {
-        return userLibrary;
-    }
-
-    public TrendLibrary getTrendLibrary() {
-        return trendLibrary;
-    }
-
-    public String getIp() {
-        try {
-            return InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public ServerConfig getServerConfig() {
-        return serverConfig;
     }
 
     @Override
@@ -137,5 +131,26 @@ public class ServerController implements AutoCloseable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /************** GETTERS/SETTERS ***************/
+    public UserLibrary getUserLibrary() {
+        return userLibrary;
+    }
+
+    public TrendLibrary getTrendLibrary() {
+        return trendLibrary;
+    }
+
+    public String getDomain() {
+        try {
+            return InetAddress.getLocalHost().getCanonicalHostName();
+        } catch (UnknownHostException e) {
+            return null;
+        }
+    }
+
+    public ServerConfig getServerConfig() {
+        return serverConfig;
     }
 }

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import org.helmo.murmurG6.controller.ServerConfig;
 import org.helmo.murmurG6.infrastructure.dto.ServerConfigDto;
 import org.helmo.murmurG6.repository.ServerRepository;
-import org.helmo.murmurG6.repository.exceptions.ReadServerConfigurationException;
+import org.helmo.murmurG6.repository.exceptions.UnableToLoadServerConfigurationException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,12 +20,12 @@ public class ServerJsonStorage implements ServerRepository {
 
 
     @Override
-    public ServerConfig loadServerConfiguration() throws ReadServerConfigurationException {
+    public ServerConfig load() throws UnableToLoadServerConfigurationException {
         ServerConfigDto serverConfigDto;
         try (BufferedReader reader = Files.newBufferedReader(FILE_PATH, StandardCharsets.UTF_8)) {
             serverConfigDto = gson.fromJson(reader, ServerConfigDto.class);
         } catch (IOException e) {
-            throw new ReadServerConfigurationException("Impossible de charger les informations de configuration du serveur !");
+            throw new UnableToLoadServerConfigurationException("Impossible de charger les informations de configuration du serveur !");
         }
         return new ServerConfig(serverConfigDto.serverName, serverConfigDto.base64KeyAES);
     }

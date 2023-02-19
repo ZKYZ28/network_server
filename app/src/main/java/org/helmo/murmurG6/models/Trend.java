@@ -2,8 +2,8 @@ package org.helmo.murmurG6.models;
 
 public class Trend {
 
-    private String trendName;
-    private String domain;
+    private final String trendName;
+    private final String domain;
 
     public Trend(String trendName, String domain) {
         this.trendName = trendName;
