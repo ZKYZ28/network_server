@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 public class ServerController implements AutoCloseable {
 
     private static ServerController instance;
-    private final Set<ClientRunnable> clientList = Collections.synchronizedSet(new HashSet<>());
+    private static final Set<ClientRunnable> clientList = Collections.synchronizedSet(new HashSet<>());
     private SSLServerSocket serverSocket;
     private ServerConfig serverConfig;
 
@@ -131,6 +131,20 @@ public class ServerController implements AutoCloseable {
         } catch (UnknownHostException e) {
             return null;
         }
+    }
+
+    /**
+     * Recupere un objet ClientRunnable en fonction du login (ex: antho123) passé en paramètre
+     * @param login le login du client recherché
+     * @return Un ClientRunnable si le client est bien trouvé dans la liste des clients connecté du server, null sinon
+     */
+    public static ClientRunnable getClientRunnableByLogin(String login){
+        for(ClientRunnable cr : clientList){
+            if(cr.getUser().getLogin().equals(login)){
+                return cr;
+            }
+        }
+        return null;
     }
 
     public ServerConfig getServerConfig() {

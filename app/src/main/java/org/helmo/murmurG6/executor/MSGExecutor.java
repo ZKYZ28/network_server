@@ -11,6 +11,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.helmo.murmurG6.controller.ServerController.getClientRunnableByLogin;
+
 public class MSGExecutor {
 
     private static final ServerController server = ServerController.getInstance();
@@ -19,7 +21,7 @@ public class MSGExecutor {
 
     /**
      * Cast un message à des utilisateurs locaux ou distant
-     * @param sender Le thread Client Emetteur du message
+     * @param client Le thread Client Emetteur du message
      * @param message le message à caster
      */
     protected static void castMsg(ClientRunnable client, String message) {
@@ -154,20 +156,5 @@ public class MSGExecutor {
             matches.add(matcher.group()); //Ex: #trend
         }
         return matches;
-    }
-
-
-    /**
-     * Recupere un objet ClientRunnable en fonction du login (ex: antho123) passé en paramètre
-     * @param login le login du client recherché
-     * @return Un ClientRunnable si le client est bien trouvé dans la liste des clients connecté du server, null sinon
-     */
-    private static ClientRunnable getClientRunnableByLogin(String login){
-        for(ClientRunnable cr : server.getClientList()){
-            if(cr.getUser().getLogin().equals(login)){
-                return cr;
-            }
-        }
-        return null;
     }
 }
