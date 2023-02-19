@@ -58,7 +58,7 @@ public class Executor implements TaskScheduler {
             case CONNECT:
                 user = server.getUserLibrary().getUser(params.group("username"));
                 client.setUser(user);
-                client.sendMessage(connect(user.getLogin()));
+                client.sendMessage(connect(user.getUserCredentials()));
                 break;
 
             case CONFIRM:
@@ -136,7 +136,7 @@ public class Executor implements TaskScheduler {
 
                 if (userLibrary.isRegistered(login)) {
                     User followedUser = userLibrary.getUser(login);
-                    followedUser.addFollower(new UserCredentials(user.getLogin(), server.getServerConfig().getServerName()));
+                    followedUser.addFollower(new UserCredentials(user.getUserCredentials(), server.getServerConfig().getServerName()));
                 }
             }
         }
@@ -152,7 +152,7 @@ public class Executor implements TaskScheduler {
             if (!domain.equals(server.getServerConfig().getServerName())) {
                 Protocol.build_SEND("sdfsdf", "sdfsdf", "sdfsdf", "sdfsdf");
             } else {
-                server.getTrendLibrary().addUserToTrend(trendName, new UserCredentials(user.getLogin(), server.getServerConfig().getServerName()));
+                server.getTrendLibrary().addUserToTrend(trendName, new UserCredentials(user.getUserCredentials(), server.getServerConfig().getServerName()));
             }
         }
     }
@@ -181,5 +181,9 @@ public class Executor implements TaskScheduler {
 
     public void setServer(ServerController server) {
         this.server = server;
+    }
+
+    public void sendToRelay(String sendMessage) {
+
     }
 }

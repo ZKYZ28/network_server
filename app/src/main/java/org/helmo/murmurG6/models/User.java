@@ -1,16 +1,20 @@
 package org.helmo.murmurG6.models;
 
+import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class User {
 
-    private final UserCredentials login; //Login de l'utilisateur.
+    private final UserCredentials userCredentials; //Login de l'utilisateur.
     private final BCrypt bCrypt;
     private final Set<UserCredentials> userFollowers; //Liste des utilisateurs suivis par l'utilisateur.
     private final Set<Trend> followedTrends; //Liste des tendances suivies par l'utilisateur.
 
-    public User(UserCredentials login, BCrypt bCrypt, Set<UserCredentials> userFollowers, Set<Trend> followedTrends) {
-        this.login = login;
+    private final Set<UUID> messageIdHistory = new HashSet<>();
+
+    public User(UserCredentials userCredentials, BCrypt bCrypt, Set<UserCredentials> userFollowers, Set<Trend> followedTrends) {
+        this.userCredentials = userCredentials;
         this.bCrypt = bCrypt;
         this.userFollowers = userFollowers;
         this.followedTrends = followedTrends;
@@ -42,9 +46,8 @@ public class User {
      *
      * @param tag le tag de la trend recherché dans la liste de trend suivie par l'utilisateur
      * @return La trend
-     * @throws InexistantTrendTagException Exception lancée si le tag de la trend recherché n'est pas suivi par l'utilisateur
      */
-    public Trend getTrendByTag(String tag) throws InexistantTrendTagException {
+    public Trend getTrendByTag(String tag) {
         for (Trend trend : followedTrends) {
             if (tag.equals(trend.getTrendName())) {
                 return trend;
@@ -60,12 +63,12 @@ public class User {
         return this.bCrypt;
     }
 
-    public String getLogin() {
-        return this.login.getLogin();
+    public String getUserCredentials() {
+        return this.userCredentials.getLogin();
     }
 
     public UserCredentials getCredentials(){
-        return this.login;
+        return this.userCredentials;
     }
 
     public String getBcryptHash() {
@@ -90,6 +93,14 @@ public class User {
 
     @Override
     public String toString() {
-        return this.login.toString();
+        return this.userCredentials.toString();
+    }
+
+    public boolean hasAlreadyReceivedMessage(UUID idMessage) {
+        return this.messageIdHistory.contains(idMessage);
+    }
+
+    public void saveReceivedMessageId(UUID idMessage) {
+        this.messageIdHistory.add(idMessage);
     }
 }

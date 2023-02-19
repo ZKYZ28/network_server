@@ -7,7 +7,6 @@ import org.helmo.murmurG6.infrastructure.ServerJsonStorage;
 import org.helmo.murmurG6.models.*;
 import org.helmo.murmurG6.repository.TrendRepository;
 import org.helmo.murmurG6.repository.UserRepository;
-import org.helmo.murmurG6.repository.exceptions.UnableToLoadServerConfigurationException;
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveTrendLibraryException;
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveUserLibraryException;
 import org.helmo.murmurG6.utils.UltraImportantClass;
@@ -121,7 +120,7 @@ public class ServerController implements AutoCloseable {
     /**
      * Gère le casting de message pour à des followers d'une Trend
      * @param senderClient L'emetteur du message
-     * @param followers La liste des creditentials des followers de la trend(ex: antho123@server1)
+     * @param trends La liste des trends à gérer
      * @param message Le message à caster
      * @param idMessage L'id unique associé à ce message
      */
@@ -132,10 +131,10 @@ public class ServerController implements AutoCloseable {
             //Si l'emetteur du message est bien abonné à la trend on gère l'envoi, sinon on ne fait rien
             if(senderClient.getTrendByTag(trendName) != null) {
                 //On regarde si la trend appartient à ce server
-                if (trendLibrary.containsKey(trendName)) {
+                if (trendLibrary.exists(trendName)) {
 
                     //Si oui, alors on itère sur les followers de cette trends afin de leur écrire
-                    for (UserCredentials trendFollowersCredential : trendLibrary.get(trendName)) {
+                    for (UserCredentials trendFollowersCredential : trendLibrary.getUsersForTrend(trendName)) {
                         manageMessageSending(senderClient, trendFollowersCredential, idMessage, message);
                     }
 
@@ -143,7 +142,7 @@ public class ServerController implements AutoCloseable {
                 //Si non (cas ou la trend n'appartient PAS à ce server) -> on passe la trend au relay
                 } else {
                     Trend t = senderClient.getTrendByTag(trendName);
-                    relay.sendMessage(Protocol.build_SEND(idMessage.toString(), senderClient.getLogin(), t.toString(), message));
+                    Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage.toString(), senderClient.getUserCredentials(), t.toString(), message));
                 }
             }
         }
@@ -163,7 +162,7 @@ public class ServerController implements AutoCloseable {
 
             //Si le destinataire n'appartient pas à ce server
         }else{
-            relay.sendMessage(Protocol.build_SEND(idMessage.toString(), sender.getCreditential.toString(), followerCredential.toString(), message));
+            Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage.toString(), sender.getCredentials().toString(), followerCredential.toString(), message));
         }
     }
 
@@ -183,9 +182,9 @@ public class ServerController implements AutoCloseable {
             User follower = client.getUser();
 
             //Si le destinataire n'a pas déja recu ce message, alors on lui écrit et enregistre cet événement dans son historique
-            if(!follower.hasAlreadyReceived(idMessage))
+            if(!follower.hasAlreadyReceivedMessage(idMessage))
                 try {
-                    client.sendMessage(Protocol.build_MSGS(sender.getLogin() + "@" + getIp() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
+                    client.sendMessage(Protocol.build_MSGS(sender.getUserCredentials() + "@" + getDomain() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
                     follower.saveReceivedMessageId(idMessage);
                 }catch (Exception e){
                     System.out.println("Erreur lors de l'envoi du message (encryption error)");
@@ -220,7 +219,7 @@ public class ServerController implements AutoCloseable {
      */
     private ClientRunnable getClientRunnableByLogin(String login){
         for(ClientRunnable cr : clientList){
-            if(cr.getUser().getLogin().equals(login)){
+            if(cr.getUser().getUserCredentials().equals(login)){
                 return cr;
             }
         }
