@@ -77,7 +77,7 @@ public class Executor implements TaskScheduler {
                 break;
 
             case MSG:
-                server.castMsg(client, params.group("message"));
+                server.castMsg(client.getUser(), params.group("message"));
                 break;
 
             case FOLLOW:
