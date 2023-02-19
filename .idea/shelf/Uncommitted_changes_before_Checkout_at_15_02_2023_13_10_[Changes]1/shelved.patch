@@ -1,0 +1,38 @@
+Index: app/src/main/java/org/helmo/murmurG6/App.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/App.java b/app/src/main/java/org/helmo/murmurG6/App.java
+--- a/app/src/main/java/org/helmo/murmurG6/App.java	
++++ b/app/src/main/java/org/helmo/murmurG6/App.java	
+@@ -20,11 +20,11 @@
+     }
+ 
+     public static void main(String[] args){
+-            try (ServerController server = new ServerController(DEFAULT_PORT, USER_JSON_STORAGE)) {
+-                server.start();
+-            } catch (IOException e) {
+-                e.printStackTrace();
+-            }
++        try (ServerController server = new ServerController(DEFAULT_PORT, USER_JSON_STORAGE)) {
++            server.start();
++        } catch (IOException e) {
++            e.printStackTrace();
++        }
+     }
+ }
+ 
+Index: app/src/main/resources/storage/user.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/resources/storage/user.json b/app/src/main/resources/storage/user.json
+--- a/app/src/main/resources/storage/user.json	
++++ b/app/src/main/resources/storage/user.json	
+@@ -1,1 +1,1 @@
+-[{"login":"monsieurDeVleeg","bcryptDto":{"rounds":14,"salt":"1nVLXg0yZa0Yc4uJaFfAkO","hash":"/aXeRIVeJROI7bMuGJUDP5R53Y/eh/q"},"followedUsers":[{"informationFollow":"test1","serverDomain":"server1.domain.guru"}],"followedTrends":[]},{"login":"test1","bcryptDto":{"rounds":14,"salt":"ZKkOitz0PY1Z2TWcnugmIO","hash":"l65VRYYDnjiUcvy4Ic/0SX9lYGPiicq"},"followedUsers":[],"followedTrends":[]}]
+\ No newline at end of file
++[{"login":"giuseppe","bcryptDto":{"rounds":14,"salt":"W3xr3gVnjdLysGEPJQr1eO","hash":"wgBka8uBJNJi2pZrqvJxfCLKmIDoxSO"},"followedUsers":[],"followedTrends":[]},{"login":"monsieurDeVleeg","bcryptDto":{"rounds":14,"salt":"1nVLXg0yZa0Yc4uJaFfAkO","hash":"/aXeRIVeJROI7bMuGJUDP5R53Y/eh/q"},"followedUsers":[{"informationFollow":"test1","serverDomain":"server1.domain.guru"}],"followedTrends":[]},{"login":"test1","bcryptDto":{"rounds":14,"salt":"ZKkOitz0PY1Z2TWcnugmIO","hash":"l65VRYYDnjiUcvy4Ic/0SX9lYGPiicq"},"followedUsers":[],"followedTrends":[]}]
+\ No newline at end of file

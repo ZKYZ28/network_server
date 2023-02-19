@@ -1,6 +1,7 @@
 package org.helmo.murmurG6.models;
 
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
+
 import java.util.*;
 
 /**
@@ -11,21 +12,42 @@ import java.util.*;
  * @version 1.0
  * @since 11 février 2023
  */
-public class UserLibrary extends HashMap<String, User> {
+public class UserLibrary {
+
+    private final Map<String, User> userMap;
+
+    public UserLibrary() {
+        this.userMap = Collections.synchronizedMap(new HashMap<>());
+    }
 
     public void register(User user) throws UserAlreadyRegisteredException {
-        if(this.containsKey(user.getLogin())){
+        if (this.userMap.containsKey(user.getUserCredentials())) {
             throw new UserAlreadyRegisteredException("L'utilisateur est déja inscrit!");
-        }else{
-            this.put(user.getLogin(), user);
+        } else {
+            this.userMap.put(user.getUserCredentials(), user);
         }
     }
 
     public static UserLibrary of(Iterable<User> users) {
-        UserLibrary ulib = new UserLibrary();
-        for(User u : users){
-            ulib.put(u.getLogin(), u);
+        UserLibrary library = new UserLibrary();
+        for (User u : users) {
+            library.userMap.put(u.getUserCredentials(), u);
         }
-        return ulib;
+        return library;
+    }
+
+    public User getUser(String login) {
+        if (this.userMap.containsKey(login)) {
+            return this.userMap.get(login);
+        }
+        return null;
+    }
+
+    public boolean isRegistered(String login) {
+        return this.userMap.containsKey(login);
+    }
+
+    public Set<User> getUsers() {
+        return new HashSet<>(this.userMap.values());
     }
 }

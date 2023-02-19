@@ -1,7 +1,10 @@
 package org.helmo.murmurG6.infrastructure.dto;
 
+import org.helmo.murmurG6.models.BCrypt;
 import org.helmo.murmurG6.models.User;
-import java.util.List;
+import org.helmo.murmurG6.models.UserCredentials;
+
+import java.util.Set;
 
 /**
  * /**
@@ -13,21 +16,24 @@ import java.util.List;
  */
 public class UserDto {
 
-    public String login;
+    public UserCredentialsDto login;
     public BCryptDto bcryptDto;
-    public List<String> followedUsers; //liste des loggins des users followed
-    public List<String> followedTrends; //liste des hashtags
+    public Set<UserCredentialsDto> followedUsers;
+    public Set<TrendDto> followedTrends;
 
-    public static User fromUserDtoToUser(UserDto dto) {
-        return new User(dto.login, Mapper.bcryptDtoToBcrypt(dto.bcryptDto), dto.followedUsers, dto.followedTrends);
+
+    public static User fromDto(UserDto dto) {
+        return new User(UserCredentialsDto.fromDto(dto.login), Mapper.bcryptDtoToBcrypt(dto.bcryptDto), Mapper.dtoListTouserCredentials(dto.followedUsers), Mapper.trendsDtosToTrend(dto.followedTrends));
     }
 
-    public static UserDto fromUserToDto(User user) {
+    public static UserDto toDto(User user) {
         UserDto dto = new UserDto();
-        dto.login = user.getLogin();
+
+        dto.login = UserCredentialsDto.toDto(user.getCredentials());
         dto.bcryptDto = Mapper.bcryptToBcryptDto(user.getBcrypt());
-        dto.followedUsers = user.getFollowedUsers();
-        dto.followedTrends = user.getFollowedTrends();
+        dto.followedUsers = Mapper.userCredentialsListToDto(user.getUserFollowers());
+        dto.followedTrends = Mapper.trendsToDto(user.getFollowedTrends());
         return dto;
     }
 }
+

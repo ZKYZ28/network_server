@@ -1,0 +1,311 @@
+Index: app/src/main/resources/storage/user.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[{\"login\":\"monsieurDeVleeg\",\"bcryptDto\":{\"rounds\":14,\"salt\":\"em.7XWnJWXfJR8ySc6vHQu\",\"hash\":\"YoigWH1NYA9FpEDt8YyMGdAaqriwi3a\"},\"followedUsers\":[],\"followedTrends\":[\"#tendance123@g6server1.godswila.guru\"]},{\"login\":\"francis\",\"bcryptDto\":{\"rounds\":14,\"salt\":\"zr1dY1Zd1BFMYZj3e023He\",\"hash\":\"kguOllAKaIAG8txA6JD6QgysWRgD836\"},\"followedUsers\":[],\"followedTrends\":[\"#tendance123@g6server1.godswila.guru\"]}]
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/resources/storage/user.json b/app/src/main/resources/storage/user.json
+--- a/app/src/main/resources/storage/user.json	(revision 73b73d9dc0449009fa9082fee11fc1c6bf617440)
++++ b/app/src/main/resources/storage/user.json	(date 1676719941706)
+@@ -1,1 +1,38 @@
+-[{"login":"monsieurDeVleeg","bcryptDto":{"rounds":14,"salt":"em.7XWnJWXfJR8ySc6vHQu","hash":"YoigWH1NYA9FpEDt8YyMGdAaqriwi3a"},"followedUsers":[],"followedTrends":["#tendance123@g6server1.godswila.guru"]},{"login":"francis","bcryptDto":{"rounds":14,"salt":"zr1dY1Zd1BFMYZj3e023He","hash":"kguOllAKaIAG8txA6JD6QgysWRgD836"},"followedUsers":[],"followedTrends":["#tendance123@g6server1.godswila.guru"]}]
+\ No newline at end of file
++[
++  {
++    "login": "monsieurDeVleeg",
++    "bcryptDto": {
++      "rounds": 14,
++      "salt": "em.7XWnJWXfJR8ySc6vHQu",
++      "hash": "YoigWH1NYA9FpEDt8YyMGdAaqriwi3a"
++    },
++    "followedUsers": [],
++    "followedTrends": [
++      "#tendance123@g6server1.godswila.guru"
++    ]
++  },
++  {
++    "login": "franchi",
++    "bcryptDto": {
++      "rounds": 14,
++      "salt": "Qg6E785SbNrAvqb8M7w4Me",
++      "hash": "A9bg5q6iVHO9dGSP6SR.v2wl9Wqu0GK"
++    },
++    "followedUsers": [],
++    "followedTrends": []
++  },
++  {
++    "login": "francis",
++    "bcryptDto": {
++      "rounds": 14,
++      "salt": "zr1dY1Zd1BFMYZj3e023He",
++      "hash": "kguOllAKaIAG8txA6JD6QgysWRgD836"
++    },
++    "followedUsers": [
++      "francis@g6server1.godswila.guru"
++    ],
++    "followedTrends": [
++      "#tendance123@g6server1.godswila.guru"
++    ]
++  }
++]
+\ No newline at end of file
+Index: app/src/main/java/org/helmo/murmurG6/controller/Executor.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.helmo.murmurG6.controller;\r\n\r\nimport org.helmo.murmurG6.models.*;\r\nimport org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;\r\nimport org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;\r\nimport org.helmo.murmurG6.utils.RandomSaltGenerator;\r\nimport java.util.ArrayList;\r\nimport java.util.concurrent.*;\r\nimport java.util.regex.Matcher;\r\nimport java.util.regex.Pattern;\r\n\r\npublic class Executor implements TaskScheduler {\r\n\r\n    private static Executor instance;\r\n    private final ExecutorService executorService; //ExecutorService avec un seul thread pour exécuter les tâches de la file d'attente.\r\n    private final BlockingQueue<Task> taskQueue; //File d'attente BlockingQueue appelée taskQueue pour stocker les tâches à exécuter.\r\n    private ServerController server;\r\n\r\n    private Executor() {\r\n        this.taskQueue = new LinkedBlockingQueue<>();\r\n        this.executorService = Executors.newSingleThreadExecutor();\r\n    }\r\n\r\n    public static Executor getInstance() {\r\n        if (instance == null) {\r\n            instance = new Executor();\r\n        }\r\n        return instance;\r\n    }\r\n\r\n    public void setServer(ServerController server) {\r\n        this.server = server;\r\n    }\r\n\r\n    public void addTask(Task task) {\r\n        taskQueue.add(task);\r\n    }\r\n\r\n    @Override\r\n    public void run() {\r\n        executorService.submit(() -> {\r\n            while (true) {\r\n                try {\r\n                    //L'executor bloque ici jusqu'à ce qu'une nouvelle tache arrvie\r\n                    Task task = taskQueue.take(); //Consomation des tâches de la file d'attente en appelant la méthode take de BlockingQueue, ce qui bloquera le thread jusqu'à ce qu'une tâche soit disponible dans la file d'attente.\r\n                    executeTask(task);\r\n                } catch (InterruptedException e) {\r\n                    break;\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n\r\n    private void executeTask(Task task) {\r\n\r\n        ClientRunnable client = task.getClient(); //On récupère le client à qui on fait la tache\r\n        Matcher params = task.getMatcher();   //On récupère le matcher de la tache à éxécuter\r\n        User user;\r\n\r\n        switch (task.getType()) {\r\n            case REGISTER:\r\n                user = new User(params.group(\"username\"), BCrypt.of(params.group(\"bcrypt\")), new ArrayList<>(), new ArrayList<>());\r\n                client.sendMessage(register(user, client));\r\n                break;\r\n\r\n            case CONNECT:\r\n                user = server.getUserCollection().get(params.group(\"username\"));\r\n                client.setUser(user);\r\n                client.sendMessage(connect(user.getLogin()));\r\n                break;\r\n\r\n            case CONFIRM:\r\n                user = client.getUser();\r\n                String received = params.group(\"challenge\");\r\n                String expected = user.getBcrypt().generateChallenge(client.getRandom22());\r\n                client.sendMessage(confirm(received, expected));\r\n                break;\r\n\r\n            case MSG:\r\n                //server.broadcastToAllClientsExceptMe(client, params.group(\"message\"));\r\n                server.castMsg(client, params.group(\"message\"));\r\n                break;\r\n\r\n            case FOLLOW:\r\n                try {\r\n                    follow(client.getUser(), params.group(\"domain\"));\r\n                    server.saveUsers();\r\n                } catch (SaveUserCollectionException | UnableToFollowUser e) {\r\n                    System.out.println(e.getMessage());\r\n                    client.sendMessage(Protocol.build_ERROR());\r\n                }\r\n                break;\r\n\r\n            default:\r\n                client.sendMessage(Protocol.build_ERROR());\r\n        }\r\n    }\r\n\r\n    private String connect(String login) {\r\n        if (server.getUserCollection().containsKey(login)) {\r\n            User user = server.getUserCollection().get(login);\r\n            return Protocol.build_PARAM(user.getBcryptRound(), user.getBcryptSalt());\r\n        } else {\r\n            return Protocol.build_ERROR();\r\n        }\r\n    }\r\n\r\n    private String confirm(String clientChallenge, String userChallenge) {\r\n        return clientChallenge.equals(userChallenge) ? Protocol.build_OK() : Protocol.build_ERROR();\r\n    }\r\n\r\n    private String register(User user, ClientRunnable client) {\r\n        try {\r\n            server.getUserCollection().register(user);\r\n            client.setUser(user);\r\n            server.saveUsers();\r\n            return Protocol.build_OK();\r\n        } catch (SaveUserCollectionException | UserAlreadyRegisteredException e) {\r\n            System.out.println(e.getMessage());\r\n            return Protocol.build_ERROR();\r\n        }\r\n    }\r\n\r\n    public String sayHello(ClientRunnable client) {\r\n        String random22 = RandomSaltGenerator.generateSalt();\r\n        client.sendMessage(Protocol.build_HELLO(server.getIp(), random22));\r\n        return random22;\r\n    }\r\n\r\n\r\n    private void follow(User user, String itemToBeFollowed) throws UnableToFollowUser {\r\n        if(itemToBeFollowed.charAt(0) == '#'){\r\n            user.followTrend(itemToBeFollowed);\r\n        } else {\r\n            followUser(user, itemToBeFollowed);\r\n        }\r\n    }\r\n\r\n        //TODO: Gérer le cas ou le login a suivre n'existe pas (checker sur TOUS les servers)\r\n        private void followUser(User user, String loginToBeFollowed) throws UnableToFollowUser{\r\n            Matcher matcher = Protocol.RX_USER_DOMAIN.matcher(loginToBeFollowed);\r\n            if(matcher.matches() && matcher.group(\"login\").equals(user.getLogin())){\r\n                throw new UnableToFollowUser(\"login d'utilisateur à suivre invalide!\");\r\n            }else{\r\n                user.followUser(loginToBeFollowed);\r\n            }\r\n        }\r\n\r\n\r\n\r\n\r\n    @Override\r\n    public void close() {\r\n        this.executorService.shutdown();\r\n        try {\r\n            if (!this.executorService.awaitTermination(60, TimeUnit.SECONDS)) {\r\n                this.executorService.shutdownNow();\r\n            }\r\n        } catch (InterruptedException e) {\r\n            this.executorService.shutdownNow();\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/controller/Executor.java b/app/src/main/java/org/helmo/murmurG6/controller/Executor.java
+--- a/app/src/main/java/org/helmo/murmurG6/controller/Executor.java	(revision 73b73d9dc0449009fa9082fee11fc1c6bf617440)
++++ b/app/src/main/java/org/helmo/murmurG6/controller/Executor.java	(date 1676719941693)
+@@ -130,22 +130,34 @@
+ 
+ 
+     private void follow(User user, String itemToBeFollowed) throws UnableToFollowUser {
+-        if(itemToBeFollowed.charAt(0) == '#'){
+-            user.followTrend(itemToBeFollowed);
+-        } else {
+-            followUser(user, itemToBeFollowed);
++        //itemToBeFollowed = test@domain || #test@domain
++        String domain;
++
++        Matcher matcher = Protocol.TAG_DOMAIN_OR_RX_USER_DOMAIN.matcher(itemToBeFollowed);
++
++        if (matcher.matches()) {
++            domain = matcher.group("UserServerDomain");
++
++            if (domain.equals(server.getServerConfig().getServerName())) {
++                if(itemToBeFollowed.charAt(0) == '#') {
++                    user.followTrend(itemToBeFollowed);
++                } else {
++                   user.followUser(server.getUserCollection().get(matcher.group("login")), user.getLogin() + );
++                }
++            }
+         }
+     }
++
+ 
+-        //TODO: Gérer le cas ou le login a suivre n'existe pas (checker sur TOUS les servers)
+-        private void followUser(User user, String loginToBeFollowed) throws UnableToFollowUser{
+-            Matcher matcher = Protocol.RX_USER_DOMAIN.matcher(loginToBeFollowed);
+-            if(matcher.matches() && matcher.group("login").equals(user.getLogin())){
+-                throw new UnableToFollowUser("login d'utilisateur à suivre invalide!");
+-            }else{
+-                user.followUser(loginToBeFollowed);
+-            }
++    //TODO: Gérer le cas ou le login a suivre n'existe pas (checker sur TOUS les servers)
++   /* private void followUser(User user, String loginToBeFollowed) throws UnableToFollowUser{
++        Matcher matcher = Protocol.RX_USER_DOMAIN.matcher(loginToBeFollowed);
++        if(matcher.matches() && matcher.group("login").equals(user.getLogin())){
++            throw new UnableToFollowUser("login d'utilisateur à suivre invalide!");
++        }else{
++            user.followUser(loginToBeFollowed);
+         }
++    }*/
+ 
+ 
+ 
+Index: app/src/main/java/org/helmo/murmurG6/models/Protocol.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.helmo.murmurG6.models;\r\n\r\nimport org.helmo.murmurG6.models.exceptions.InvalidTaskException;\r\n\r\nimport java.util.Map;\r\nimport java.util.regex.Matcher;\r\nimport java.util.regex.Pattern;\r\n\r\npublic class Protocol {\r\n\r\n    private static final String RX_DIGIT = \"[0-9]\";\r\n    private static final String RX_LETTER = \"[a-zA-Z]\";\r\n    private static final String RX_LETTER_DIGIT = RX_LETTER + \"|\" + RX_DIGIT;\r\n    private static final String RX_SYMBOL = \"[\\\\x21-\\\\x2f]|[\\\\x3a-\\\\x40]|[\\\\x5B-\\\\x60]\";\r\n    private static final String RX_ROUND = \"(\" + RX_DIGIT + \"{2})\";\r\n    private static final String RX_PASSCHAR = \"[\\\\x22-\\\\xff]\";\r\n    private static final String RX_VISIBLE_CHARACTER = \"[\\\\x20-\\\\xff]\";\r\n    private static final String RX_INFORMATION_MESSAGE = \"((\" + RX_VISIBLE_CHARACTER + \"){0,200})\";\r\n    private static final String RX_RANDOM = \"((\" + RX_LETTER_DIGIT + \"|\" + RX_SYMBOL + \"){22})\";\r\n    private static final String RX_BCRYPT_SALT = \"((\" + RX_LETTER_DIGIT + \"|\" + RX_SYMBOL + \"){22})\";\r\n    private final static String RX_ESP = \"\\\\s\";\r\n    private static final String RX_DOMAIN = \"((\" + RX_LETTER_DIGIT + \"|\\\\.){5,200})\";\r\n    public static final String RX_USERNAME = \"((\" + RX_LETTER_DIGIT + \"){5,20})\";\r\n    public static final Pattern RX_USER_DOMAIN = Pattern.compile(\"(\" + \"(?<login>\"+RX_USERNAME + \")\" + \"@\" + RX_DOMAIN + \")\");\r\n    private static final String RX_MESSAGE = \"((\" + RX_VISIBLE_CHARACTER + \"){1,250})\";\r\n    private static final String RX_SHA3_EX = \"((\" + RX_LETTER_DIGIT + \"){30,200})\";\r\n\r\n    /*PARTS*/\r\n    private static final String RX_CRLF = \"(\\\\x0d\\\\x0a){0,1}\";\r\n    private static final String RX_SALT_SIZE = \"([0-9]{2})\";\r\n    public static final String RX_BCRYPT_HASH = \"(\\\\$2b\\\\$\\\\d{2}\\\\$(\" + RX_LETTER_DIGIT + \"|\" + RX_SYMBOL + \"){1,70})\";\r\n    public static final String TAG = \"#[a-zA-Z0-9]{5,20}\";\r\n    public static final String TAG_DOMAIN = \"(\" + TAG + \"@\" + RX_DOMAIN + \")\";\r\n\r\n    private static final String TAG_DOMAIN_OR_RX_USER_DOMAIN = \"(\" + RX_USER_DOMAIN + \"|\" + TAG_DOMAIN + \")\";\r\n\r\n\r\n    /*FULL*/\r\n    private final static Pattern RX_CONNECT_TASK = Pattern.compile(\"CONNECT\" + RX_ESP + \"(?<username>\" + RX_USERNAME + \")\" + RX_CRLF);\r\n    private final static Pattern RX_REGISTER_TASK = Pattern.compile(\"REGISTER\" + RX_ESP + \"(?<username>\" + RX_USERNAME + \")\" + RX_ESP + RX_SALT_SIZE + RX_ESP + \"(?<bcrypt>\" + RX_BCRYPT_HASH + \")\" + RX_CRLF);\r\n    private final static Pattern RX_FOLLOW_TASK = Pattern.compile(\"FOLLOW\" + RX_ESP + \"(?<domain>\" + TAG_DOMAIN_OR_RX_USER_DOMAIN + \")\" + RX_CRLF);\r\n    private final static Pattern RX_CONFIRM_TASK = Pattern.compile(\"CONFIRM\" + RX_ESP + \"(?<challenge>\" + RX_SHA3_EX + \")\" + RX_CRLF);\r\n    private final static Pattern RX_DISCONNECT_TASK = Pattern.compile(\"DISCONNECT\" + RX_CRLF);\r\n    private final static Pattern RX_MSG_TASK = Pattern.compile(\"MSG\" + RX_ESP + \"(?<message>\" + RX_MESSAGE + \")\" + RX_CRLF);\r\n\r\n    private final static String MSGS = \"MSGS <message>\\r\\n\";\r\n    private final static String HELLO = \"HELLO <ip> <salt>\\r\\n\";\r\n    private final static String PARAM = \"PARAM <round> <salt>\\r\\n\";\r\n    private final static String SEND = \"SEND <ip_domain> <nom_domaine> <nom/tag_domain> <message_interne>\\r\\n\";\r\n    private final static String ERROR = \"-ERR\\r\\n\";\r\n    private final static String OK = \"+OK\\r\\n\";\r\n\r\n\r\n\r\n\r\n    public static String build_MSGS(String msg){\r\n        return MSGS.replace(\"<message>\", msg);\r\n    }\r\n\r\n    public static String build_HELLO(String ip, String salt){\r\n        return HELLO.replace(\"<ip>\", ip).replace(\"<salt>\", salt);\r\n    }\r\n\r\n    public static String build_PARAM(int round, String salt){\r\n        return PARAM.replace(\"<round>\", String.valueOf(round)).replace(\"<salt>\", salt);\r\n    }\r\n\r\n    public static String build_SEND(String ip_domain, String nom_domain, String nomOrTag_domain, String message_interne){\r\n        return SEND.replace(\"<ip_domain>\", ip_domain).replace(\"<nom_domaine>\", nom_domain).replace(\"<nom/tag_domain>\", nomOrTag_domain).replace(\"<message_interne>\", message_interne);\r\n    }\r\n\r\n    public static String build_ERROR(){\r\n        return ERROR;\r\n    }\r\n\r\n    public static String build_OK(){\r\n        return OK;\r\n    }\r\n\r\n\r\n    private static final Map<Pattern, TaskType> TYPE_MESSAGE_MAP = Map.of(\r\n            RX_CONNECT_TASK, TaskType.CONNECT,\r\n            RX_REGISTER_TASK, TaskType.REGISTER,\r\n            RX_FOLLOW_TASK, TaskType.FOLLOW,\r\n            RX_CONFIRM_TASK, TaskType.CONFIRM,\r\n            RX_DISCONNECT_TASK, TaskType.DISCONNECT,\r\n            RX_MSG_TASK, TaskType.MSG\r\n    );\r\n\r\n    public static Task buildTask(String command) /*throws InvalidTaskException */{\r\n        for (Map.Entry<Pattern, TaskType> entry : TYPE_MESSAGE_MAP.entrySet()) {\r\n            Matcher matcher = entry.getKey().matcher(command);\r\n            if (matcher.matches()) {\r\n                return new Task(entry.getValue(), matcher);\r\n            }\r\n        }\r\n        throw new InvalidTaskException(\"Tache invalide!\");\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/models/Protocol.java b/app/src/main/java/org/helmo/murmurG6/models/Protocol.java
+--- a/app/src/main/java/org/helmo/murmurG6/models/Protocol.java	(revision 73b73d9dc0449009fa9082fee11fc1c6bf617440)
++++ b/app/src/main/java/org/helmo/murmurG6/models/Protocol.java	(date 1676718926219)
+@@ -21,7 +21,7 @@
+     private final static String RX_ESP = "\\s";
+     private static final String RX_DOMAIN = "((" + RX_LETTER_DIGIT + "|\\.){5,200})";
+     public static final String RX_USERNAME = "((" + RX_LETTER_DIGIT + "){5,20})";
+-    public static final Pattern RX_USER_DOMAIN = Pattern.compile("(" + "(?<login>"+RX_USERNAME + ")" + "@" + RX_DOMAIN + ")");
++    public static final Pattern RX_USER_DOMAIN = Pattern.compile("(" + "(?<login>"+RX_USERNAME + ")" + "@" + "(?<UserServerDomain>" + RX_DOMAIN + "))");
+     private static final String RX_MESSAGE = "((" + RX_VISIBLE_CHARACTER + "){1,250})";
+     private static final String RX_SHA3_EX = "((" + RX_LETTER_DIGIT + "){30,200})";
+ 
+@@ -30,9 +30,9 @@
+     private static final String RX_SALT_SIZE = "([0-9]{2})";
+     public static final String RX_BCRYPT_HASH = "(\\$2b\\$\\d{2}\\$(" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){1,70})";
+     public static final String TAG = "#[a-zA-Z0-9]{5,20}";
+-    public static final String TAG_DOMAIN = "(" + TAG + "@" + RX_DOMAIN + ")";
++    public static final Pattern TAG_DOMAIN = Pattern.compile("(" + TAG + "@" + "(?<TrendServerDomain>" + RX_DOMAIN + "))");
+ 
+-    private static final String TAG_DOMAIN_OR_RX_USER_DOMAIN = "(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")";
++    public static final Pattern TAG_DOMAIN_OR_RX_USER_DOMAIN = Pattern.compile("(" + RX_USER_DOMAIN + "|" + TAG_DOMAIN + ")");
+ 
+ 
+     /*FULL*/
+Index: app/out/production/resources/star.godswila.guru.p12
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/out/production/resources/star.godswila.guru.p12 b/app/out/production/resources/star.godswila.guru.p12
+deleted file mode 100644
+--- a/app/out/production/resources/star.godswila.guru.p12	(revision 73b73d9dc0449009fa9082fee11fc1c6bf617440)
++++ /dev/null	(revision 73b73d9dc0449009fa9082fee11fc1c6bf617440)
+@@ -1,57 +0,0 @@
+-0�I0�	*�H��
+-�� ��0��0��	*�H��
+-���0�� 0��	*�H��
+-0
+-*�H��
+-0��Y�Mp ��hg[J
+-O�n�}a;����EE����.�ɒUШ?̕=��y5�KϬe�+�{1z����oJŊ�a��Fv�C^_�{�U�xώ�սgta��������h=y��׈�V���ԍ���_�tyw<��ۨyq݉yr�b�D$���5����b]�B
+-����<�wQ�4h3�?�#������ޞ�H�HoI���A��:���J� ��Ij�����zК7�8�T&:�d?���j��M\\L�f)g� ��&�ʶ��m�|C�i-'������Eh0�u�m��m=W��1��F�Y/�+[靀A�4�b;?�2]��7�s�#�:�&�����\���u	���\��E�p�s�-�u���&.O�)���@×�$�񩃨SW�T�'D
+-ˀ�M�I���oj���gX��+I�9N��BK�T�/ء�!�>�d�V�~M����R�21�p-R,�j��Ӳo=!��W�W�ޣ�%�/��j<Y"p� ��]��������o�M~d���xl�����L��Ԃf$��}+CR+L��|f�Ϋ��T�0����wL�G#.���EE��E>!���#X,�;��i4%���w*��$K#h��H��EU�{���Ԯ�E:��
+-��!���_k���FƵ�K�UmY�4c<@=��LM�]�2N�e�j�(S�(z��P��g�/��P?�c�
+-sN���5Y�����jyPQ�
+-���ٶ�s��=廡�]y�\��j�MD�!�?0�����T�9s���,NM�:%�?�X�3����K�]y^>_)�
+-�AD�ϑ�4�rK"%JzqQq����g%�p�3k����R��m���z��VCv u�ng��]ql��H�p��;��:�w���,��>�P�����*�%���"�(([�y��(������*X/�i�=�����Bo�0z�h��/�C/(��`bU:��<&��l�J�l�:�һ�;,��>�l�R-��γ�5kK�"�,����m+�Z~��ź���9�~]��i���������̎������F!�%��8
+-���@'ҿ�6Gp���0�a�FA��{V�N}|UDU29�O���|>R�5�ͳ����H�J%Sϋ�� ɠ`A���1d��w���fi��顼�V-WZ�(���z��u��i�Q3���merT�y����4�X����I�/Cq�TȀr����
+-�
+-8�4$�W�|ؠۅ ]�؍^��M97��6�
+-�q��tW�<���2o�߮fp6��v�9�p3�c�*ɧ/����LQ]�Y���@�T��SX��F�Ald������FG�B]ȓ�:�q�����`���t��QJ�9��tLCk2tT<}Nwԕ�@�Eo@Ku�xG0�jF�LՕ^�q�J�&�A4ˣ����$�V������=Ƶ�z��T
+-��;��x1�c,�
+-�e�릊}	7�&�"�ڙ��.i͖���[]���_P�����a�g�"6��@��K�љ$d�SB���>qs�����q����������Af����XO,~H�<�,x����E��t�KRO��$�*W�1�km���Q��J��#<��
+-q�6�e�����T
+-�G�2f�˶;��w����rۻ���\Va����k̵ 6���;
+-�l@�&<>�b-?�P�ڜ��Um٧�gƎ�T|���T#����`�xZ��gH�����p�GM��/\�M)O���1N�R����Z��� @��qw��/w�i��ڰ��0����@��ԛ�<֜�u��z�,Dɢ*� �X�Z5�l��l�)��a�q� �pμ8�.%��'��O��:C�p&��2H�`HM�
+-=KLU�T��<����[ݰ�gq�xw!	�D=�J�c�~Y5d���ݸ������\̓I]�V5rҎq4�o�l5{��8��� ���
+-h�!t����)T��˶Q>��s�H����QK$3@b}>���� ��x7���x6w��e)�Ѣ��
+-:
+-T3�7�!���{�>A�$�l4��<�Y����+�ڨ�
+-p���v�,B�
+-K��J�X�k)U�6j9*a��5u��(�PA�)e>\�&����yu
+-ϔ�rY�PJ��tiHx"���c����>�(M"�rP��&_!х�+ά�W`���tX,j��D��,1�0��D)��;�S8�V|ub.�5�sh	su'��L{�K����?�H�������V@Y=�py���gkx����4 N�{���
+-�0�M����(T�.�wšyH*�1i�����f�0
+-|�1��E�/ɗ��4����x��^�=_�I�v6u���]�ǋ_�L	�- �̉���D�%._�����Χ
+-�qx�:}��mVhM%=3���?UT+;ܗ�S[Cܳuxg]5a#U���s�2K>���LsN;�	�
+-8�����yi]�c9���d3~�W�$�V��J��lHN�B�
+-��,�5��N�����%�Xb�۞��{H��sl��.�ai.��vג��������i�YhK{72 '~�1��D>���A �����u��o�u6X��u@r_��`�<g` �Ѓ� ��P��5L� ��A�t�-�C����;�s�k��(�,�۱eG�9����]�5�R�é�����!��H��Bb�C�ר�<&�x���- Ӻ^��������<e^eM�xK�(��(.�2���E�L�F'噭b@r,P.�h���
+-�[�T��x$��Q �<�kG���	e)W���l6�"q�B�쫯�i6����>�]ۢ�i�k��>+g� Սƥʭ�Ȋ�DLd��zv�L`���s�U)���a5�L�
+-���l})�Q�Lx�:Y^}
+-����� 	c'?)f���yߛ	�<
+-�x7
+-_�]�uo$�B�8�eZǇ#0�A	*�H��
+-��2�.0�*0�&*�H��
+-
+-���0��0
+-*�H��
+-0������� ��xO����{.�L��`��ȹ�*�*A����i*�[dAq�V��U{.C�LO��d�D��~WqsX�Y�]H�f�<Լ�3�;sk�X%Aĵ��M\F����~�$N4ܵx�����=v9�`����b5n(��(RGmIn� ���5��*?t�$�/�<?�:Z���$/��(�4��<��5��
+-�*�(9W��M���?Ĉ��h��e��fa��SA���.-�9Yzd�����!I^�F�.���hG|���G��d�_t����ߗL
+-�H?��.���_�o��W���1B���:��)y]LT]���:�.�6�~F/Gj��%�^�� S\�qpf�C6�i5�_ĻT4�Cݧ�������\���a�a*��oAp���E9�p�%a�#̓��0���*��{��hy�B%=2T�-�K~ʥ�����G�wC�AE����ޯ�9&�W�.�"+i+�1��N��09���t�
+-ǲ����H7,sJ������4�~�2~0�� ��?Z��H&Wqu�ۿK�+%1+?��(
+- Sx�����!f4(��{6����46�FO�K*�3��#�'B����,���U�2�TBe�Cx�]�.����˝Q��\��7=�G����]�����fz|�ᙧS���	A
+-��4�]}D�#N�-�U`E�!8G�'ħ�Ǹ����$�(��yJ�.kLT]G@5�^���t���+�\w��I��(�}#���2��W�ڰH���q���D�Uc�ҍR���o��Z�w(;�$&]��݌r	�n�=���	s�G�륈��U^+�J`ۯ�*��$�{��bS'��d��糚�
+-|�I$*tba�3�$�;���;���$���B��/���.���_22��*��q��bIHU�"��U��P)͘�y�U��z�o)V;$=��n��;���
+-=Q��E����n��I����1H"�ɀz��-W�|(M6�� ^�-a��������ms��!��!�-�o��L&Y�~�x��tY/�2S��{��w��i� ,��6�}#�:�A^�T��
+-D]t���J��
+-/�`:,��~C�O_l|j���g+��f6�F1>0�����`��a�
+-o�$�s)�5���,"�z��h �sY��5B�Gm}������h b�����6_��$�
+-Z��I�C<�]uv�*������'���N�1%0#	*�H��
+-	1b��
+-�p�+�	�=��z	>010!0	+ ��80�3�}����1F��_��1 ,F 
+\ No newline at end of file
+Index: app/src/main/java/org/helmo/murmurG6/controller/ServerController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.helmo.murmurG6.controller;\r\n\r\nimport org.helmo.murmurG6.infrastructure.ServerJsonStorage;\r\nimport org.helmo.murmurG6.models.*;\r\nimport org.helmo.murmurG6.repository.UserRepository;\r\nimport org.helmo.murmurG6.repository.exceptions.ReadServerConfigurationException;\r\nimport org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;\r\nimport org.helmo.murmurG6.utils.UltraImportantClass;\r\n\r\nimport javax.net.ssl.SSLServerSocket;\r\nimport javax.net.ssl.SSLServerSocketFactory;\r\nimport javax.net.ssl.SSLSocket;\r\nimport java.io.IOException;\r\nimport java.net.InetAddress;\r\nimport java.net.UnknownHostException;\r\nimport java.util.*;\r\nimport java.util.regex.Matcher;\r\nimport java.util.regex.Pattern;\r\n\r\n/**\r\n * La classe ServerController représente le contrôleur principal de l'application serveur.\r\n * Cette classe gère la connexion des clients et communique avec la classe ClientRunnable pour gérer la communication avec les clients.\r\n */\r\npublic class ServerController implements AutoCloseable {\r\n    private final Set<ClientRunnable> clientList = Collections.synchronizedSet(new HashSet<>());\r\n    private final SSLServerSocket serverSocket;\r\n    private final UserRepository storage;\r\n    private final UserLibrary userLibrary;\r\n    private ServerConfig serverConfig;\r\n\r\n    /**\r\n     * Le constructeur de la classe ServerController permet de créer un nouveau serveur en spécifiant un numéro de port et un storage d'utilisateurs.\r\n     *\r\n     * @param port Le numéro de port sur lequel le serveur écoutera les connexions entrantes.\r\n     * @param repo Le storage d'utilisateurs qui sera utilisé pour enregistrer et lire les informations d'utilisateur.\r\n     * @throws IOException En cas d'échec de la création du socket serveur.\r\n     */\r\n    public ServerController(int port, UserRepository repo) throws IOException {\r\n        SSLServerSocketFactory sslServerSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();\r\n        this.serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(port);\r\n        //this.serverSocket = new ServerSocket(port);\r\n        this.storage = repo;\r\n        this.userLibrary = repo.load(); //remplissage de tous les users inscrits dans la usercollection\r\n\r\n        this.serverConfig = new ServerJsonStorage().loadServerConfiguration();\r\n        this.serverConfig.setServerIp(getIp());\r\n\r\n        UltraImportantClass.welcome();\r\n        System.out.println(\"****************************************************************\");\r\n        System.out.println(\"********      SERVER ONLINE ! IP : \" + getIp() + \"        *********\");\r\n        System.out.println(\"****************************************************************\");\r\n    }\r\n\r\n\r\n    public void start() throws IOException {\r\n        TaskScheduler executor = Executor.getInstance();\r\n        executor.setServer(this);\r\n        new Thread(executor).start();\r\n\r\n        while (!this.serverSocket.isClosed()) {\r\n            SSLSocket client = (SSLSocket) serverSocket.accept();\r\n            //Socket client = serverSocket.accept();\r\n            System.out.println(\"Quelqu'un s'est connecté!\");\r\n            ClientRunnable runnable = new ClientRunnable(client);\r\n            clientList.add(runnable);\r\n            new Thread(runnable).start();\r\n        }\r\n    }\r\n\r\n    public void broadcastToAllClientsExceptMe(ClientRunnable me, String message) {\r\n        System.out.printf(\"[broadcastAll] Message envoyé : %s\\n\", message);\r\n        for (ClientRunnable c : clientList) {\r\n            if (c != me) {\r\n                c.sendMessage(\"MSGS admin@192.168.0.19 \" + message);\r\n            }\r\n        }\r\n    }\r\n\r\n\r\n    /*public void broadcastOther(ClientRunnable me, String message) {\r\n        Set<ClientRunnable> needToSend = tellWhoRecevedMessage(me, message);\r\n        for (ClientRunnable c : needToSend) {\r\n            c.sendMessage(\"MSGS \" + c.getUser().getLogin() + \"@server1.domain.guru \" + message);\r\n        }\r\n    }\r\n\r\n    public Set<ClientRunnable> tellWhoRecevedMessage(ClientRunnable me, String message) {\r\n        Set<ClientRunnable> needToSend = Collections.synchronizedSet(new HashSet<>());\r\n        for (ClientRunnable c : clientList) {\r\n            if (c != me) {\r\n                if (c.getUser().chekcIfFollowUser(me.getUser().getLogin())) {\r\n                    needToSend.add(c);\r\n                }\r\n                Set<String> trendsInMessage = detectTrends(message);\r\n                if(trendsInMessage.size() != 0) {\r\n                    for (FollowInformation follow : me.getUser().getFollowedTrends()) {\r\n                        if (c.getUser().chekcIfFollowTrend(follow) && trendsInMessage.contains(follow.getInformationFollow())) {\r\n                            needToSend.add(c);\r\n                        }\r\n                    }\r\n                }\r\n            }\r\n        }\r\n        return needToSend;\r\n    }\r\n\r\n    private Set<String> detectTrends(String message) {\r\n        Set<String> trends = new HashSet<>();\r\n        int index = 0;\r\n        while (index < message.length()) {\r\n            index = message.indexOf(\"#\", index);\r\n            if (index == -1) {\r\n                break;\r\n            }\r\n            index++;\r\n            int debutMot = index;\r\n            int finMot = message.indexOf(\" \", index);\r\n            if (finMot == -1) {\r\n                finMot = message.length();\r\n            }\r\n            String mot = message.substring(debutMot, finMot);\r\n            trends.add(mot);\r\n        }\r\n        return trends;\r\n    }*/\r\n\r\n    private Set<String> extractTrends(String message) {\r\n        Pattern pattern = Pattern.compile(Protocol.TAG);\r\n        Matcher matcher = pattern.matcher(message);\r\n        HashSet<String> matches = new HashSet<>();\r\n\r\n        while (matcher.find()) {\r\n            matches.add(matcher.group()); //Ex: #trend\r\n        }\r\n\r\n        return matches;\r\n    }\r\n\r\n    //TODO\r\n    public void castMsg(ClientRunnable senderClient, String message) {\r\n        System.out.printf(\"Message envoyé : %s\\n\", message);\r\n        User sender = senderClient.getUser();\r\n\r\n        for (ClientRunnable c : clientList) {\r\n            try {\r\n\r\n                if (c != senderClient && (c.getUser().followsUser(sender.getLogin() + \"@\" + serverConfig.getServerName())) || c.getUser().followsTrend(extractTrends(message))) {  //TODO A CHANGER LA PARTIE DES TRENDS\r\n                    c.sendMessage(Protocol.build_MSGS(senderClient.getUser().getLogin() + \"@\" + getIp() + \" \" + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));\r\n                } else if (c != senderClient && (c.getUser().followsUser(\"\") || c.getUser().followsTrend(extractTrends(message)))) {  //TODO A CHANGER LA PARTIE DES TRENDS ET DU USER\r\n                    c.sendMessage(Protocol.build_SEND(\"\",\"\",\"\",\"\"));  //TODO A CHANGER QUAND ON VEUT SEND\r\n                }\r\n\r\n            } catch (ReadServerConfigurationException e) {\r\n                System.out.println(\"ERREUR LORS DE L'ENVOIE D'UN MESSAGE\" + e.getMessage());\r\n            } catch (Exception e) {\r\n                throw new RuntimeException(e);\r\n            }\r\n        }\r\n    }\r\n\r\n    public void saveUsers() throws SaveUserCollectionException {\r\n        storage.save(this.userLibrary);\r\n    }\r\n\r\n    public UserLibrary getUserCollection() {\r\n        return userLibrary;\r\n    }\r\n\r\n    public String getIp() {\r\n        try {\r\n            return InetAddress.getLocalHost().getHostAddress();\r\n        } catch (UnknownHostException e) {\r\n            throw new RuntimeException(e);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void close() {\r\n        try {\r\n            this.serverSocket.close();\r\n        } catch (IOException e) {\r\n            e.printStackTrace();\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java b/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java
+--- a/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java	(revision 73b73d9dc0449009fa9082fee11fc1c6bf617440)
++++ b/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java	(date 1676718209028)
+@@ -76,54 +76,6 @@
+         }
+     }
+ 
+-
+-    /*public void broadcastOther(ClientRunnable me, String message) {
+-        Set<ClientRunnable> needToSend = tellWhoRecevedMessage(me, message);
+-        for (ClientRunnable c : needToSend) {
+-            c.sendMessage("MSGS " + c.getUser().getLogin() + "@server1.domain.guru " + message);
+-        }
+-    }
+-
+-    public Set<ClientRunnable> tellWhoRecevedMessage(ClientRunnable me, String message) {
+-        Set<ClientRunnable> needToSend = Collections.synchronizedSet(new HashSet<>());
+-        for (ClientRunnable c : clientList) {
+-            if (c != me) {
+-                if (c.getUser().chekcIfFollowUser(me.getUser().getLogin())) {
+-                    needToSend.add(c);
+-                }
+-                Set<String> trendsInMessage = detectTrends(message);
+-                if(trendsInMessage.size() != 0) {
+-                    for (FollowInformation follow : me.getUser().getFollowedTrends()) {
+-                        if (c.getUser().chekcIfFollowTrend(follow) && trendsInMessage.contains(follow.getInformationFollow())) {
+-                            needToSend.add(c);
+-                        }
+-                    }
+-                }
+-            }
+-        }
+-        return needToSend;
+-    }
+-
+-    private Set<String> detectTrends(String message) {
+-        Set<String> trends = new HashSet<>();
+-        int index = 0;
+-        while (index < message.length()) {
+-            index = message.indexOf("#", index);
+-            if (index == -1) {
+-                break;
+-            }
+-            index++;
+-            int debutMot = index;
+-            int finMot = message.indexOf(" ", index);
+-            if (finMot == -1) {
+-                finMot = message.length();
+-            }
+-            String mot = message.substring(debutMot, finMot);
+-            trends.add(mot);
+-        }
+-        return trends;
+-    }*/
+-
+     private Set<String> extractTrends(String message) {
+         Pattern pattern = Pattern.compile(Protocol.TAG);
+         Matcher matcher = pattern.matcher(message);
+@@ -174,6 +126,10 @@
+         }
+     }
+ 
++    public ServerConfig getServerConfig() {
++        return serverConfig;
++    }
++
+     @Override
+     public void close() {
+         try {
+Index: app/src/main/java/org/helmo/murmurG6/models/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.helmo.murmurG6.models;\r\n\r\nimport java.util.List;\r\nimport java.util.Set;\r\n\r\npublic class User {\r\n\r\n    private final String login; //Login de l'utilisateur.\r\n    private final BCrypt bCrypt;\r\n    private final List<String> followedUsers; //Liste des utilisateurs suivis par l'utilisateur.\r\n    private final List<String> followedTrends; //Liste des tendances suivies par l'utilisateur.\r\n\r\n    public User(String login, BCrypt bCrypt, List<String> followedUsers, List<String> followedTrends) {\r\n        this.login = login;\r\n        this.bCrypt = bCrypt;\r\n        this.followedUsers = followedUsers;\r\n        this.followedTrends = followedTrends;\r\n    }\r\n\r\n    public boolean followsUser(String sender) {\r\n        for (String followedLogin : this.followedUsers) {\r\n            if (followedLogin.contains(sender)) {\r\n                return true;\r\n            }\r\n        }\r\n        return false;\r\n    }\r\n\r\n    public boolean followsTrend(Set<String> extractedTrends) {\r\n        for (String trend : extractedTrends) {\r\n            for (String followedTrend : this.followedTrends) {\r\n                if (followedTrend.contains(trend)) {\r\n                    return true;\r\n                }\r\n            }\r\n        }\r\n        return false;\r\n    }\r\n\r\n    public BCrypt getBcrypt() {\r\n        return this.bCrypt;\r\n    }\r\n\r\n    public String getLogin() {\r\n        return this.login;\r\n    }\r\n\r\n    public String getBcryptHash() {\r\n        return this.bCrypt.getHash();\r\n    }\r\n\r\n    public int getBcryptRound() {\r\n        return this.bCrypt.getRounds();\r\n    }\r\n\r\n    public String getBcryptSalt() {\r\n        return this.bCrypt.getSalt();\r\n    }\r\n\r\n    /**\r\n     * Retourne la liste des utilisateurs suivis par l'utilisateur.\r\n     *\r\n     * @return liste des utilisateurs suivis par l'utilisateur.\r\n     */\r\n    public List<String> getFollowedUsers() {\r\n        return followedUsers;\r\n    }\r\n\r\n    /**\r\n     * Retourne la liste des trends suivies par l'utilisateur.\r\n     *\r\n     * @return liste des trends suivies par l'utilisateur.\r\n     */\r\n    public List<String> getFollowedTrends() {\r\n        return followedTrends;\r\n    }\r\n\r\n\r\n    /**\r\n     * Permet d'ajouter un utilisateur à sa liste d'abonnement\r\n     *\r\n     * @param userId L'id de l'utilisateur i.e : swila@server1.godswila.guru\r\n     */\r\n    public void followUser(String userId) {\r\n        if (!this.followedUsers.contains(userId)) {\r\n            this.followedUsers.add(userId);\r\n        }\r\n    }\r\n\r\n    /**\r\n     * Permet d'ajouter une tendance à sa liste d'abonnement\r\n     *\r\n     * @param trendId L'id de l'utilisateur i.e : #tendance1234@server1.godswila.guru\r\n     */\r\n    public void followTrend(String trendId) {\r\n        if (!this.followedTrends.contains(trendId)) {\r\n            this.followedTrends.add(trendId);\r\n        }\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/models/User.java b/app/src/main/java/org/helmo/murmurG6/models/User.java
+--- a/app/src/main/java/org/helmo/murmurG6/models/User.java	(revision 73b73d9dc0449009fa9082fee11fc1c6bf617440)
++++ b/app/src/main/java/org/helmo/murmurG6/models/User.java	(date 1676718724505)
+@@ -81,9 +81,13 @@
+      *
+      * @param userId L'id de l'utilisateur i.e : swila@server1.godswila.guru
+      */
+-    public void followUser(String userId) {
+-        if (!this.followedUsers.contains(userId)) {
+-            this.followedUsers.add(userId);
++    public void followUser(User toFollow, String userId) {
++        toFollow.addFollower(userId);
++    }
++
++    public void addFollower(String follower) {
++        if (!this.followedUsers.contains(follower)) {
++            this.followedUsers.add(follower);
+         }
+     }
+ 

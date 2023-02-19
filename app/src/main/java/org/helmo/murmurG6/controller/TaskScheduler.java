@@ -9,4 +9,5 @@ public interface TaskScheduler extends Runnable, AutoCloseable {
     void setServer(ServerController server);
 
     String sayHello(ClientRunnable client);
+
 }
