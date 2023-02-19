@@ -57,7 +57,7 @@ public class ServerController implements AutoCloseable {
 
         UltraImportantClass.welcome();
         System.out.println("****************************************************************");
-        System.out.println("********     SERVER ONLINE ! IP : " + getDomain() + "     ********");
+        System.out.println("********     SERVER ONLINE ! IP : " + getDomain() + " " + serverSocket.getInetAddress().getHostAddress() + "     ********");
         System.out.println("****************************************************************");
     }
 
@@ -141,8 +141,13 @@ public class ServerController implements AutoCloseable {
 
                 //Si non (cas ou la trend n'appartient PAS à ce server) -> on passe la trend au relay
                 } else {
-                    Trend t = senderClient.getTrendByTag(trendName);
-                    Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage.toString(), senderClient.getUserCredentials(), t.toString(), message));
+                    try {
+                        Trend t = senderClient.getTrendByTag(trendName);
+                        Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage.toString(), senderClient.getUserCredentials(), t.toString(), AESCrypt.encrypt(message, serverConfig.getBase64KeyAES()).toString()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 }
             }
         }
@@ -162,7 +167,11 @@ public class ServerController implements AutoCloseable {
 
             //Si le destinataire n'appartient pas à ce server
         }else{
-            Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage.toString(), sender.getCredentials().toString(), followerCredential.toString(), message));
+            try {
+                Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage.toString(), sender.getCredentials().toString(), followerCredential.toString(), AESCrypt.encrypt(message, serverConfig.getBase64KeyAES()).toString())); //TODO a voir avec le toString quand relay fini
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -182,14 +191,10 @@ public class ServerController implements AutoCloseable {
             User follower = client.getUser();
 
             //Si le destinataire n'a pas déja recu ce message, alors on lui écrit et enregistre cet événement dans son historique
-            if(!follower.hasAlreadyReceivedMessage(idMessage))
-                try {
-                    client.sendMessage(Protocol.build_MSGS(sender.getUserCredentials() + "@" + serverConfig.getServerName() + " " + AESCrypt.encrypt(message, serverConfig.getBase64KeyAES())));
-                    follower.saveReceivedMessageId(idMessage);
-                }catch (Exception e){
-                    System.out.println("Erreur lors de l'envoi du message (encryption error)");
-                }
-
+            if (!follower.hasAlreadyReceivedMessage(idMessage)) {
+                client.sendMessage(Protocol.build_MSGS(sender.getUserCredentials() + "@" + serverConfig.getServerName() + " " + message));
+                follower.saveReceivedMessageId(idMessage);
+            }
         //Si le destinataire n'est pas actuellement connecté
         }else{
             //TODO : Extension file de message quand le client n'est pas connecté (quand il est nul dans ce cas ci)
@@ -225,10 +230,6 @@ public class ServerController implements AutoCloseable {
         }
         return null;
     }
-
-
-
-
 
 
 

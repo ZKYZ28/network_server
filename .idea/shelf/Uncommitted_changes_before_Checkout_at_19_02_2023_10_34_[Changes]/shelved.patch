@@ -1,0 +1,42 @@
+Index: app/src/main/java/org/helmo/murmurG6/models/UserLibrary.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.helmo.murmurG6.models;\r\n\r\nimport org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;\r\nimport java.util.*;\r\n\r\n/**\r\n * La classe UserCollection est une classe qui permet de gérer une collection d'utilisateurs enregistrés.\r\n * Elle utilise une implémentation de la classe `HashMap` pour stocker les utilisateurs enregistrés,\r\n * ce qui permet de rechercher les utilisateurs enregistrés en utilisant leur nom d'utilisateur (login).\r\n *\r\n * @version 1.0\r\n * @since 11 février 2023\r\n */\r\npublic class UserLibrary extends HashMap<String, User> {\r\n\r\n    public void register(User user) throws UserAlreadyRegisteredException {\r\n        if(this.containsKey(user.getLogin())){\r\n            throw new UserAlreadyRegisteredException(\"L'utilisateur est déja inscrit!\");\r\n        }else{\r\n            this.put(user.getLogin(), user);\r\n        }\r\n    }\r\n\r\n    public static UserLibrary of(Iterable<User> users) {\r\n        UserLibrary ulib = new UserLibrary();\r\n        for(User u : users){\r\n            ulib.put(u.getLogin(), u);\r\n        }\r\n        return ulib;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/models/UserLibrary.java b/app/src/main/java/org/helmo/murmurG6/models/UserLibrary.java
+--- a/app/src/main/java/org/helmo/murmurG6/models/UserLibrary.java	(revision 6e053e0fab6f31b2d39fce3321e0ffd17d53f2e3)
++++ b/app/src/main/java/org/helmo/murmurG6/models/UserLibrary.java	(date 1676799224326)
+@@ -22,10 +22,10 @@
+     }
+ 
+     public static UserLibrary of(Iterable<User> users) {
+-        UserLibrary ulib = new UserLibrary();
++        UserLibrary library = new UserLibrary();
+         for(User u : users){
+-            ulib.put(u.getLogin(), u);
++            library.put(u.getLogin(), u);
+         }
+-        return ulib;
++        return library;
+     }
+ }
+Index: app/src/main/java/org/helmo/murmurG6/utils/RandomSaltGenerator.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package org.helmo.murmurG6.utils;\r\n\r\n/**\r\n * La classe RandomSaltGenerator génère un sel aléatoire de longueur spécifiée.\r\n */\r\npublic class RandomSaltGenerator {\r\n\r\n    private static final int SALT_SIZE = 22; //La taille du sel généré.\r\n    private static final int[] NUMBERS = {0x30, 0x39}; //L'ensemble des chiffres.\r\n    private static final int[] LETTERS_MIN = {0x61, 0x7A}; //L'ensemble des lettres minuscules.\r\n    private static final int[] LETTERS_MAJ = {0x41, 0x5A}; //L'ensemble des lettres majuscules.\r\n    private static final int[] SYMBOLS_ONE = {0x21, 0x2F}; //Le premier ensemble de symboles.\r\n    private static final int[] SYMBOLS_TWO = {0x3A, 0x40}; //Le deuxième ensemble de symboles.\r\n    private static final int[] SYMBOLS_THREE = {0x5B, 0x60}; //Le troisième ensemble de symboles.\r\n    private static final int[][] ALL_CHARACTERS = { NUMBERS, LETTERS_MIN, LETTERS_MAJ, SYMBOLS_ONE, SYMBOLS_TWO, SYMBOLS_THREE }; //L'ensemble de tous les types de caractères.\r\n\r\n    /**\r\n     * <p>La méthode generateSalt génère une chaîne aléatoire de caractères de longueur SALT_SIZE.</p>\r\n     * <p>Pour générer la chaîne aléatoire, elle appelle la méthode <a href=\"#generateRandomCharacter()\">generateRandomCharacter()</a> qui génère un caractère aléatoire à partir de différents types de caractères tels que les nombres, les lettres minuscules, les lettres majuscules, et les symboles.</p>\r\n     * <p>Les types de caractères sont définis par des plages de codes Unicode, et le caractère aléatoire est sélectionné en choisissant un type de caractères aléatoire, puis en choisissant un caractère aléatoire dans cette plage.</p>\r\n     * <p>Ensuite, elle construit la chaîne aléatoire en appelant generateRandomCharacter plusieurs fois et en ajoutant chaque caractère généré à une chaîne StringBuilder.</p>\r\n     * <p>Finalement, la méthode renvoie la chaîne construite en appelant la méthode toString de StringBuilder.</p>\r\n     *\r\n     * @return Une chaine composée des SALT_SIZE * un charactère généré aléatoirement\r\n     */\r\n    public static String generateSalt() {\r\n\r\n        StringBuilder salt = new StringBuilder();\r\n\r\n        for (int i = 0; i < SALT_SIZE; i++) {\r\n            salt.append(generateRandomCharacter());\r\n        }\r\n        return salt.toString();\r\n    }\r\n\r\n    /**\r\n     * Génère un caractère aléatoire en choisissant un type de caractère (nombres, minuscules, majuscules, symboles)\r\n     * aléatoirement et en choisissant un caractère spécifique dans ce type aléatoirement.\r\n     *\r\n     * @return Le caractère généré aléatoirement\r\n     */\r\n    private static char generateRandomCharacter() {\r\n\r\n        // 1. Choix aléatoire d'un type de caractère\r\n        int type =  (int)(Math.random() * ALL_CHARACTERS.length);\r\n\r\n        // 2. Choix aléatoire d'un caractère dans le type choisi\r\n        int range = (int)(Math.random() * (ALL_CHARACTERS[type][1] - ALL_CHARACTERS[type][0]));\r\n        int selector = (int)(Math.random() * range);\r\n        int character = ALL_CHARACTERS[type][0] + selector;\r\n\r\n        // 3. Retour du caractère sous forme de type char\r\n        return (char)character;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/utils/RandomSaltGenerator.java b/app/src/main/java/org/helmo/murmurG6/utils/RandomSaltGenerator.java
+--- a/app/src/main/java/org/helmo/murmurG6/utils/RandomSaltGenerator.java	(revision 6e053e0fab6f31b2d39fce3321e0ffd17d53f2e3)
++++ b/app/src/main/java/org/helmo/murmurG6/utils/RandomSaltGenerator.java	(date 1676799224336)
+@@ -24,7 +24,6 @@
+      * @return Une chaine composée des SALT_SIZE * un charactère généré aléatoirement
+      */
+     public static String generateSalt() {
+-
+         StringBuilder salt = new StringBuilder();
+ 
+         for (int i = 0; i < SALT_SIZE; i++) {

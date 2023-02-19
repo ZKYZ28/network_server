@@ -1,0 +1,38 @@
+Index: app/src/main/java/org/helmo/murmurG6/models/UserLibrary.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/models/UserLibrary.java b/app/src/main/java/org/helmo/murmurG6/models/UserLibrary.java
+--- a/app/src/main/java/org/helmo/murmurG6/models/UserLibrary.java	
++++ b/app/src/main/java/org/helmo/murmurG6/models/UserLibrary.java	
+@@ -22,10 +22,10 @@
+     }
+ 
+     public static UserLibrary of(Iterable<User> users) {
+-        UserLibrary ulib = new UserLibrary();
++        UserLibrary library = new UserLibrary();
+         for(User u : users){
+-            ulib.put(u.getLogin(), u);
++            library.put(u.getLogin(), u);
+         }
+-        return ulib;
++        return library;
+     }
+ }
+Index: app/src/main/java/org/helmo/murmurG6/utils/RandomSaltGenerator.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/utils/RandomSaltGenerator.java b/app/src/main/java/org/helmo/murmurG6/utils/RandomSaltGenerator.java
+--- a/app/src/main/java/org/helmo/murmurG6/utils/RandomSaltGenerator.java	
++++ b/app/src/main/java/org/helmo/murmurG6/utils/RandomSaltGenerator.java	
+@@ -24,7 +24,6 @@
+      * @return Une chaine composée des SALT_SIZE * un charactère généré aléatoirement
+      */
+     public static String generateSalt() {
+-
+         StringBuilder salt = new StringBuilder();
+ 
+         for (int i = 0; i < SALT_SIZE; i++) {

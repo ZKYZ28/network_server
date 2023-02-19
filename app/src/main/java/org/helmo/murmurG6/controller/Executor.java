@@ -19,6 +19,7 @@ public class Executor implements TaskScheduler {
     private final BlockingQueue<Task> taskQueue;   //File d'attente BlockingQueue appelée taskQueue pour stocker les tâches à exécuter.
     private ServerController server;
 
+
     private Executor() {
         this.taskQueue = new LinkedBlockingQueue<>();
         this.executorService = Executors.newSingleThreadExecutor();
@@ -124,7 +125,6 @@ public class Executor implements TaskScheduler {
             }
             this.server.save();
         } catch (UnableToSaveTrendLibraryException | UnableToSaveUserLibraryException e) {
-            //TODO TREATMENT
             e.printStackTrace();
         }
     }
@@ -189,6 +189,6 @@ public class Executor implements TaskScheduler {
     }
 
     public void sendToRelay(String sendMessage) {
-
+        
     }
 }

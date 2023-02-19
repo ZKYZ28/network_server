@@ -1,0 +1,133 @@
+Index: app/src/main/java/org/helmo/murmurG6/system/ServerController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/system/ServerController.java b/app/src/main/java/org/helmo/murmurG6/system/ServerController.java
+--- a/app/src/main/java/org/helmo/murmurG6/system/ServerController.java	
++++ b/app/src/main/java/org/helmo/murmurG6/system/ServerController.java	
+@@ -7,7 +7,6 @@
+ import org.helmo.murmurG6.repository.IUserCollectionRepository;
+ import org.helmo.murmurG6.repository.exceptions.SaveUserCollectionException;
+ import org.helmo.murmurG6.utils.UltraImportantClass;
+-
+ import javax.net.ssl.*;
+ import java.io.IOException;
+ import java.net.InetAddress;
+Index: app/src/main/java/org/helmo/murmurG6/system/ClientRunnable.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/system/ClientRunnable.java b/app/src/main/java/org/helmo/murmurG6/system/ClientRunnable.java
+--- a/app/src/main/java/org/helmo/murmurG6/system/ClientRunnable.java	
++++ b/app/src/main/java/org/helmo/murmurG6/system/ClientRunnable.java	
+@@ -4,10 +4,6 @@
+ import org.helmo.murmurG6.models.Protocol;
+ import org.helmo.murmurG6.models.User;
+ import org.helmo.murmurG6.utils.RandomSaltGenerator;
+-
+-import javax.net.ssl.SSLContext;
+-import javax.net.ssl.SSLSocket;
+-import javax.net.ssl.SSLSocketFactory;
+ import java.io.*;
+ import java.net.Socket;
+ import java.nio.charset.StandardCharsets;
+@@ -18,10 +14,8 @@
+     private boolean isConnected = false;
+     private final ServerController server;
+     private User user;
+-    private Executor executor;
+-
++    private final Executor executor;
+     private String random22 = "";
+-
+     private final Protocol protocol = new Protocol();
+ 
+     public ClientRunnable(Socket client, ServerController server) {
+@@ -32,7 +26,6 @@
+             in = new BufferedReader(new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8));
+             out = new PrintWriter(new OutputStreamWriter(client.getOutputStream(), StandardCharsets.UTF_8), true);
+             isConnected = true;
+-
+         } catch(IOException ex) {
+             ex.printStackTrace();
+         }
+@@ -41,15 +34,14 @@
+     public void run() {
+         try {
+             random22 = sayHello();                                      //Envoi du message Hello au client + récupération du random de 22 caractères aléatoires
+-            String login ="";                                           //Le loggin du client
+             String ligne = in.readLine();                               //Le server attend que le client ecrive quelque chose
+-            while(isConnected && ligne != null && !ligne.isEmpty()) {
++            while(isConnected && ligne != null && !ligne.isBlank()) {
+                 System.out.printf("Ligne reçue : %s\r\n", ligne);
+                 Task task = protocol.analyseMessage(ligne); //Création d'une tache sur base de la ligne recue
+                 if(task != null){
+                     task.setClient(this);      //Asignation du ClientRunnable à la tache (utile pour l'executor)
+                     executor.addTask(task);     //Ajout de la tache dans la file de taches de l'executor
+-                }else{
++                } else {
+                     sendMessage("-ERR pas bien");
+                 }
+                 ligne = in.readLine();    //Le thread mis à disposition du client attend la prochaine ligne
+Index: app/src/main/java/org/helmo/murmurG6/utils/BcryptHash.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/utils/BcryptHash.java b/app/src/main/java/org/helmo/murmurG6/utils/BcryptHash.java
+--- a/app/src/main/java/org/helmo/murmurG6/utils/BcryptHash.java	
++++ b/app/src/main/java/org/helmo/murmurG6/utils/BcryptHash.java	
+@@ -37,9 +37,4 @@
+         parts.setHash(hash.substring(29));
+         return parts;
+     }
+-
+-    public static void main(String[] args) {
+-        BcryptHash parts = BcryptHash.decomposeHash("$2b$14$azertyuiopmlkjhgfdsqwxMotDePasseHashé");
+-        System.out.println(parts.salt);
+-    }
+ }
+Index: app/src/main/java/org/helmo/murmurG6/system/Executor.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/system/Executor.java b/app/src/main/java/org/helmo/murmurG6/system/Executor.java
+--- a/app/src/main/java/org/helmo/murmurG6/system/Executor.java	
++++ b/app/src/main/java/org/helmo/murmurG6/system/Executor.java	
+@@ -4,6 +4,7 @@
+ 
+ import java.util.concurrent.*;
+ import java.util.regex.Matcher;
++import java.util.regex.Pattern;
+ 
+ public class Executor implements Runnable, AutoCloseable {
+ 
+@@ -134,7 +135,7 @@
+ 
+     private String register(User user, ClientRunnable client)  {
+         try {
+-            if(user.getLogin().length() < 5 || user.getLogin().length() >20){
++            if(!Pattern.matches(Protocol.RX_USERNAME, user.getLogin())){
+                 throw new RegistrationImpossibleException("Longeur du loggin incorrect ("+user.getLogin().length()+")");
+             }
+             server.registerUser(user);
+Index: app/src/main/java/org/helmo/murmurG6/models/Protocol.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/org/helmo/murmurG6/models/Protocol.java b/app/src/main/java/org/helmo/murmurG6/models/Protocol.java
+--- a/app/src/main/java/org/helmo/murmurG6/models/Protocol.java	
++++ b/app/src/main/java/org/helmo/murmurG6/models/Protocol.java	
+@@ -32,7 +32,7 @@
+     private static final String RX_BCRYPT_SALT = "((" + RX_LETTER_DIGIT + "|" + RX_SYMBOL + "){22})";
+     private final static String RX_ESP = "\\s";
+     private static final String RX_DOMAIN = "((" + RX_LETTER_DIGIT + "|\\.){5,200})";
+-    private static final String RX_USERNAME = "((" + RX_LETTER_DIGIT + "){5,20})";
++    public static final String RX_USERNAME = "((" + RX_LETTER_DIGIT + "){5,20})";
+     private static final String RX_USER_DOMAIN = "(" + RX_USERNAME + "@" + RX_DOMAIN + ")";
+     private static final String RX_MESSAGE = "((" + RX_VISIBLE_CHARACTER + "){1,250})";
+     private static final String RX_SHA3_EX = "((" + RX_LETTER_DIGIT+ "){30,200})";
