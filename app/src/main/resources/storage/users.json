@@ -1,1 +1,73 @@
-[{"login":{"login":"thomas","domain":"g6server1.godswila.guru"},"bcryptDto":{"rounds":14,"salt":"xpcHWqlx7C2taxBsj5evmO","hash":"NfX3MbBhtUgOLtFQ/W/vSP4bnDaaPgC"},"followedUsers":[],"followedTrends":[{"trendName":"#ferrari","domain":"g6server1.godswila.guru"}]},{"login":{"login":"lucas","domain":"g6server1.godswila.guru"},"bcryptDto":{"rounds":14,"salt":"eCo5paUiBIl6MCqKVC0/gu","hash":"7dtVzcK/XTYq6Y96RoepvjT4dR0Tljm"},"followedUsers":[],"followedTrends":[{"trendName":"#ferrari","domain":"g6server1.godswila.guru"}]},{"login":{"login":"Franchi","domain":"g6server1.godswila.guru"},"bcryptDto":{"rounds":14,"salt":"K9jb0D2WamfXFObl.WhyX.","hash":"K.yWjg1BJHnXLK31QdOU/gKr/J4PfUG"},"followedUsers":[],"followedTrends":[]},{"login":{"login":"antho","domain":"g6server1.godswila.guru"},"bcryptDto":{"rounds":14,"salt":"wbGLsbF1wDVzJyFth5W74u","hash":"qtoqhvfi.e0I4A3gehnHy7pvgCTTS7G"},"followedUsers":[{"login":"thomas","domain":"g6server1.godswila.guru"},{"login":"lucas","domain":"g6server1.godswila.guru"}],"followedTrends":[]}]
+[
+  {
+    "login": {
+      "login": "thomas",
+      "domain": "g6server1.godswila.guru"
+    },
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "xpcHWqlx7C2taxBsj5evmO",
+      "hash": "NfX3MbBhtUgOLtFQ/W/vSP4bnDaaPgC"
+    },
+    "followedUsers": [],
+    "followedTrends": [
+      {
+        "trendName": "#ferrari",
+        "domain": "g6server1.godswila.guru"
+      }
+    ]
+  },
+  {
+    "login": {
+      "login": "lucas",
+      "domain": "g6server1.godswila.guru"
+    },
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "eCo5paUiBIl6MCqKVC0/gu",
+      "hash": "7dtVzcK/XTYq6Y96RoepvjT4dR0Tljm"
+    },
+    "followedUsers": [],
+    "followedTrends": [
+      {
+        "trendName": "#ferrari",
+        "domain": "g6server1.godswila.guru"
+      }
+    ]
+  },
+  {
+    "login": {
+      "login": "Franchi",
+      "domain": "g6server1.godswila.guru"
+    },
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "K9jb0D2WamfXFObl.WhyX.",
+      "hash": "K.yWjg1BJHnXLK31QdOU/gKr/J4PfUG"
+    },
+    "followedUsers": [],
+    "followedTrends": []
+  },
+  {
+    "login": {
+      "login": "antho",
+      "domain": "g6server1.godswila.guru"
+    },
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "wbGLsbF1wDVzJyFth5W74u",
+      "hash": "qtoqhvfi.e0I4A3gehnHy7pvgCTTS7G"
+    },
+    "followedUsers": [
+      {
+        "login": "thomas",
+        "domain": "g6server1.godswila.guru"
+      },
+      {
+        "login": "lucas",
+        "domain": "g6server1.godswila.guru"
+      }
+    ],
+    "followedTrends": []
+  }
+]

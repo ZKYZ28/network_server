@@ -97,7 +97,7 @@ public class RelayThread implements Runnable, AutoCloseable {
 
             if (args.matches()) {
                 //1. Retrieve the ClientRunnable
-                ClientRunnable receiver = ServerController.getClientRunnableByLogin("login");
+                ClientRunnable receiver = ServerController.getClientRunnableByLogin("senderLogin");
 
                 if (receiver != null) {
 
