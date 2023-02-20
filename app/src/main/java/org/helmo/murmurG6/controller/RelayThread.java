@@ -5,7 +5,6 @@ import org.helmo.murmurG6.models.AESCrypt;
 import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.models.Task;
 import org.helmo.murmurG6.models.UserCredentials;
-
 import java.io.IOException;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +12,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RelayThread implements Runnable, AutoCloseable {
 
@@ -27,7 +25,7 @@ public class RelayThread implements Runnable, AutoCloseable {
     private InetAddress multicastAddress;
     private InetSocketAddress group;
     private MulticastSocket multicastSocket;
-    private ServerController server;
+    private ServerConfig config;
 
 
     private RelayThread() {
@@ -54,13 +52,13 @@ public class RelayThread implements Runnable, AutoCloseable {
     }
 
     public void init(ServerController server) {
-        this.server = server;
+        this.config = server.getServerConfig();
     }
 
 
     public void sendToRelay(String sendMessage) {
         try {
-            byte[] msgsBytes = AESCrypt.encrypt(sendMessage, server.getServerConfig().getBase64KeyAES());
+            byte[] msgsBytes = AESCrypt.encrypt(sendMessage, config.getBase64KeyAES());
             DatagramPacket packet = new DatagramPacket(msgsBytes, msgsBytes.length, this.group);
             this.multicastSocket.send(packet);
         } catch (Exception e) {
@@ -74,7 +72,7 @@ public class RelayThread implements Runnable, AutoCloseable {
             byte[] buf = new byte[1000];
             DatagramPacket packet = new DatagramPacket(buf, buf.length);
             this.multicastSocket.receive(packet);
-            return AESCrypt.decrypt(packet.getData(), server.getServerConfig().getBase64KeyAES());
+            return AESCrypt.decrypt(packet.getData(), config.getBase64KeyAES());
         } catch (Exception e) {
             return null;
         }
@@ -82,7 +80,7 @@ public class RelayThread implements Runnable, AutoCloseable {
 
     public void echo() {
         try {
-            String echoMessage = "ECHO " + PORT + " " + server.getDomain();
+            String echoMessage = "ECHO " + PORT + " " + config.getServerName();
             byte[] msgsBytes = echoMessage.getBytes(StandardCharsets.UTF_8);
             DatagramPacket packet = new DatagramPacket(msgsBytes, msgsBytes.length, this.group);
             this.multicastSocket.send(packet);

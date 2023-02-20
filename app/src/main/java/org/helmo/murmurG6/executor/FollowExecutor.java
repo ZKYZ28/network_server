@@ -72,15 +72,13 @@ public class FollowExecutor {
                 user.followTrend(trend);
             }
 
-
-
             //TREND
             //Si la trend appartient au server on enregistre
-            if(trend.getDomain().equals(server.getServerConfig().getServerName())){
+            if (trend.getDomain().equals(server.getServerConfig().getServerName())) {
                 server.getTrendLibrary().addUserToTrend(trendName, senderCreditentials);
 
             //Si la trend appartient a un autre server
-            }else{
+            } else {
                 Executor.getInstance().sendToRelay(Protocol.build_SEND(
                         String.valueOf(UUID.randomUUID()),
                         senderCreditentials.toString(),

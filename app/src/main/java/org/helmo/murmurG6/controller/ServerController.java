@@ -70,8 +70,10 @@ public class ServerController implements AutoCloseable {
         welcome();
         try {
             TaskScheduler executor = Executor.getInstance();
+            RelayThread relayThread = RelayThread.getInstance();
+            relayThread.init(this);
             new Thread(executor).start();
-            new Thread(RelayThread.getInstance()).start();
+            new Thread(relayThread).start();
 
             while (!this.serverSocket.isClosed()) {
                 SSLSocket client = (SSLSocket) serverSocket.accept();
@@ -127,6 +129,10 @@ public class ServerController implements AutoCloseable {
         } catch (UnknownHostException e) {
             return null;
         }
+    }
+
+    public void removeClient(ClientRunnable client) {
+        clientList.remove(client);
     }
 
     /**
