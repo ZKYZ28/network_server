@@ -4,6 +4,7 @@ import org.helmo.murmurG6.executor.Executor;
 import org.helmo.murmurG6.models.AESCrypt;
 import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.models.Task;
+import org.helmo.murmurG6.models.UserCredentials;
 
 import java.io.IOException;
 import java.net.*;
@@ -12,6 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RelayThread implements Runnable, AutoCloseable {
 
@@ -97,16 +99,14 @@ public class RelayThread implements Runnable, AutoCloseable {
             Matcher args = Protocol.RX_SEND.matcher(message);
 
             if (args.matches()) {
-                //1. Retrieve the ClientRunnable
-                ClientRunnable receiver = ServerController.getClientRunnableByLogin("login");
+                //Mise en place du UserCreditential de l'emetteur
+                String senderDomain = args.group("sender"); //ex: "antho123@serv1.godswila.guru"
+                Matcher senderParams = Protocol.RX_USER_DOMAIN.matcher(senderDomain);
+                UserCredentials senderCreditential = new UserCredentials(senderParams.group("login"), senderParams.group("domain"));
 
-                if (receiver != null) {
+                Task task = new Task(senderCreditential, null, Protocol.detectTaskType(args.group("content")), args.group("content"));
 
-                    Task task = new Task(receiver, Protocol.detectTaskType(args.group("content")), args.group("content"));
-
-                    //4. Give the task to the executor
-                    executor.addTask(task);
-                }
+                executor.addTask(task);
             }
         }
     }

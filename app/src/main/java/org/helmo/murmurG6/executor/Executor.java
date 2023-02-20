@@ -1,6 +1,7 @@
 package org.helmo.murmurG6.executor;
 
 import org.helmo.murmurG6.controller.ClientRunnable;
+import org.helmo.murmurG6.controller.RelayThread;
 import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.controller.ServerController;
 import org.helmo.murmurG6.controller.TaskScheduler;
@@ -15,7 +16,6 @@ public class Executor implements TaskScheduler {
     private static Executor instance;
     private final ExecutorService executorService; //ExecutorService avec un seul thread pour exécuter les tâches de la file d'attente.
     private final BlockingQueue<Task> taskQueue;   //File d'attente BlockingQueue appelée taskQueue pour stocker les tâches à exécuter.
-
     private final ServerController server = ServerController.getInstance();
 
     private Executor() {
@@ -64,7 +64,7 @@ public class Executor implements TaskScheduler {
                 break;
 
             case FOLLOW:
-                FollowExecutor.follow(client, params.group("domain"));
+                FollowExecutor.follow(client.getUser().getCredentials(), params.group("domain"));
                 break;
 
             case DISCONNECT:
@@ -108,6 +108,6 @@ public class Executor implements TaskScheduler {
 
 
     public void sendToRelay(String sendMessage) {
-        
+        RelayThread.getInstance().sendToRelay(sendMessage);
     }
 }

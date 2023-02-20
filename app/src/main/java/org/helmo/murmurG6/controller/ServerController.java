@@ -87,7 +87,7 @@ public class ServerController implements AutoCloseable {
     private void welcome() {
         UltraImportantClass.welcome();
         System.out.println("**************************************************************************************");
-        System.out.println("********     SERVER ONLINE ! IP : " + getDomain() + " " + serverSocket.getInetAddress().getHostAddress() + "     ********");
+        System.out.println("********     SERVER ONLINE ! IP : " + serverConfig.getServerName() + " " + serverSocket.getInetAddress().getHostAddress() + "     ********");
         System.out.println("**************************************************************************************");
     }
 

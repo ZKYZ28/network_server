@@ -62,7 +62,7 @@ public class ClientRunnable implements Runnable {
                 System.out.printf("Ligne reçue : %s\r\n", ligne);
 
                 //Ajout de la tache dans la file des taches de l'executor
-                executor.addTask(new Task(this, Protocol.detectTaskType(ligne), ligne));
+                executor.addTask(new Task(user != null ? user.getCredentials() : null, this, Protocol.detectTaskType(ligne), ligne));
 
                 ligne = in.readLine();
             }
