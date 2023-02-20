@@ -61,6 +61,7 @@ public class Protocol {
 
 
     private final static String MSGS = "MSGS <message>\r\n";
+    private final static String FOLLOW = "FOLLOW <itemToFollow>\r\n";
     private final static String HELLO = "HELLO <ip> <salt>\r\n";
     private final static String PARAM = "PARAM <round> <salt>\r\n";
     private final static String SEND = "SEND <id> <nom_domaine> <nom/tag_domain> <message_interne>\r\n";
@@ -70,6 +71,10 @@ public class Protocol {
 
     public static String build_MSGS(String msg) {
         return MSGS.replace("<message>", msg);
+    }
+
+    public static String build_FOLLOW(String itemToFollow) {
+        return FOLLOW.replace("<itemToFollow>", itemToFollow);
     }
 
     public static String build_HELLO(String ip, String salt) {

@@ -36,7 +36,7 @@ public class ServerController implements AutoCloseable {
     private UserRepository userRepository;
     private TrendRepository trendRepository;
     private UserLibrary userLibrary;
-    private TrendLibrary trendLibrary; //TODO Executor: quand follow, enregistrer le follower de la trend
+    private TrendLibrary trendLibrary;
 
 
     public static ServerController getInstance() {
@@ -71,6 +71,7 @@ public class ServerController implements AutoCloseable {
         try {
             TaskScheduler executor = Executor.getInstance();
             new Thread(executor).start();
+            new Thread(RelayThread.getInstance()).start();
 
             while (!this.serverSocket.isClosed()) {
                 SSLSocket client = (SSLSocket) serverSocket.accept();
