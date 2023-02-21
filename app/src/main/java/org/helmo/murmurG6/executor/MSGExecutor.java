@@ -7,11 +7,8 @@ import org.helmo.murmurG6.models.*;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static org.helmo.murmurG6.controller.ServerController.getClientRunnableByLogin;
 
 public class MSGExecutor {
 
@@ -24,13 +21,12 @@ public class MSGExecutor {
      * @param client Le thread Client Emetteur du message
      * @param message le message à caster
      */
-    protected static void castMsg(ClientRunnable client, String message) {
+    protected static void castMsg(ClientRunnable client, String message, String idMessage) {
         //Tactique: on gère d'abord l'envoi des message aux followers du sender,
         // ensuite on gerera les messages aux followers des trends
 
         System.out.printf("Message envoyé : %s\n", message);
         User sender = client.getUser();
-        UUID idMessage = UUID.randomUUID();
 
         //Envoi du message au followers de l'emmetteur du message
         castToFollowers(sender, sender.getUserFollowers(), message, idMessage);
@@ -50,10 +46,10 @@ public class MSGExecutor {
      * @param message Le message à caster
      * @param idMessage L'id unique associé à ce message
      */
-    private static void castToFollowers(User senderClient, Set<UserCredentials> followers, String message, UUID idMessage) {
+    private static void castToFollowers(User senderClient, Set<UserCredentials> followers, String message, String idMessage) {
         //Parcours de la liste des followers du sender + envoi des message
         for(UserCredentials followerCreditential: followers){
-            manageMessageSending(senderClient, followerCreditential, idMessage, message);
+            manageMessageToClient(senderClient, followerCreditential, idMessage, message);
         }
     }
 
@@ -65,7 +61,7 @@ public class MSGExecutor {
      * @param message Le message à caster
      * @param idMessage L'id unique associé à ce message
      */
-    private static void castToTrendFollowers(User senderClient, Set<String> trends, String message, UUID idMessage) {
+    private static void castToTrendFollowers(User senderClient, Set<String> trends, String message, String idMessage) {
         //On parcours les trends mentionné dans le message
         for(String trendName: trends){
 
@@ -77,17 +73,17 @@ public class MSGExecutor {
 
                     //Si oui, alors on itère sur les followers de cette trends afin de leur écrire
                     for (UserCredentials trendFollowersCredential : trendLibrary.getUsersForTrend(trendName)) {
-                        manageMessageSending(senderClient, trendFollowersCredential, idMessage, message);
+                        manageMessageToClient(senderClient, trendFollowersCredential, idMessage, message);
                     }
 
 
                     //Si non (cas ou la trend n'appartient PAS à ce server) -> on passe la trend au relay
                 } else {
-                    Trend t = senderClient.getTrendByTag(trendName);
+                    Trend distantTrend = senderClient.getTrendByTag(trendName);
                     Executor.getInstance().sendToRelay(Protocol.build_SEND(
-                            idMessage.toString(),
+                            idMessage,
                             senderClient.getLogin(),
-                            t.toString(),
+                            distantTrend.toString(),
                             message));
                 }
             }
@@ -95,12 +91,12 @@ public class MSGExecutor {
     }
 
 
-    private static void manageMessageSending(User sender, UserCredentials followerCredential, UUID idMessage, String message) {
+    private static void manageMessageToClient(User sender, UserCredentials followerCredential, String idMessage, String message) {
         //on regarde si le destinataire est sur ce server ou sur un autre domaine
         if(followerCredential.getDomain().equals(server.getServerConfig().getServerName())){
 
             //On recupere le threadClient sur le server du destinataire afin de lui écrire
-            ClientRunnable client = getClientRunnableByLogin(followerCredential.getLogin());
+            ClientRunnable client = server.getClientRunnableByLogin(followerCredential.getLogin());
 
             //Gere l'envoi du message en local (aux user de CE server)
             operateLocalMessageSend(sender, idMessage, message, client);
@@ -109,7 +105,7 @@ public class MSGExecutor {
             //Si le destinataire n'appartient pas à ce server
         }else{
             Executor.getInstance().sendToRelay(Protocol.build_SEND(
-                    idMessage.toString(),
+                    idMessage,
                     sender.getCredentials().toString(),
                     followerCredential.toString(),
                     message));
@@ -125,7 +121,7 @@ public class MSGExecutor {
      * @param message Le message
      * @param client Le thread ClientRunnable du destinataire sur ce server
      */
-    private static void operateLocalMessageSend(User sender, UUID idMessage, String message, ClientRunnable client) {
+    private static void operateLocalMessageSend(User sender, String idMessage, String message, ClientRunnable client) {
         //Si le client est connecté
         if(client != null) {
 
@@ -134,7 +130,7 @@ public class MSGExecutor {
 
             //Si le destinataire n'a pas déja recu ce message, alors on lui écrit et enregistre cet événement dans son historique
             if (!follower.hasAlreadyReceivedMessage(idMessage) && !sender.equals(follower)) {
-                client.sendMessage(Protocol.build_MSGS(sender.getLogin() + "@" + server.getServerConfig().getServerName() + " " + message));
+                client.sendMessage(Protocol.build_MSGS(sender.getCredentials().toString() + " " + message));
                 follower.saveReceivedMessageId(idMessage);
             }
             //Si le destinataire n'est pas actuellement connecté

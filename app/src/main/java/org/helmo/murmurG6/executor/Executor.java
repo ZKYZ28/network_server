@@ -1,6 +1,7 @@
 package org.helmo.murmurG6.executor;
 
 import org.helmo.murmurG6.controller.ClientRunnable;
+import org.helmo.murmurG6.controller.RelayThread;
 import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.controller.ServerController;
 import org.helmo.murmurG6.controller.TaskScheduler;
@@ -15,7 +16,6 @@ public class Executor implements TaskScheduler {
     private static Executor instance;
     private final ExecutorService executorService; //ExecutorService avec un seul thread pour exécuter les tâches de la file d'attente.
     private final BlockingQueue<Task> taskQueue;   //File d'attente BlockingQueue appelée taskQueue pour stocker les tâches à exécuter.
-
     private final ServerController server = ServerController.getInstance();
 
     private Executor() {
@@ -46,33 +46,40 @@ public class Executor implements TaskScheduler {
         ClientRunnable client = task.getClient();
         Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
 
-        switch (task.getType()) {
-            case REGISTER:
-                RegisterExecutor.register(client, params);
-                break;
+        if(params != null && client != null) {
+            switch (task.getType()) {
+                case REGISTER:
+                    RegisterExecutor.register(client, params);
+                    break;
 
-            case CONNECT:
-                ConnectExecutor.connect(client, params);
-                break;
+                case CONNECT:
+                    ConnectExecutor.connect(client, params);
+                    break;
 
-            case CONFIRM:
-                ConfirmExecutor.confirm(client, params.group("challenge"));
-                break;
+                case CONFIRM:
+                    ConfirmExecutor.confirm(client, params.group("challenge"));
+                    break;
 
-            case MSG:
-                MSGExecutor.castMsg(client, params.group("message"));
-                break;
+                case MSG:
+                    MSGExecutor.castMsg(client, params.group("message"), task.getTaskId());
+                    break;
 
-            case FOLLOW:
-                FollowExecutor.follow(client, params.group("domain"));
-                break;
+                case MSGS:
+                    MSGSExecutor.castMsgs(task.getSender(), task.getReceiver(), params.group("message"), task.getTaskId());
+                    break;
 
-            case DISCONNECT:
-                //TODO retirer le client de la clientlist
+                case FOLLOW:
+                    FollowExecutor.follow(client.getUser().getCredentials(), params.group("domain"));
+                    break;
 
-            default:
-                client.sendMessage(Protocol.build_ERROR());
-                break;
+                case DISCONNECT:
+                    server.removeClient(client);
+                    break;
+
+                default:
+                    client.sendMessage(Protocol.build_ERROR());
+                    break;
+            }
         }
     }
 
@@ -108,6 +115,6 @@ public class Executor implements TaskScheduler {
 
 
     public void sendToRelay(String sendMessage) {
-        
+        RelayThread.getInstance().sendToRelay(sendMessage);
     }
 }

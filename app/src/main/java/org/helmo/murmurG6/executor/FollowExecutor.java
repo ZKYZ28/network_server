@@ -1,28 +1,25 @@
 package org.helmo.murmurG6.executor;
 
 import org.helmo.murmurG6.controller.ClientRunnable;
-import org.helmo.murmurG6.models.Protocol;
+import org.helmo.murmurG6.models.*;
 import org.helmo.murmurG6.controller.ServerController;
 import org.helmo.murmurG6.controller.exceptions.UnableToFollowUserException;
-import org.helmo.murmurG6.models.Trend;
-import org.helmo.murmurG6.models.User;
-import org.helmo.murmurG6.models.UserLibrary;
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveTrendLibraryException;
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveUserLibraryException;
 
+import java.util.UUID;
 import java.util.regex.Matcher;
 
 public class FollowExecutor {
 
     private static final ServerController server = ServerController.getInstance();
 
-    protected static void follow(ClientRunnable client, String target) {
-        User user = client.getUser();
+    protected static void follow(UserCredentials senderCredentials, String target) {
         try {
             if (target.startsWith("#")) {
-                followTrend(user, target);
+                followTrend(senderCredentials, target);
             } else {
-                followUser(user, target);
+                followUser(senderCredentials, target);
             }
             server.save();
         } catch (UnableToSaveTrendLibraryException | UnableToSaveUserLibraryException e) {
@@ -30,36 +27,63 @@ public class FollowExecutor {
         }
     }
 
-    private static void followUser(User user, String userToFollow) throws UnableToFollowUserException {
+    private static void followUser(UserCredentials senderCreditentials, String userToFollow) throws UnableToFollowUserException {
         Matcher matcher = Protocol.RX_USER_DOMAIN.matcher(userToFollow);
         if (matcher.matches()) {
             String login = matcher.group("login");
             String domain = matcher.group("userServerDomain");
+
+            //Si la target n'est pas sur ce server, on envoi au relay
             if (!domain.equals(server.getServerConfig().getServerName())) {
-                Protocol.build_SEND("", "", "", "");
+                Executor.getInstance().sendToRelay(Protocol.build_SEND(
+                        String.valueOf(UUID.randomUUID()),
+                        senderCreditentials.toString(),
+                        userToFollow,
+                        Protocol.build_FOLLOW(userToFollow)));
+
+            //Si domain == le domaine de ce server
             } else {
                 UserLibrary userLibrary = server.getUserLibrary();
 
+                //On vérrifie si target existe sur le server
                 if (userLibrary.isRegistered(login)) {
                     User followedUser = userLibrary.getUser(login);
-                    followedUser.addFollower(user.getCredentials());
+                    followedUser.addFollower(senderCreditentials);
                 }
             }
         }
     }
 
-    private static void followTrend(User user, String trendToFollow) throws UnableToFollowUserException {
+    private static void followTrend(UserCredentials senderCreditentials, String trendToFollow) throws UnableToFollowUserException {
         Matcher matcher = Protocol.TAG_DOMAIN.matcher(trendToFollow);
         if (matcher.matches()) {
             String trendName = matcher.group("tagName");
             String domain = matcher.group("trendServerDomain");
-            user.followTrend(new Trend(trendName, domain));
+            Trend trend = new Trend(trendName, domain);
 
-            if (!domain.equals(server.getServerConfig().getServerName())) {
-                Protocol.build_SEND("sdfsdf", "sdfsdf", "sdfsdf", "sdfsdf");
-            } else {
-                server.getTrendLibrary().addUserToTrend(trendName, user.getCredentials());
+            //USER
+            //Cas ou le sender appartient au server et y est inscrit
+            if(senderCreditentials.getDomain().equals(server.getServerConfig().getServerName()) && server.getUserLibrary().isRegistered(senderCreditentials.getLogin())) {
+
+                //On récupère ce sender
+                User user = server.getUserLibrary().getUser(senderCreditentials.getLogin());
+
+                //On ajoute la trend dans sa liste de trend followed
+                user.followTrend(trend);
             }
+
+            //TREND
+            //Si la trend appartient au server on enregistre
+            if (trend.getDomain().equals(server.getServerConfig().getServerName())) {
+                server.getTrendLibrary().addUserToTrend(trendName, senderCreditentials);
+
+            //Si la trend appartient a un autre server
+            } else {
+                Executor.getInstance().sendToRelay(Protocol.build_SEND(
+                        String.valueOf(UUID.randomUUID()),
+                        senderCreditentials.toString(),
+                        trendToFollow,
+                        Protocol.build_FOLLOW(trendToFollow)));            }
         }
     }
 }

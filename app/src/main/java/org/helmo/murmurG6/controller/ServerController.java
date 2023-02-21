@@ -27,16 +27,17 @@ import java.util.*;
 public class ServerController implements AutoCloseable {
 
     private static ServerController instance;
-    private static final Set<ClientRunnable> clientList = Collections.synchronizedSet(new HashSet<>());
+    private final Set<ClientRunnable> clientList = Collections.synchronizedSet(new HashSet<>());
     private SSLServerSocket serverSocket;
     private ServerConfig serverConfig;
+    private int uuid;
 
 
     //TODO Déplacer ces 4 attribut dans une autre classe
     private UserRepository userRepository;
     private TrendRepository trendRepository;
     private UserLibrary userLibrary;
-    private TrendLibrary trendLibrary; //TODO Executor: quand follow, enregistrer le follower de la trend
+    private TrendLibrary trendLibrary;
 
 
     public static ServerController getInstance() {
@@ -45,6 +46,8 @@ public class ServerController implements AutoCloseable {
         }
         return instance;
     }
+
+
 
     public void init(int port, UserRepository userRepository, TrendRepository trendRepository) {
         try{
@@ -70,7 +73,10 @@ public class ServerController implements AutoCloseable {
         welcome();
         try {
             TaskScheduler executor = Executor.getInstance();
+            RelayThread relayThread = RelayThread.getInstance();
+            relayThread.init(this);
             new Thread(executor).start();
+            new Thread(relayThread).start();
 
             while (!this.serverSocket.isClosed()) {
                 SSLSocket client = (SSLSocket) serverSocket.accept();
@@ -87,7 +93,7 @@ public class ServerController implements AutoCloseable {
     private void welcome() {
         UltraImportantClass.welcome();
         System.out.println("**************************************************************************************");
-        System.out.println("********     SERVER ONLINE ! IP : " + getDomain() + " " + serverSocket.getInetAddress().getHostAddress() + "     ********");
+        System.out.println("********     SERVER ONLINE ! IP : " + serverConfig.getServerName() + " " + serverSocket.getInetAddress().getHostAddress() + "     ********");
         System.out.println("**************************************************************************************");
     }
 
@@ -99,6 +105,12 @@ public class ServerController implements AutoCloseable {
     public void save() throws UnableToSaveUserLibraryException, UnableToSaveTrendLibraryException {
         userRepository.save(this.userLibrary);
         trendRepository.save(this.trendLibrary);
+    }
+
+    public String generateId() {
+        String generatedUniqueId = uuid+this.getServerConfig().getServerName();
+        uuid++;
+        return generatedUniqueId;
     }
 
 
@@ -128,12 +140,16 @@ public class ServerController implements AutoCloseable {
         }
     }
 
+    public void removeClient(ClientRunnable client) {
+        clientList.remove(client);
+    }
+
     /**
      * Recupere un objet ClientRunnable en fonction du login (ex: antho123) passé en paramètre
      * @param login le login du client recherché
      * @return Un ClientRunnable si le client est bien trouvé dans la liste des clients connecté du server, null sinon
      */
-    public static ClientRunnable getClientRunnableByLogin(String login){
+    public ClientRunnable getClientRunnableByLogin(String login){
         for(ClientRunnable cr : clientList){
             if(cr.getUser().getLogin().equals(login)){
                 return cr;

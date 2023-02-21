@@ -4,18 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80d6a6b1-98ac-4076-b856-98bb2db1ca20" name="Changes" comment="commit">
+    <list default="true" id="80d6a6b1-98ac-4076-b856-98bb2db1ca20" name="Changes" comment="Listen MSGS + generation ID task">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ClientRunnable.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ClientRunnable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/Protocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/Protocol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/RelayThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/RelayThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/ConfirmExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/ConfirmExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/ConnectExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/ConnectExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/Executor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/Executor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/FollowExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/FollowExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/RegisterExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/RegisterExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/org/helmo/murmurG6/models/ProtocolTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/org/helmo/murmurG6/models/ProtocolTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,7 +40,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="task_redo" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -87,6 +77,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="org.helmo.murmurG6.executor" />
       <recent name="org.helmo.murmurG6.infrastructure" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -149,6 +140,10 @@
       <workItem from="1676717439369" duration="5475000" />
       <workItem from="1676808322318" duration="4033000" />
       <workItem from="1676842141060" duration="628000" />
+      <workItem from="1676891642345" duration="1436000" />
+      <workItem from="1676893092646" duration="5481000" />
+      <workItem from="1676974622259" duration="6147000" />
+      <workItem from="1676988796874" duration="624000" />
     </task>
     <task id="LOCAL-00001" summary="-">
       <created>1676482100001</created>
@@ -353,7 +348,28 @@
       <option name="project" value="LOCAL" />
       <updated>1676844015635</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="commit">
+      <created>1676846102361</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1676846102361</updated>
+    </task>
+    <task id="LOCAL-00031" summary="commit">
+      <created>1676898633532</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1676898633532</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Listen MSGS + generation ID task">
+      <created>1676982529368</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1676982529368</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -390,9 +406,19 @@
     <MESSAGE value="[ServerController] castMsg et extractTrends" />
     <MESSAGE value="Code refactored" />
     <MESSAGE value="commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="commit" />
+    <MESSAGE value="Listen MSGS + generation ID task" />
+    <option name="LAST_COMMIT_MESSAGE" value="Listen MSGS + generation ID task" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/FollowExecutor.java</url>
+          <line>76</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="GradleRunConfiguration">
         <watch expression="dto.trendMap" language="JAVA" />

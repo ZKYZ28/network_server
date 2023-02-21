@@ -48,6 +48,8 @@ public class ClientRunnable implements Runnable {
      */
     public void run() throws UnableToRunClientException {
         try {
+            ServerController server = ServerController.getInstance();
+
             //L'executor est un singleton. Le thread connait l'executor via une interface
             TaskScheduler executor = Executor.getInstance();
 
@@ -62,7 +64,14 @@ public class ClientRunnable implements Runnable {
                 System.out.printf("Ligne reçue : %s\r\n", ligne);
 
                 //Ajout de la tache dans la file des taches de l'executor
-                executor.addTask(new Task(this, Protocol.detectTaskType(ligne), ligne));
+                executor.addTask(new Task(
+                        server.generateId(),
+                        this,
+                        user != null ? user.getCredentials() : null,
+                        null,
+                        Protocol.detectTaskType(ligne),
+                        ligne)
+                );
 
                 ligne = in.readLine();
             }

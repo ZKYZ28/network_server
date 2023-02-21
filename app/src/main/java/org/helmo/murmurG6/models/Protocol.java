@@ -45,11 +45,23 @@ public class Protocol {
     //"MSGS" esp nom_domaine esp message crlf
     private final static Pattern RX_MSGS = Pattern.compile("MSGS" + RX_ESP + RX_USER_DOMAIN + RX_ESP + RX_MESSAGE + RX_CRLF);
 
-    public final static Pattern RX_SEND = Pattern.compile("SEND" + RX_ESP + "(?<id>" + RX_ID_DOMAIN + ")" + RX_ESP + "(?<sender>" + RX_USER_DOMAIN + ")" + RX_ESP + "(?<receiver>" +TAG_DOMAIN_OR_RX_USER_DOMAIN + ")" + RX_ESP + "(?<content>" + RX_FOLLOW_TASK + "|" +RX_MSGS + ")" + RX_CRLF);
-    //"SEND" esp id_domaine esp nom_domaine esp (nom_domaine / tag_domaine) esp message_interne crlf
+
+
+//************************************************************************************************************************
+    private static final String SEND_RX_USER_DOMAIN = "(" + RX_USERNAME + "@" + RX_DOMAIN +")";
+    private static final String SEND_TAG_DOMAIN = "(" + TAG + "@" + RX_DOMAIN + ")";
+    private static final String SEND_TAG_DOMAIN_OR_RX_USER_DOMAIN = "(" + SEND_RX_USER_DOMAIN + "|" + SEND_TAG_DOMAIN + ")";
+    private static final String SEND_RX_FOLLOW_TASK = "FOLLOW" + RX_ESP + SEND_TAG_DOMAIN_OR_RX_USER_DOMAIN + RX_CRLF;
+    private static final String SEND_RX_MSGS = "MSGS" + RX_ESP + SEND_RX_USER_DOMAIN + RX_ESP + RX_MESSAGE + RX_CRLF;
+    public final static Pattern RX_SEND = Pattern.compile("SEND" + RX_ESP + "(?<id>" + RX_ID_DOMAIN + ")" + RX_ESP +
+            "(?<sender>" + SEND_RX_USER_DOMAIN + ")" + RX_ESP +
+            "(?<receiver>" +SEND_TAG_DOMAIN_OR_RX_USER_DOMAIN + ")" + RX_ESP +
+            "(?<content>" + SEND_RX_FOLLOW_TASK + "|" +SEND_RX_MSGS + ")" + RX_CRLF);
+//************************************************************************************************************************
 
 
     private final static String MSGS = "MSGS <message>\r\n";
+    private final static String FOLLOW = "FOLLOW <itemToFollow>\r\n";
     private final static String HELLO = "HELLO <ip> <salt>\r\n";
     private final static String PARAM = "PARAM <round> <salt>\r\n";
     private final static String SEND = "SEND <id> <nom_domaine> <nom/tag_domain> <message_interne>\r\n";
@@ -59,6 +71,10 @@ public class Protocol {
 
     public static String build_MSGS(String msg) {
         return MSGS.replace("<message>", msg);
+    }
+
+    public static String build_FOLLOW(String itemToFollow) {
+        return FOLLOW.replace("<itemToFollow>", itemToFollow);
     }
 
     public static String build_HELLO(String ip, String salt) {
@@ -88,7 +104,8 @@ public class Protocol {
             TaskType.FOLLOW, RX_FOLLOW_TASK,
             TaskType.CONFIRM, RX_CONFIRM_TASK,
             TaskType.DISCONNECT, RX_DISCONNECT_TASK,
-            TaskType.MSG, RX_MSG_TASK
+            TaskType.MSG, RX_MSG_TASK,
+            TaskType.MSGS, RX_MSGS
     );
 
     public static Matcher getMatcher(TaskType type, String command){
@@ -107,4 +124,5 @@ public class Protocol {
         }
         return TaskType.UNKNOWN;
     }
+
 }
