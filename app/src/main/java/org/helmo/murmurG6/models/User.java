@@ -12,7 +12,7 @@ public class User {
     private final Set<UserCredentials> userFollowers; //Liste des utilisateurs suivis par l'utilisateur.
     private final Set<Trend> followedTrends; //Liste des tendances suivies par l'utilisateur.
 
-    private final Set<UUID> messageIdHistory = new HashSet<>();
+    private final Set<String> messageIdHistory = new HashSet<>();
 
     public User(UserCredentials userCredentials, BCrypt bCrypt, Set<UserCredentials> userFollowers, Set<Trend> followedTrends) {
         this.userCredentials = userCredentials;
@@ -97,11 +97,11 @@ public class User {
         return this.userCredentials.toString();
     }
 
-    public boolean hasAlreadyReceivedMessage(UUID idMessage) {
+    public boolean hasAlreadyReceivedMessage(String idMessage) {
         return this.messageIdHistory.contains(idMessage);
     }
 
-    public void saveReceivedMessageId(UUID idMessage) {
+    public void saveReceivedMessageId(String idMessage) {
         this.messageIdHistory.add(idMessage);
     }
 

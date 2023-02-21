@@ -27,9 +27,10 @@ import java.util.*;
 public class ServerController implements AutoCloseable {
 
     private static ServerController instance;
-    private static final Set<ClientRunnable> clientList = Collections.synchronizedSet(new HashSet<>());
+    private final Set<ClientRunnable> clientList = Collections.synchronizedSet(new HashSet<>());
     private SSLServerSocket serverSocket;
     private ServerConfig serverConfig;
+    private int uuid;
 
 
     //TODO Déplacer ces 4 attribut dans une autre classe
@@ -45,6 +46,8 @@ public class ServerController implements AutoCloseable {
         }
         return instance;
     }
+
+
 
     public void init(int port, UserRepository userRepository, TrendRepository trendRepository) {
         try{
@@ -104,6 +107,12 @@ public class ServerController implements AutoCloseable {
         trendRepository.save(this.trendLibrary);
     }
 
+    public String generateId() {
+        String generatedUniqueId = uuid+this.getServerConfig().getServerName();
+        uuid++;
+        return generatedUniqueId;
+    }
+
 
     @Override
     public void close() {
@@ -140,7 +149,7 @@ public class ServerController implements AutoCloseable {
      * @param login le login du client recherché
      * @return Un ClientRunnable si le client est bien trouvé dans la liste des clients connecté du server, null sinon
      */
-    public static ClientRunnable getClientRunnableByLogin(String login){
+    public ClientRunnable getClientRunnableByLogin(String login){
         for(ClientRunnable cr : clientList){
             if(cr.getUser().getLogin().equals(login)){
                 return cr;

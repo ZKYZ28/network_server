@@ -46,34 +46,40 @@ public class Executor implements TaskScheduler {
         ClientRunnable client = task.getClient();
         Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
 
-        switch (task.getType()) {
-            case REGISTER:
-                RegisterExecutor.register(client, params);
-                break;
+        if(params != null && client != null) {
+            switch (task.getType()) {
+                case REGISTER:
+                    RegisterExecutor.register(client, params);
+                    break;
 
-            case CONNECT:
-                ConnectExecutor.connect(client, params);
-                break;
+                case CONNECT:
+                    ConnectExecutor.connect(client, params);
+                    break;
 
-            case CONFIRM:
-                ConfirmExecutor.confirm(client, params.group("challenge"));
-                break;
+                case CONFIRM:
+                    ConfirmExecutor.confirm(client, params.group("challenge"));
+                    break;
 
-            case MSG:
-                MSGExecutor.castMsg(client, params.group("message"));
-                break;
+                case MSG:
+                    MSGExecutor.castMsg(client, params.group("message"), task.getTaskId());
+                    break;
 
-            case FOLLOW:
-                FollowExecutor.follow(client.getUser().getCredentials(), params.group("domain"));
-                break;
+                case MSGS:
+                    MSGSExecutor.castMsgs(task.getSender(), task.getReceiver(), params.group("message"), task.getTaskId());
+                    break;
 
-            case DISCONNECT:
-                server.removeClient(client);
-                break;
+                case FOLLOW:
+                    FollowExecutor.follow(client.getUser().getCredentials(), params.group("domain"));
+                    break;
 
-            default:
-                client.sendMessage(Protocol.build_ERROR());
-                break;
+                case DISCONNECT:
+                    server.removeClient(client);
+                    break;
+
+                default:
+                    client.sendMessage(Protocol.build_ERROR());
+                    break;
+            }
         }
     }
 

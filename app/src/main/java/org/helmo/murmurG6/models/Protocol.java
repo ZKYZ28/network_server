@@ -104,7 +104,8 @@ public class Protocol {
             TaskType.FOLLOW, RX_FOLLOW_TASK,
             TaskType.CONFIRM, RX_CONFIRM_TASK,
             TaskType.DISCONNECT, RX_DISCONNECT_TASK,
-            TaskType.MSG, RX_MSG_TASK
+            TaskType.MSG, RX_MSG_TASK,
+            TaskType.MSGS, RX_MSGS
     );
 
     public static Matcher getMatcher(TaskType type, String command){

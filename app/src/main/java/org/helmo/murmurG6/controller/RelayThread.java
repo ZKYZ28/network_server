@@ -98,11 +98,11 @@ public class RelayThread implements Runnable, AutoCloseable {
 
             if (args.matches()) {
                 //Mise en place du UserCreditential de l'emetteur
-                String senderDomain = args.group("sender"); //ex: "antho123@serv1.godswila.guru"
+                String senderDomain = args.group("sender"); //ex: "antho123@serv2.godswila.guru"
                 Matcher senderParams = Protocol.RX_USER_DOMAIN.matcher(senderDomain);
                 UserCredentials senderCreditential = new UserCredentials(senderParams.group("login"), senderParams.group("domain"));
 
-                Task task = new Task(senderCreditential, null, Protocol.detectTaskType(args.group("content")), args.group("content"));
+                Task task = new Task(args.group("id"), null, senderCreditential, args.group("receiver"), Protocol.detectTaskType(args.group("content")), args.group("content"));
 
                 executor.addTask(task);
             }
