@@ -42,6 +42,10 @@ public class Executor implements TaskScheduler {
     }
 
 
+    //TODO refactor task -> client runnable
+    //TODO Enlever statique
+    //TODO Class Statique -> private constructor + class final
+    //TODO Relay Thread -> retirer singleton
     private void executeTask(Task task) {
         ClientRunnable client = task.getClient();
         Matcher params = Protocol.getMatcher(task.getType(), task.getContent());

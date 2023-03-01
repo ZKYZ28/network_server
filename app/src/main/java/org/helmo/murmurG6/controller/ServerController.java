@@ -107,6 +107,8 @@ public class ServerController implements AutoCloseable {
         trendRepository.save(this.trendLibrary);
     }
 
+    //TODO proteger concurence thread
+    //TODO id cyclique
     public String generateId() {
         String generatedUniqueId = uuid+this.getServerConfig().getServerName();
         uuid++;
