@@ -108,7 +108,7 @@ public class ServerController implements AutoCloseable {
     }
 
     //TODO proteger concurence thread
-    //TODO id cyclique
+    //TODO generation id 1 -> 5 caracteres
     public String generateId() {
         String generatedUniqueId = uuid+this.getServerConfig().getServerName();
         uuid++;
