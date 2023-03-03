@@ -31,6 +31,7 @@ public class RelayThread implements Runnable, AutoCloseable {
     private RelayThread() {
         executorService = Executors.newScheduledThreadPool(2);
 
+
         try {
             NetworkInterface networkInterface = NetworkInterface.getByName(NETWORK_INTERFACE);
 

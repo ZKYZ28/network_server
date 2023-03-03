@@ -46,6 +46,7 @@ public class ClientRunnable implements Runnable {
      *
      * @throws UnableToRunClientException si une erreur se produit lors de la communication avec le client
      */
+    //TODO RENDRE LES METHODES SERVER SYNCHRONIZED CAR PLUSIEURS CLIENTS PEUVENT LES EXECUTER !!!!!!!!!!!!
     public void run() throws UnableToRunClientException {
         try {
             ServerController server = ServerController.getInstance();
