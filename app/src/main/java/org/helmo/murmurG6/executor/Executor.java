@@ -119,6 +119,6 @@ public class Executor implements TaskScheduler {
 
 
     public void sendToRelay(String sendMessage) {
-        RelayThread.getInstance().sendToRelay(sendMessage);
+        //RelayThread.getInstance().sendToRelay(sendMessage);
     }
 }

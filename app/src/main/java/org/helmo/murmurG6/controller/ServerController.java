@@ -73,10 +73,8 @@ public class ServerController implements AutoCloseable {
         welcome();
         try {
             TaskScheduler executor = Executor.getInstance();
-            RelayThread relayThread = RelayThread.getInstance();
-            relayThread.init(this);
             new Thread(executor).start();
-            new Thread(relayThread).start();
+            new Thread(new RelayThread(this)).start();
 
             while (!this.serverSocket.isClosed()) {
                 SSLSocket client = (SSLSocket) serverSocket.accept();
