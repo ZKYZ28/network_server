@@ -8,11 +8,13 @@ import org.helmo.murmurG6.models.UserCredentials;
 
 import java.util.regex.Matcher;
 
-public class MSGSExecutor {
+public final class MSGSExecutor {
 
     private static final ServerController server = ServerController.getInstance();
 
-    protected static void castMsgs(UserCredentials sender, String target, String message, String messageId) {
+    private MSGSExecutor(){}
+
+    static void castMsgs(UserCredentials sender, String target, String message, String messageId) {
         Matcher params = Protocol.TAG_DOMAIN_OR_RX_USER_DOMAIN.matcher(target);
         if(params.matches()){
             if(target.charAt(0) == '#'){

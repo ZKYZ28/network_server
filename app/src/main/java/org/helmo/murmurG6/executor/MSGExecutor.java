@@ -10,18 +10,18 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MSGExecutor {
+public final class MSGExecutor {
 
     private static final ServerController server = ServerController.getInstance();
 
-
+    private MSGExecutor(){}
 
     /**
      * Cast un message à des utilisateurs locaux ou distant
      * @param client Le thread Client Emetteur du message
      * @param message le message à caster
      */
-    protected static void castMsg(ClientRunnable client, String message, String idMessage) {
+    static void castMsg(ClientRunnable client, String message, String idMessage) {
         //Tactique: on gère d'abord l'envoi des message aux followers du sender,
         // ensuite on gerera les messages aux followers des trends
 

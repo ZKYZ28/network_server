@@ -10,11 +10,12 @@ import org.helmo.murmurG6.repository.exceptions.UnableToSaveUserLibraryException
 import java.util.UUID;
 import java.util.regex.Matcher;
 
-public class FollowExecutor {
-
+public final class FollowExecutor {
     private static final ServerController server = ServerController.getInstance();
 
-    protected static void follow(UserCredentials senderCredentials, String target) {
+    private FollowExecutor(){}
+
+    static void follow(UserCredentials senderCredentials, String target) {
         try {
             if (target.startsWith("#")) {
                 followTrend(senderCredentials, target);
