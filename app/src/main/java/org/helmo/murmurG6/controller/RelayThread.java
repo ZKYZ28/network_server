@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 
@@ -26,11 +27,13 @@ public class RelayThread implements Runnable, AutoCloseable {
     private static final int MULTICAST_PORT = 23106;
     private static final int RELAY_PORT = 20201;
 
+
+    private final ServerController server;
     private ServerSocket serverSocket;
     private DatagramSocket multicastSocket;
     private BufferedReader in;
     private PrintWriter out;
-    private final ServerController server;
+    private ScheduledFuture<?> echoTask;
 
 
     public RelayThread(ServerController server) {
@@ -95,7 +98,9 @@ public class RelayThread implements Runnable, AutoCloseable {
             Socket unicastSocket = this.serverSocket.accept(); //Connection avec le relay
             this.in = new BufferedReader(new InputStreamReader(unicastSocket.getInputStream(), StandardCharsets.UTF_8));
             this.out = new PrintWriter(new OutputStreamWriter(unicastSocket.getOutputStream(), StandardCharsets.UTF_8), true);
-            this.multicastSocket.close();
+
+            //Relay connecté donc plus besoin de faire echo, fermeture du multicast socket et annulation du thread echo
+            cancelEcho();
 
             String message = receiveFromRelay();
 
@@ -129,6 +134,14 @@ public class RelayThread implements Runnable, AutoCloseable {
         }
     }
 
+    /**
+     * Ferme le socket multicast et annule le thread responsable du echo
+     */
+    private void cancelEcho() {
+        this.multicastSocket.close();
+        this.echoTask.cancel(true);
+    }
+
 
     @Override
     public void close() {
@@ -148,8 +161,7 @@ public class RelayThread implements Runnable, AutoCloseable {
     @Override
     public void run() {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
-
-        executorService.scheduleAtFixedRate(this::echo, 0, 15, TimeUnit.SECONDS);
+        this.echoTask = executorService.scheduleAtFixedRate(this::echo, 0, 15, TimeUnit.SECONDS);
         executorService.submit(this::listen);
     }
 }
