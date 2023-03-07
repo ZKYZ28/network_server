@@ -40,6 +40,13 @@ public class ServerController implements AutoCloseable {
     private TrendLibrary trendLibrary;
 
 
+    private ServerController() {}
+
+    /**
+     * Retour l'instance du singleton du ServerController si non-null. Sinon, créer une nouvelle instance et la retourne également.
+     *
+     * @return L'instance du ServerController
+     */
     public static ServerController getInstance() {
         if (instance == null) {
             instance = new ServerController();
@@ -48,14 +55,20 @@ public class ServerController implements AutoCloseable {
     }
 
 
-
+    /**
+     * Initialisation du ServerController
+     *
+     * @param port Le port sur lequel les clients se connectent
+     * @param userRepository Le dépôt d'utilisateurs enregistrés sur le server
+     * @param trendRepository Le dépôt des tendances enregistrées sur le server
+     */
     public void init(int port, UserRepository userRepository, TrendRepository trendRepository) {
         try{
             SSLServerSocketFactory sslServerSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
             this.serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(port);
 
             this.serverConfig = new ServerJsonStorage().load();
-            this.serverConfig.setServerIp(getDomain());
+            //this.serverConfig.setServerIp(getDomain());
 
             this.userRepository = userRepository;
             this.trendRepository = trendRepository;
@@ -69,6 +82,12 @@ public class ServerController implements AutoCloseable {
     }
 
 
+    /**
+     * Lancement du serveur.
+     * Initialisation des threads Executor et RelayThread et réception des clients.
+     *
+     * @throws IOException
+     */
     public void start() throws IOException {
         welcome();
         try {
@@ -79,7 +98,6 @@ public class ServerController implements AutoCloseable {
 
             while (!this.serverSocket.isClosed()) {
                 SSLSocket client = (SSLSocket) serverSocket.accept();
-                System.out.println("Quelqu'un s'est connecté!");
                 ClientRunnable runnable = new ClientRunnable(client);
                 clientList.add(runnable);
                 new Thread(runnable).start();
@@ -97,11 +115,18 @@ public class ServerController implements AutoCloseable {
     }
 
 
-    public boolean isRunning() {
+    /*public boolean isRunning() {
         return !this.serverSocket.isClosed();
-    }
+    }*/
 
-    public void save() throws UnableToSaveUserLibraryException, UnableToSaveTrendLibraryException {
+    /**
+     * Sauvegarde les utilisateurs et tendances.
+     * Synchronized car plusieurs ClientRunnable peuvent appeler la méthode
+     *
+     * @throws UnableToSaveUserLibraryException
+     * @throws UnableToSaveTrendLibraryException
+     */
+    public synchronized void save() throws UnableToSaveUserLibraryException, UnableToSaveTrendLibraryException {
         userRepository.save(this.userLibrary);
         trendRepository.save(this.trendLibrary);
     }
@@ -128,7 +153,7 @@ public class ServerController implements AutoCloseable {
     }
 
     /************** GETTERS/SETTERS ***************/
-    public UserLibrary getUserLibrary() {
+    public synchronized UserLibrary getUserLibrary() {
         return userLibrary;
     }
 
@@ -136,14 +161,19 @@ public class ServerController implements AutoCloseable {
         return trendLibrary;
     }
 
-    public String getDomain() {
+    /*public String getDomain() {
         try {
             return InetAddress.getLocalHost().getCanonicalHostName();
         } catch (UnknownHostException e) {
             return null;
         }
-    }
+    }*/
 
+    /**
+     * Supprime un client de la liste des thread ClientRunnable
+     *
+     * @param client Le client à supprimer
+     */
     public void removeClient(ClientRunnable client) {
         clientList.remove(client);
     }
@@ -162,7 +192,7 @@ public class ServerController implements AutoCloseable {
         return null;
     }
 
-    public ServerConfig getServerConfig() {
+    public synchronized ServerConfig getServerConfig() {
         return serverConfig;
     }
 }

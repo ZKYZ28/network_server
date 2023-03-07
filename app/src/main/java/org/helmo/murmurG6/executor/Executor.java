@@ -24,14 +24,27 @@ public class Executor implements TaskScheduler {
         this.executorService = Executors.newSingleThreadExecutor();
     }
 
-    public void addTask(Task task) {
+    public static Executor getInstance() {
+        if (instance == null) {
+            instance = new Executor();
+        }
+        return instance;
+    }
+
+
+    /**
+     * Ajoute une tâche a la liste bloquante de tâches
+     *
+     * @param task La tâche à ajouter
+     */
+    public synchronized void addTask(Task task) {
         taskQueue.add(task);
     }
 
     @Override
     public void run() {
         executorService.submit(() -> {
-            while (server.isRunning()) {
+            while (/*server.isRunning()*/ true) {
                 try {
                     Task task = taskQueue.take(); //Consomation des tâches de la file d'attente en appelant la méthode take de BlockingQueue, ce qui bloquera le thread (waiting) jusqu'à ce qu'une tâche soit disponible dans la file d'attente.
                     executeTask(task);
@@ -70,14 +83,6 @@ public class Executor implements TaskScheduler {
         }
     }
 
-
-    public String sayHello(ClientRunnable client) {
-        String random22 = RandomSaltGenerator.generateSalt();
-        client.sendMessage(Protocol.build_HELLO(server.getServerConfig().getServerName(), random22));
-        return random22;
-    }
-
-
     @Override
     public void close() {
         this.executorService.shutdown();
@@ -92,13 +97,6 @@ public class Executor implements TaskScheduler {
 
 
     /********** GETTERS/SETTERS ************/
-
-    public static Executor getInstance() {
-        if (instance == null) {
-            instance = new Executor();
-        }
-        return instance;
-    }
 
 
     public void sendToRelay(String sendMessage) {

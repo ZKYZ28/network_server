@@ -11,6 +11,12 @@ public class ServerConfig {
         this.base64KeyAES = base64KeyAES;
     }
 
+    /**
+     * Si on lance plusieurs serveur sur la meme machine, elles auronts toutes la meme ip/domaines.
+     * Le fichier de config devrait etre une config inchangeable une fois le serveur lancé.
+     *
+     * @param ip
+     */
     public void setServerIp(String ip) {
         this.serverIp = ip;
     }

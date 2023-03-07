@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
  */
 public class RelayThread implements Runnable, AutoCloseable {
 
-    private static final String MULTICAST_IP = "224.1.1.255";
+    private static final String MULTICAST_IP = "224.1.1.255"; //TODO Load les 3 depuis la ServerConfig
     private static final int MULTICAST_PORT = 23106;
     private static final int RELAY_PORT = 20201;
 
@@ -51,7 +51,7 @@ public class RelayThread implements Runnable, AutoCloseable {
     public void sendToRelay(String sendMessage) {
         try {
             byte[] msgsBytes = AESCrypt.encrypt(sendMessage, server.getServerConfig().getBase64KeyAES());
-            out.println(Arrays.toString(msgsBytes));
+            out.println(Arrays.toString(msgsBytes)); //TODO Verifier que c'est bien une string
             out.flush();
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +92,7 @@ public class RelayThread implements Runnable, AutoCloseable {
      */
     public void listen() {
         try {
-            Socket unicastSocket = this.serverSocket.accept();
+            Socket unicastSocket = this.serverSocket.accept(); //Connection avec le relay
             this.in = new BufferedReader(new InputStreamReader(unicastSocket.getInputStream(), StandardCharsets.UTF_8));
             this.out = new PrintWriter(new OutputStreamWriter(unicastSocket.getOutputStream(), StandardCharsets.UTF_8), true);
             this.multicastSocket.close();
@@ -103,7 +103,6 @@ public class RelayThread implements Runnable, AutoCloseable {
                 handleReceivedMessage(message);
                 message = receiveFromRelay();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -133,7 +132,12 @@ public class RelayThread implements Runnable, AutoCloseable {
 
     @Override
     public void close() {
-
+        try {
+            this.serverSocket.close();
+            this.multicastSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

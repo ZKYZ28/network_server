@@ -7,6 +7,7 @@ import org.helmo.murmurG6.models.*;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveTrendLibraryException;
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveUserLibraryException;
+import org.helmo.murmurG6.utils.RandomSaltGenerator;
 
 import java.io.*;
 import java.net.Socket;
@@ -23,7 +24,7 @@ public class ClientRunnable implements Runnable {
     private final PrintWriter out;
     private User user;
     private String random22;
-    ServerController server = ServerController.getInstance();
+    private final ServerController server;
 
 
     /**
@@ -34,6 +35,7 @@ public class ClientRunnable implements Runnable {
      * @throws UnableToConnectToClientException si la connexion au client échoue
      */
     public ClientRunnable(Socket client) throws UnableToConnectToClientException {
+        this.server = ServerController.getInstance();
         try {
             in = new BufferedReader(new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8));
             out = new PrintWriter(new OutputStreamWriter(client.getOutputStream(), StandardCharsets.UTF_8), true);
@@ -50,34 +52,24 @@ public class ClientRunnable implements Runnable {
      *
      * @throws UnableToRunClientException si une erreur se produit lors de la communication avec le client
      */
-    //TODO RENDRE LES METHODES SERVER SYNCHRONIZED CAR PLUSIEURS CLIENTS PEUVENT LES EXECUTER !!!!!!!!!!!!
     public void run() throws UnableToRunClientException {
         try {
             //L'executor est un singleton. Le thread connait l'executor via une interface
             TaskScheduler executor = Executor.getInstance();
 
             //Envoi du message Hello au client + récupération du random de 22 caractères aléatoires
-            random22 = executor.sayHello(this);
-
-
+            random22 = sayHello();
 
             String ligne = in.readLine();
 
             while (ligne != null && !ligne.isEmpty()) {
                 System.out.printf("Ligne reçue : %s\r\n", ligne);
 
-                Task task = new Task(
-                        server.generateId(),
-                        this,
-                        user != null ? user.getCredentials() : null,
-                        null,
-                        Protocol.detectTaskType(ligne),
-                        ligne
-                );
+                Task task = new Task(server.generateId(), this, user != null ? user.getCredentials() : null, null, Protocol.detectTaskType(ligne), ligne);
 
                 Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
 
-                if(params != null){
+                if (params != null) {
                     switch (task.getType()) {
                         case REGISTER:
                             register(params);
@@ -99,7 +91,7 @@ public class ClientRunnable implements Runnable {
                             executor.addTask(task);
                             break;
                     }
-                }else{
+                } else {
                     sendMessage(Protocol.build_ERROR());
                 }
 
@@ -140,14 +132,11 @@ public class ClientRunnable implements Runnable {
     /*************************************************/
 
 
-
-    /** REGISTER **/
-    private void register(Matcher params){
-        User user = new User(
-                new UserCredentials(params.group("username"), server.getServerConfig().getServerName()),
-                BCrypt.of(params.group("bcrypt")),
-                new HashSet<>(),
-                new HashSet<>());
+    /**
+     * REGISTER
+     **/
+    private void register(Matcher params) {
+        User user = new User(new UserCredentials(params.group("username"), server.getServerConfig().getServerName()), BCrypt.of(params.group("bcrypt")), new HashSet<>(), new HashSet<>());
 
         this.sendMessage(executeRegister(user));
     }
@@ -155,33 +144,43 @@ public class ClientRunnable implements Runnable {
     private String executeRegister(User user) {
         try {
             server.getUserLibrary().register(user);
-            setUser(user);
+            this.user = user;
             server.save();
             return Protocol.build_OK();
-        } catch (UnableToSaveUserLibraryException | UnableToSaveTrendLibraryException | UserAlreadyRegisteredException e) {
+        } catch (UnableToSaveUserLibraryException | UnableToSaveTrendLibraryException |
+                 UserAlreadyRegisteredException e) {
             return Protocol.build_ERROR();
         }
     }
 
 
-    /** CONNECT **/
-    private void connect(Matcher params){
+    /**
+     * CONNECT
+     **/
+    private void connect(Matcher params) {
         sendMessage(controlConnect(params.group("username")));
     }
 
     private String controlConnect(String login) {
         if (server.getUserLibrary().isRegistered(login)) {
             User user = server.getUserLibrary().getUser(login);
-            setUser(user);
+            this.user = user;
             return Protocol.build_PARAM(user.getBcryptRound(), user.getBcryptSalt());
         } else {
             return Protocol.build_ERROR();
         }
     }
 
+    private String sayHello() {
+        String random22 = RandomSaltGenerator.generateSalt();
+        sendMessage(Protocol.build_HELLO(server.getServerConfig().getServerName(), random22));
+        return random22;
+    }
 
-    /** CONFIRM **/
-    private void confirm(String challengeReceived){
+    /**
+     * CONFIRM
+     **/
+    private void confirm(String challengeReceived) {
         String expected = user.getBcrypt().generateChallenge(getRandom22());
         sendMessage(controlConfirm(challengeReceived, expected));
     }

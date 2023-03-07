@@ -14,11 +14,13 @@ public final class MSGExecutor {
 
     private static final ServerController server = ServerController.getInstance();
 
-    private MSGExecutor(){}
+    private MSGExecutor() {
+    }
 
     /**
      * Cast un message à des utilisateurs locaux ou distant
-     * @param client Le thread Client Emetteur du message
+     *
+     * @param client  Le thread Client Emetteur du message
      * @param message le message à caster
      */
     static void castMsg(ClientRunnable client, String message, String idMessage) {
@@ -32,23 +34,23 @@ public final class MSGExecutor {
         castToFollowers(sender, sender.getUserFollowers(), message, idMessage);
 
         //Si le message fait mention d'au moins 1 trend -> envoi des message aux abonnés de la trend
-        if(extractTrends(message).size() > 0){
+        if (extractTrends(message).size() > 0) {
             castToTrendFollowers(sender, extractTrends(message), message, idMessage);
         }
     }
 
 
-
     /**
      * Gère le casting de message pour à des followers d'un user
+     *
      * @param senderClient L'emetteur du message
-     * @param followers La liste des creditentials des followers (ex: antho123@server1)
-     * @param message Le message à caster
-     * @param idMessage L'id unique associé à ce message
+     * @param followers    La liste des creditentials des followers (ex: antho123@server1)
+     * @param message      Le message à caster
+     * @param idMessage    L'id unique associé à ce message
      */
     private static void castToFollowers(User senderClient, Set<UserCredentials> followers, String message, String idMessage) {
         //Parcours de la liste des followers du sender + envoi des message
-        for(UserCredentials followerCreditential: followers){
+        for (UserCredentials followerCreditential : followers) {
             manageMessageToClient(senderClient, followerCreditential, idMessage, message);
         }
     }
@@ -56,17 +58,18 @@ public final class MSGExecutor {
 
     /**
      * Gère le casting de message pour à des followers d'une Trend
+     *
      * @param senderClient L'emetteur du message
-     * @param trends La liste des trends à gérer
-     * @param message Le message à caster
-     * @param idMessage L'id unique associé à ce message
+     * @param trends       La liste des trends à gérer
+     * @param message      Le message à caster
+     * @param idMessage    L'id unique associé à ce message
      */
     private static void castToTrendFollowers(User senderClient, Set<String> trends, String message, String idMessage) {
         //On parcours les trends mentionné dans le message
-        for(String trendName: trends){
+        for (String trendName : trends) {
 
             //Si l'emetteur du message est bien abonné à la trend on gère l'envoi, sinon on ne fait rien
-            if(senderClient.getTrendByTag(trendName) != null) {
+            if (senderClient.getTrendByTag(trendName) != null) {
                 //On regarde si la trend appartient à ce server
                 if (server.getTrendLibrary().exists(trendName)) {
                     TrendLibrary trendLibrary = server.getTrendLibrary();
@@ -80,11 +83,7 @@ public final class MSGExecutor {
                     //Si non (cas ou la trend n'appartient PAS à ce server) -> on passe la trend au relay
                 } else {
                     Trend distantTrend = senderClient.getTrendByTag(trendName);
-                    Executor.getInstance().sendToRelay(Protocol.build_SEND(
-                            idMessage,
-                            senderClient.getLogin(),
-                            distantTrend.toString(),
-                            message));
+                    Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, senderClient.getLogin(), distantTrend.toString(), message));
                 }
             }
         }
@@ -93,7 +92,7 @@ public final class MSGExecutor {
 
     private static void manageMessageToClient(User sender, UserCredentials followerCredential, String idMessage, String message) {
         //on regarde si le destinataire est sur ce server ou sur un autre domaine
-        if(followerCredential.getDomain().equals(server.getServerConfig().getServerName())){
+        if (followerCredential.getDomain().equals(server.getServerConfig().getServerName())) {
 
             //On recupere le threadClient sur le server du destinataire afin de lui écrire
             ClientRunnable client = server.getClientRunnableByLogin(followerCredential.getLogin());
@@ -103,27 +102,24 @@ public final class MSGExecutor {
 
 
             //Si le destinataire n'appartient pas à ce server
-        }else{
-            Executor.getInstance().sendToRelay(Protocol.build_SEND(
-                    idMessage,
-                    sender.getCredentials().toString(),
-                    followerCredential.toString(),
-                    message));
-                    //TODO a voir avec le toString quand relay fini
+        } else {
+            Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, sender.getCredentials().toString(), followerCredential.toString(), message));
+            //TODO a voir avec le toString quand relay fini
         }
     }
 
 
     /**
      * Gère l'envoi du message localement (aux utilisateur de CE server)
-     * @param sender L'emetteur du message
+     *
+     * @param sender    L'emetteur du message
      * @param idMessage L'id du message
-     * @param message Le message
-     * @param client Le thread ClientRunnable du destinataire sur ce server
+     * @param message   Le message
+     * @param client    Le thread ClientRunnable du destinataire sur ce server
      */
     private static void operateLocalMessageSend(User sender, String idMessage, String message, ClientRunnable client) {
         //Si le client est connecté
-        if(client != null) {
+        if (client != null) {
 
             //On recupere l'objet User associé à ce thread client afin de pourvoir gérer son historique
             User follower = client.getUser();
@@ -134,7 +130,7 @@ public final class MSGExecutor {
                 follower.saveReceivedMessageId(idMessage);
             }
             //Si le destinataire n'est pas actuellement connecté
-        }else{
+        } else {
             //TODO : Extension file de message quand le client n'est pas connecté (quand il est nul dans ce cas ci)
         }
     }
@@ -142,6 +138,7 @@ public final class MSGExecutor {
 
     /**
      * Recupere toute les trend (uniquement leur name) mentionnée dans un message
+     *
      * @param message le message ananlysé
      * @return un set de tagname
      */
