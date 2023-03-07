@@ -18,6 +18,7 @@ public class Executor implements TaskScheduler {
     private final BlockingQueue<Task> taskQueue;   //File d'attente BlockingQueue appelée taskQueue pour stocker les tâches à exécuter.
     private final ServerController server = ServerController.getInstance();
 
+
     private Executor() {
         this.taskQueue = new LinkedBlockingQueue<>();
         this.executorService = Executors.newSingleThreadExecutor();
@@ -42,27 +43,13 @@ public class Executor implements TaskScheduler {
     }
 
 
-    //TODO refactor task -> client runnable
-    //TODO Enlever statique
-    //TODO Class Statique -> private constructor + class final
-    //TODO Relay Thread -> retirer singleton
+
     private void executeTask(Task task) {
         ClientRunnable client = task.getClient();
         Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
 
         if(params != null && client != null) {
-            switch (task.getType()) {
-                case REGISTER:
-                    RegisterExecutor.register(client, params);
-                    break;
-
-                case CONNECT:
-                    ConnectExecutor.connect(client, params);
-                    break;
-
-                case CONFIRM:
-                    ConfirmExecutor.confirm(client, params.group("challenge"));
-                    break;
+                switch (task.getType()) {
 
                 case MSG:
                     MSGExecutor.castMsg(client, params.group("message"), task.getTaskId());
@@ -74,10 +61,6 @@ public class Executor implements TaskScheduler {
 
                 case FOLLOW:
                     FollowExecutor.follow(client.getUser().getCredentials(), params.group("domain"));
-                    break;
-
-                case DISCONNECT:
-                    server.removeClient(client);
                     break;
 
                 default:
@@ -119,6 +102,8 @@ public class Executor implements TaskScheduler {
 
 
     public void sendToRelay(String sendMessage) {
-        RelayThread.getInstance().sendToRelay(sendMessage);
+        try(RelayThread relay = new RelayThread()) {
+            relay.sendToRelay(sendMessage);
+        }
     }
 }

@@ -15,12 +15,7 @@ import java.util.regex.Matcher;
 
 public class RelayThread implements Runnable, AutoCloseable {
 
-    private static final String MULTICAST_IP = "224.1.1.255";
-    private static final int PORT = 19375;
-    private static final String NETWORK_INTERFACE = "eth12";
-    private static RelayThread instance;
-
-
+    private final int PORT = 19375;
     private final ScheduledExecutorService executorService;
     private InetAddress multicastAddress;
     private InetSocketAddress group;
@@ -28,13 +23,15 @@ public class RelayThread implements Runnable, AutoCloseable {
     private ServerConfig config;
 
 
-    private RelayThread() {
+    public RelayThread() {
         executorService = Executors.newScheduledThreadPool(2);
 
 
         try {
+            String NETWORK_INTERFACE = "eth12";
             NetworkInterface networkInterface = NetworkInterface.getByName(NETWORK_INTERFACE);
 
+            String MULTICAST_IP = "224.1.1.255";
             this.multicastAddress = InetAddress.getByName(MULTICAST_IP);
             this.multicastSocket = new MulticastSocket(PORT);
             this.group = new InetSocketAddress(multicastAddress, PORT);
@@ -45,12 +42,6 @@ public class RelayThread implements Runnable, AutoCloseable {
         }
     }
 
-    public static RelayThread getInstance() {
-        if (instance == null) {
-            instance = new RelayThread();
-        }
-        return instance;
-    }
 
     public void init(ServerController server) {
         this.config = server.getServerConfig();

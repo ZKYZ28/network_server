@@ -30,10 +30,10 @@ public class ServerController implements AutoCloseable {
     private final Set<ClientRunnable> clientList = Collections.synchronizedSet(new HashSet<>());
     private SSLServerSocket serverSocket;
     private ServerConfig serverConfig;
+    private RelayThread relay;
     private int uuid;
 
 
-    //TODO Déplacer ces 4 attribut dans une autre classe
     private UserRepository userRepository;
     private TrendRepository trendRepository;
     private UserLibrary userLibrary;
@@ -64,7 +64,7 @@ public class ServerController implements AutoCloseable {
             this.trendLibrary = trendRepository.load();
 
         } catch (IOException e) {
-            e.printStackTrace(); //TODO Faire des execption explicites
+            e.printStackTrace();
         }
     }
 
@@ -73,10 +73,11 @@ public class ServerController implements AutoCloseable {
         welcome();
         try {
             TaskScheduler executor = Executor.getInstance();
-            RelayThread relayThread = RelayThread.getInstance();
-            relayThread.init(this);
+            this.relay = new RelayThread();
+            relay.init(this);
+            new Thread(relay).start();
+
             new Thread(executor).start();
-            new Thread(relayThread).start();
 
             while (!this.serverSocket.isClosed()) {
                 SSLSocket client = (SSLSocket) serverSocket.accept();
@@ -107,11 +108,13 @@ public class ServerController implements AutoCloseable {
         trendRepository.save(this.trendLibrary);
     }
 
-    //TODO proteger concurence thread
-    //TODO generation id 1 -> 5 caracteres
-    public String generateId() {
+    /**
+     * La signature "synchronized" signifie que la méthode est thread-safe et peut être accédée par plusieurs threads sans conflits.
+     * @return String un id unique sous forme de chaine de caractères
+     */
+    public synchronized String generateId() {
         String generatedUniqueId = uuid+this.getServerConfig().getServerName();
-        uuid++;
+        uuid = (++uuid) % 10000;
         return generatedUniqueId;
     }
 
@@ -119,6 +122,7 @@ public class ServerController implements AutoCloseable {
     @Override
     public void close() {
         try {
+            this.relay.close();
             this.serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
