@@ -11,7 +11,6 @@ import org.helmo.murmurG6.utils.RandomSaltGenerator;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 
@@ -86,7 +85,7 @@ public class ClientRunnable implements Runnable, Closeable {
                             break;
 
                         case DISCONNECT:
-                            disconnect();
+                            close();
                             break;
 
                         default:
@@ -97,7 +96,7 @@ public class ClientRunnable implements Runnable, Closeable {
                     sendMessage(Protocol.build_ERROR());
                 }
 
-                ligne = in.readLine();
+                if (socket.isClosed()) break; else ligne = in.readLine();
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -124,13 +123,6 @@ public class ClientRunnable implements Runnable, Closeable {
 
     public void setUser(User u) {
         this.user = u;
-    }
-
-
-    private void disconnect() throws IOException {
-        sendMessage(Protocol.build_OK());
-        server.removeClient(this);
-        close();
     }
 
 
@@ -210,6 +202,9 @@ public class ClientRunnable implements Runnable, Closeable {
 
     @Override
     public void close() throws IOException {
+        System.out.println("[ClientRunnable] Déconnection de " + this.user.getLogin());
+        sendMessage(Protocol.build_OK());
+        this.server.removeClient(this);
         this.in.close();
         this.out.close();
         this.socket.close();
