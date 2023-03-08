@@ -14,12 +14,13 @@ import org.helmo.murmurG6.repository.exceptions.UnableToSaveTrendLibraryExceptio
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveUserLibraryException;
 import org.helmo.murmurG6.utils.UltraImportantClass;
 
-import javax.net.ssl.SSLServerSocket;
+import javax.net.ServerSocketFactory;
+import javax.net.SocketFactory;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.*;
 
 /**
@@ -30,7 +31,7 @@ public class ServerController implements AutoCloseable {
 
     private static ServerController instance;
     private final Set<ClientRunnable> clientList = Collections.synchronizedSet(new HashSet<>());
-    private SSLServerSocket serverSocket;
+    private ServerSocket serverSocket;
     private ServerConfig serverConfig;
     private RelayThread relay;
     private int uuid;
@@ -62,17 +63,15 @@ public class ServerController implements AutoCloseable {
     /**
      * Initialisation du ServerController
      *
-     * @param port Le port sur lequel les clients se connectent
      * @param userRepository Le dépôt d'utilisateurs enregistrés sur le server
      * @param trendRepository Le dépôt des tendances enregistrées sur le server
      */
-    public void init(int port, UserRepository userRepository, TrendRepository trendRepository, OffLineMessageRepository offLineMessageRepository) {
+    public void init(UserRepository userRepository, TrendRepository trendRepository, OffLineMessageRepository offLineMessageRepository) {
         try{
-            SSLServerSocketFactory sslServerSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
-            this.serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(port);
-
             this.serverConfig = new ServerJsonStorage().load();
-            //this.serverConfig.setServerIp(getDomain());
+
+            ServerSocketFactory socketFactory = serverConfig.tls ? SSLServerSocketFactory.getDefault() : ServerSocketFactory.getDefault();
+            this.serverSocket = socketFactory.createServerSocket(serverConfig.serverPort);
 
             this.userRepository = userRepository;
             this.trendRepository = trendRepository;
@@ -92,8 +91,6 @@ public class ServerController implements AutoCloseable {
     /**
      * Lancement du serveur.
      * Initialisation des threads Executor et RelayThread et réception des clients.
-     *
-     * @throws IOException
      */
     public void start() throws IOException {
         welcome();
@@ -104,10 +101,17 @@ public class ServerController implements AutoCloseable {
             new Thread(this.relay).start();
 
             while (!this.serverSocket.isClosed()) {
-                SSLSocket client = (SSLSocket) serverSocket.accept();
-                ClientRunnable runnable = new ClientRunnable(client);
-                clientList.add(runnable);
-                new Thread(runnable).start();
+                if (serverConfig.tls) {
+                    SSLSocket client = (SSLSocket) serverSocket.accept();
+                    ClientRunnable runnable = new ClientRunnable(client);
+                    clientList.add(runnable);
+                    new Thread(runnable).start();
+                } else {
+                    Socket client = serverSocket.accept();
+                    ClientRunnable runnable = new ClientRunnable(client);
+                    clientList.add(runnable);
+                    new Thread(runnable).start();
+                }
             }
         } catch (UnableToConnectToClientException | UnableToRunClientException | UnableToExecuteTaskException e) {
             e.printStackTrace();
@@ -117,7 +121,7 @@ public class ServerController implements AutoCloseable {
     private void welcome() {
         UltraImportantClass.welcome();
         System.out.println("**************************************************************************************");
-        System.out.println("********     SERVER ONLINE ! IP : " + serverConfig.getServerName() + " " + serverSocket.getInetAddress().getHostAddress() + "     ********");
+        System.out.println("********     SERVER ONLINE ! IP : " + serverConfig.serverDomain + " " + serverConfig.serverPort + "     ********");
         System.out.println("**************************************************************************************");
     }
 
@@ -129,9 +133,6 @@ public class ServerController implements AutoCloseable {
     /**
      * Sauvegarde les utilisateurs et tendances.
      * Synchronized car plusieurs ClientRunnable peuvent appeler la méthode
-     *
-     * @throws UnableToSaveUserLibraryException
-     * @throws UnableToSaveTrendLibraryException
      */
     public synchronized void save() throws UnableToSaveUserLibraryException, UnableToSaveTrendLibraryException {
         userRepository.save(this.userLibrary);
@@ -143,7 +144,7 @@ public class ServerController implements AutoCloseable {
      * @return String un id unique sous forme de chaine de caractères
      */
     public synchronized String generateId() {
-        String generatedUniqueId = uuid+this.getServerConfig().getServerName();
+        String generatedUniqueId = uuid+this.getServerConfig().serverDomain;
         uuid = (++uuid) % 10000;
         return generatedUniqueId;
     }

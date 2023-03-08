@@ -20,13 +20,13 @@ public class AESCrypt {
      * Cette méthode prend un message en clair, une clé secrète et un vecteur d'initialisation (IV) en entrée.
      * Elle utilise la clé et l'IV pour chiffrer le message en utilisant l'algorithme de chiffrement AES-GCM.
      * Elle renvoie le texte chiffré résultant.
-     * @param plaintext le message que l'on souhaite chiffrer
+     *
+     * @param plaintext    le message que l'on souhaite chiffrer
      * @param keyBase64AES clé sous la forme base64
      * @return le message chiffré sous forme d'une chaine de caractères
      * @throws Exception
      */
-    public static byte[] encrypt(String plaintext, String keyBase64AES) throws Exception
-    {
+    public static byte[] encrypt(String plaintext, String keyBase64AES) throws Exception {
         // Conversion du message en tableau d'octets
         byte[] plaintextBytes = plaintext.getBytes();
         // Décoder la clé en base64 sous la forme d'un tableau d'octets
@@ -56,13 +56,13 @@ public class AESCrypt {
      * Cette méthode prend un texte chiffré, une clé secrète et un vecteur d'initialisation (IV) en entrée.
      * Elle utilise la clé et l'IV pour déchiffrer le texte en utilisant l'algorithme de chiffrement AES-GCM.
      * Elle renvoie le message en clair résultant.
+     *
      * @param cipherMessageBytes le message chiffré en octets (chaine de caractères)
-     * @param keyBase64AES la clé sous la forme base64
+     * @param keyBase64AES       la clé sous la forme base64
      * @return le message déchiffré sous forme d'une chaine de caractères
      * @throws Exception
      */
-    public static String decrypt(byte[] cipherMessageBytes, String keyBase64AES) throws Exception
-    {
+    public static String decrypt(byte[] cipherMessageBytes, String keyBase64AES) throws Exception {
         // Décodage de la clé en base64 sous la forme d'un tableau d'octets
         byte[] keyBytes = Base64.getDecoder().decode(keyBase64AES);
         // Récupération de l'IV et du texte chiffré à partir du tableau d'octets
@@ -78,14 +78,14 @@ public class AESCrypt {
 
     /**
      * Effectue le chiffrement de données en utilisant l'algorithme AES avec le mode de chiffrement GCM.
+     *
      * @param plaintext les données à chiffrer.
-     * @param key la clé de chiffrement.
-     * @param IV le vecteur d'initialisation.
+     * @param key       la clé de chiffrement.
+     * @param IV        le vecteur d'initialisation.
      * @return les données chiffrées.
      * @throws Exception si une erreur se produit pendant le chiffrement.
      */
-    private static byte[] encrypt(byte[] plaintext, SecretKey key, byte[] IV) throws Exception
-    {
+    private static byte[] encrypt(byte[] plaintext, SecretKey key, byte[] IV) throws Exception {
         // Récupère une instance de Cipher
         Cipher cipher = Cipher.getInstance(GCM_TRANSFORMATION);
 
@@ -104,14 +104,14 @@ public class AESCrypt {
 
     /**
      * Effectue le déchiffrement de données en utilisant l'algorithme AES avec le mode de chiffrement GCM.
+     *
      * @param cipherText les données chiffrées à déchiffrer.
-     * @param key la clé de déchiffrement.
-     * @param IV le vecteur d'initialisation.
+     * @param key        la clé de déchiffrement.
+     * @param IV         le vecteur d'initialisation.
      * @return les données déchiffrées.
      * @throws Exception si une erreur se produit pendant le déchiffrement.
      */
-    private static byte[] decrypt(byte[] cipherText, SecretKey key, byte[] IV) throws Exception
-    {
+    private static byte[] decrypt(byte[] cipherText, SecretKey key, byte[] IV) throws Exception {
         // Récupère une instance de Cipher
         Cipher cipher = Cipher.getInstance(GCM_TRANSFORMATION);
 

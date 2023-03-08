@@ -36,7 +36,7 @@ public final class FollowExecutor {
             String domain = matcher.group("userServerDomain");
 
             //Si la target n'est pas sur ce server, on envoi au relay
-            if (!domain.equals(server.getServerConfig().getServerName())) {
+            if (!domain.equals(server.getServerConfig().serverDomain)) {
                 System.out.println(Protocol.build_SEND(String.valueOf(UUID.randomUUID()), senderCreditentials.toString(), userToFollow, Protocol.build_FOLLOW(userToFollow)));
                 Executor.getInstance().sendToRelay(Protocol.build_SEND(String.valueOf(UUID.randomUUID()), senderCreditentials.toString(), userToFollow, Protocol.build_FOLLOW(userToFollow)));
 
@@ -62,7 +62,7 @@ public final class FollowExecutor {
 
             //USER
             //Cas ou le sender appartient au server et y est inscrit
-            if (senderCreditentials.getDomain().equals(server.getServerConfig().getServerName()) && server.getUserLibrary().isRegistered(senderCreditentials.getLogin())) {
+            if (senderCreditentials.getDomain().equals(server.getServerConfig().serverDomain) && server.getUserLibrary().isRegistered(senderCreditentials.getLogin())) {
 
                 //On récupère ce sender
                 User user = server.getUserLibrary().getUser(senderCreditentials.getLogin());
@@ -73,7 +73,7 @@ public final class FollowExecutor {
 
             //TREND
             //Si la trend appartient au server on enregistre
-            if (trend.getDomain().equals(server.getServerConfig().getServerName())) {
+            if (trend.getDomain().equals(server.getServerConfig().serverDomain)) {
                 server.getTrendLibrary().addUserToTrend(trendName, senderCreditentials);
 
                 //Si la trend appartient a un autre server

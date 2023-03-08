@@ -23,12 +23,7 @@ import java.util.regex.Matcher;
  */
 public class RelayThread implements Runnable, AutoCloseable {
 
-    private static final String MULTICAST_IP = "224.1.1.255"; //TODO Load les 3 depuis la ServerConfig
-    private static final int MULTICAST_PORT = 23106;
-    private static final int RELAY_PORT = 0;
-
-
-    private final ServerController server;
+    private final ServerConfig config;
     private ServerSocket serverSocket;
     private DatagramSocket multicastSocket;
     private BufferedReader in;
@@ -37,9 +32,9 @@ public class RelayThread implements Runnable, AutoCloseable {
 
 
     public RelayThread(ServerController server) {
-        this.server = server;
+        this.config = server.getServerConfig();
         try {
-            this.serverSocket = new ServerSocket(RELAY_PORT);
+            this.serverSocket = new ServerSocket(0);
             this.multicastSocket = new DatagramSocket();
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,8 +48,7 @@ public class RelayThread implements Runnable, AutoCloseable {
      */
     public void sendToRelay(String sendMessage) {
         try {
-            byte[] msgsBytes = AESCrypt.encrypt(sendMessage, server.getServerConfig().getBase64KeyAES());
-            System.out.println("Out: " + out);
+            byte[] msgsBytes = AESCrypt.encrypt(sendMessage, config.base64KeyAES);
             out.println(Arrays.toString(msgsBytes)+"\n\r"); //TODO Verifier que c'est bien une string
             out.flush();
         } catch (Exception e) {
@@ -70,7 +64,7 @@ public class RelayThread implements Runnable, AutoCloseable {
     public String receiveFromRelay() {
         try {
             String line = in.readLine();
-            return AESCrypt.decrypt(line.getBytes(), server.getServerConfig().getBase64KeyAES());
+            return AESCrypt.decrypt(line.getBytes(), config.base64KeyAES);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -82,9 +76,9 @@ public class RelayThread implements Runnable, AutoCloseable {
      */
     public void echo() {
         try {
-            String echoMessage = "ECHO " + this.serverSocket.getLocalPort() + " " + server.getServerConfig().getServerName() + "\r\n";
+            String echoMessage = "ECHO " + this.serverSocket.getLocalPort() + " " + config.serverDomain + "\r\n";
             byte[] msgsBytes = echoMessage.getBytes(StandardCharsets.UTF_8);
-            DatagramPacket packet = new DatagramPacket(msgsBytes, msgsBytes.length, InetAddress.getByName(MULTICAST_IP), MULTICAST_PORT);
+            DatagramPacket packet = new DatagramPacket(msgsBytes, msgsBytes.length, InetAddress.getByName(config.multicastIp), config.multicastPort);
             this.multicastSocket.send(packet);
         } catch (IOException e) {
             e.printStackTrace();
@@ -101,7 +95,6 @@ public class RelayThread implements Runnable, AutoCloseable {
             this.out = new PrintWriter(new OutputStreamWriter(unicastSocket.getOutputStream(), StandardCharsets.UTF_8), true);
 
             //Relay connecté donc plus besoin de faire echo, fermeture du multicast socket et annulation du thread echo
-            System.out.println("Echo arreté");
             cancelEcho();
 
             String message = receiveFromRelay();
@@ -142,6 +135,7 @@ public class RelayThread implements Runnable, AutoCloseable {
     private void cancelEcho() {
         this.multicastSocket.close();
         this.echoTask.cancel(true);
+        System.out.println("[RelayThread] Annulation du thread echo car connection avec Relay établie.");
     }
 
 
