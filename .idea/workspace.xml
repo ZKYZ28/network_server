@@ -4,23 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae76b9f1-2ec5-4bea-b236-a225373471b2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="ae76b9f1-2ec5-4bea-b236-a225373471b2" name="Changes" comment="fff">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ClientRunnable.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ClientRunnable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/RelayThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/RelayThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/FollowExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/FollowExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/ServerJsonStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/ServerJsonStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/dto/ServerConfigDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/dto/ServerConfigDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/AESCrypt.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/AESCrypt.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/TaskType.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/TaskType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/TrendLibrary.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/TrendLibrary.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,6 +77,14 @@
       <workItem from="1678268609608" duration="4461000" />
       <workItem from="1678279426439" duration="456000" />
     </task>
+    <task id="LOCAL-00001" summary="fff">
+      <created>1678289805519</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1678289805519</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -106,6 +100,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fff" />
+    <option name="LAST_COMMIT_MESSAGE" value="fff" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/murmurG6$Server.ic" NAME="Server Coverage Results" MODIFIED="1678138594860" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

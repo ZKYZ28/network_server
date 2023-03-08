@@ -1,6 +1,5 @@
 package org.helmo.murmurG6.controller;
 
-import org.helmo.murmurG6.controller.exceptions.UnableToConnectToClientException;
 import org.helmo.murmurG6.controller.exceptions.UnableToRunClientException;
 import org.helmo.murmurG6.executor.Executor;
 import org.helmo.murmurG6.models.*;
@@ -20,8 +19,7 @@ import java.util.regex.Matcher;
  * Elle implémente l'interface Runnable et est exécutée dans un thread séparé pour chaque client connecté.
  */
 public class ClientRunnable implements Runnable, Closeable {
-    private final BufferedReader in;
-    private final PrintWriter out;
+
     private User user;
     private String random22;
     private final ServerController server;
@@ -33,17 +31,10 @@ public class ClientRunnable implements Runnable, Closeable {
      * Établit une connexion avec le client passé en paramètre et crée un BufferedReader et un PrintWriter pour la communication avec le client.
      *
      * @param client Socket du client connecté
-     * @throws UnableToConnectToClientException si la connexion au client échoue
      */
-    public ClientRunnable(Socket client) throws UnableToConnectToClientException {
+    public ClientRunnable(Socket client) {
         this.server = ServerController.getInstance();
         this.socket = client;
-        try {
-            in = new BufferedReader(new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8));
-            out = new PrintWriter(new OutputStreamWriter(client.getOutputStream(), StandardCharsets.UTF_8), true);
-        } catch (IOException ex) {
-            throw new UnableToConnectToClientException("Impossible de se connecter au client. Une erreur est survenue lors de la création des canaux de communication pour le thread client. Vérifiez que le client est correctement connecté et que les ports de communication sont disponibles.", ex);
-        }
     }
 
     /**
@@ -56,7 +47,8 @@ public class ClientRunnable implements Runnable, Closeable {
      */
     @Override
     public void run() throws UnableToRunClientException {
-        try {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(this.socket.getInputStream(), StandardCharsets.UTF_8))) {
+
             //L'executor est un singleton. Le thread connait l'executor via une interface
             TaskScheduler executor = Executor.getInstance();
 
@@ -113,8 +105,12 @@ public class ClientRunnable implements Runnable, Closeable {
      * @param message Le message à envoyer.
      */
     public void sendMessage(String message) {
-        out.println(message);
-        out.flush();
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream(), StandardCharsets.UTF_8), true);) {
+            out.println(message);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -194,8 +190,6 @@ public class ClientRunnable implements Runnable, Closeable {
     @Override
     public void close() {
         try {
-            this.in.close();
-            this.out.close();
             this.socket.close();
         } catch (IOException e) {
             e.printStackTrace();
