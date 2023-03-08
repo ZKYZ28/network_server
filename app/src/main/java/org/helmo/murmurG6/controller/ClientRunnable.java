@@ -30,11 +30,11 @@ public class ClientRunnable implements Runnable, Closeable {
      * Constructeur de la classe ClientRunnable.
      * Établit une connexion avec le client passé en paramètre et crée un BufferedReader et un PrintWriter pour la communication avec le client.
      *
-     * @param client Socket du client connecté
+     * @param socket Socket du client connecté
      */
-    public ClientRunnable(Socket client) {
+    public ClientRunnable(Socket socket) {
         this.server = ServerController.getInstance();
-        this.socket = client;
+        this.socket = socket;
     }
 
     /**
@@ -57,7 +57,7 @@ public class ClientRunnable implements Runnable, Closeable {
 
             String ligne = in.readLine();
 
-            while (ligne != null && !ligne.isEmpty()) {
+            while (!this.socket.isClosed()) {
                 System.out.printf("Ligne reçue : %s\r\n", ligne);
 
                 Task task = new Task(server.generateId(), this, user != null ? user.getCredentials() : null, null, Protocol.detectTaskType(ligne), ligne);
@@ -91,10 +91,10 @@ public class ClientRunnable implements Runnable, Closeable {
                     sendMessage(Protocol.build_ERROR());
                 }
 
-
                 ligne = in.readLine();
             }
         } catch (IOException ex) {
+            ex.printStackTrace();
             throw new UnableToRunClientException("Une erreur est survenue lors de la lecture du socket.", ex);
         }
     }
@@ -105,7 +105,7 @@ public class ClientRunnable implements Runnable, Closeable {
      * @param message Le message à envoyer.
      */
     public void sendMessage(String message) {
-        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream(), StandardCharsets.UTF_8), true);) {
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream(), StandardCharsets.UTF_8), true)) {
             out.println(message);
             out.flush();
         } catch (IOException e) {

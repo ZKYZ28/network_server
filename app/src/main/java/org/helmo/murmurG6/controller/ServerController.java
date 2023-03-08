@@ -106,7 +106,7 @@ public class ServerController implements AutoCloseable {
                     new Thread(runnable).start();
                 }
             }
-        } catch (UnableToConnectToClientException | UnableToRunClientException | UnableToExecuteTaskException e) {
+        } catch (UnableToRunClientException | UnableToExecuteTaskException e) {
             e.printStackTrace();
         }
     }
