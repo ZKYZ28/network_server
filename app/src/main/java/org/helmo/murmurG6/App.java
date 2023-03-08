@@ -21,7 +21,7 @@ public class App {
 
     public static void main(String[] args){
         try (ServerController server = ServerController.getInstance()) {
-            server.init(23106, USER_REPOSITORY, TREND_REPOSITORY);
+            server.init(20302, USER_REPOSITORY, TREND_REPOSITORY);
             server.start();
         } catch (IOException e) {
             e.printStackTrace();

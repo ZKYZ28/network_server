@@ -37,6 +37,7 @@ public final class FollowExecutor {
 
             //Si la target n'est pas sur ce server, on envoi au relay
             if (!domain.equals(server.getServerConfig().getServerName())) {
+                System.out.println(Protocol.build_SEND(String.valueOf(UUID.randomUUID()), senderCreditentials.toString(), userToFollow, Protocol.build_FOLLOW(userToFollow)));
                 Executor.getInstance().sendToRelay(Protocol.build_SEND(String.valueOf(UUID.randomUUID()), senderCreditentials.toString(), userToFollow, Protocol.build_FOLLOW(userToFollow)));
 
                 //Si domain == le domaine de ce server
@@ -77,6 +78,7 @@ public final class FollowExecutor {
 
                 //Si la trend appartient a un autre server
             } else {
+                System.out.println(Protocol.build_SEND(String.valueOf(UUID.randomUUID()), senderCreditentials.toString(), trendToFollow, Protocol.build_FOLLOW(trendToFollow)));
                 Executor.getInstance().sendToRelay(Protocol.build_SEND(String.valueOf(UUID.randomUUID()), senderCreditentials.toString(), trendToFollow, Protocol.build_FOLLOW(trendToFollow)));
             }
         }

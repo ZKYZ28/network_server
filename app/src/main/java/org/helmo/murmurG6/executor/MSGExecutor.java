@@ -83,6 +83,8 @@ public final class MSGExecutor {
                     //Si non (cas ou la trend n'appartient PAS à ce server) -> on passe la trend au relay
                 } else {
                     Trend distantTrend = senderClient.getTrendByTag(trendName);
+
+                    System.out.println(Protocol.build_SEND(idMessage, senderClient.getLogin(), distantTrend.toString(), message));
                     Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, senderClient.getLogin(), distantTrend.toString(), message));
                 }
             }
@@ -103,6 +105,7 @@ public final class MSGExecutor {
 
             //Si le destinataire n'appartient pas à ce server
         } else {
+            System.out.println(Protocol.build_SEND(idMessage, sender.getCredentials().toString(), followerCredential.toString(), message));
             Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, sender.getCredentials().toString(), followerCredential.toString(), message));
             //TODO a voir avec le toString quand relay fini
         }

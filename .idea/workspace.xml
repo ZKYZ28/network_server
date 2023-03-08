@@ -4,416 +4,90 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80d6a6b1-98ac-4076-b856-98bb2db1ca20" name="Changes" comment="Relay Thread Fix">
+    <list default="true" id="ae76b9f1-2ec5-4bea-b236-a225373471b2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ClientRunnable.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ClientRunnable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/RelayThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/RelayThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/TaskScheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/TaskScheduler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/Executor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/Executor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/FollowExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/FollowExecutor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGSExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGSExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/trends.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/trends.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/test/java/org/helmo/murmurG6/models/ProtocolTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/org/helmo/murmurG6/models/ProtocolTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExternalProjectsData">
-    <projectState path="$PROJECT_DIR$">
-      <ProjectState />
-    </projectState>
-  </component>
-  <component name="ExternalProjectsManager">
-    <system id="GRADLE">
-      <state>
-        <projects_view>
-          <tree_state>
-            <expand />
-            <select />
-          </tree_state>
-        </projects_view>
-      </state>
-    </system>
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Enum" />
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Antho" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MacroExpansionManager">
-    <option name="directoryName" value="n6facsfy" />
+    <option name="directoryName" value="lueq2muf" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="2Lmh0hLTKUtBuN40b7K4kb9WNG3" />
+  <component name="ProjectId" id="2MhEC32Sedt4xvJ2ZdK2cP0OCmh" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;Git.Branch.Popup.ShowAllRemotes&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/loicl/OneDrive/HELMo/UE21 - Réseaux/murmumr-relay&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
   }
 }</component>
-  <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="org.helmo.murmurG6.executor" />
-      <recent name="org.helmo.murmurG6.infrastructure" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\loic\OneDrive\murmur_reseau_2023\app\src\main\resources" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Application.Server">
-    <configuration name="Server" type="Application" factoryName="Application" singleton="false">
+  <component name="RunManager">
+    <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.helmo.murmurG6.App" />
       <module name="murmurG6.app.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ProtocolTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="murmurG6.app.test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.helmo.murmurG6.models.exceptions.*" />
+          <option name="PATTERN" value="org.helmo.murmurG6.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.helmo.murmurG6.models" />
-      <option name="MAIN_CLASS_NAME" value="org.helmo.murmurG6.models.ProtocolTest" />
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <list>
-      <item itemvalue="Application.Server" />
-      <item itemvalue="JUnit.ProtocolTest" />
-    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.ProtocolTest" />
-        <item itemvalue="JUnit.ProtocolTest" />
-        <item itemvalue="JUnit.ProtocolTest" />
-        <item itemvalue="JUnit.ProtocolTest" />
-        <item itemvalue="JUnit.ProtocolTest" />
+        <item itemvalue="Application.App" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="80d6a6b1-98ac-4076-b856-98bb2db1ca20" name="Changes" comment="" />
-      <created>1676481943477</created>
+      <changelist id="ae76b9f1-2ec5-4bea-b236-a225373471b2" name="Changes" comment="" />
+      <created>1678211285640</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1676481943477</updated>
-      <workItem from="1676481944589" duration="227000" />
-      <workItem from="1676482180755" duration="18175000" />
-      <workItem from="1676502376711" duration="1528000" />
-      <workItem from="1676565664195" duration="10555000" />
-      <workItem from="1676624283319" duration="680000" />
-      <workItem from="1676632686940" duration="57000" />
-      <workItem from="1676632980625" duration="6304000" />
-      <workItem from="1676645843145" duration="5547000" />
-      <workItem from="1676717063661" duration="356000" />
-      <workItem from="1676717439369" duration="5475000" />
-      <workItem from="1676808322318" duration="4033000" />
-      <workItem from="1676842141060" duration="628000" />
-      <workItem from="1676891642345" duration="1436000" />
-      <workItem from="1676893092646" duration="5481000" />
-      <workItem from="1676974622259" duration="6147000" />
-      <workItem from="1676988796874" duration="624000" />
-      <workItem from="1677077830013" duration="15000" />
-      <workItem from="1677325935198" duration="51000" />
-      <workItem from="1677663583569" duration="6743000" />
-      <workItem from="1677678359824" duration="40000" />
-      <workItem from="1677682013080" duration="532000" />
-      <workItem from="1677829535245" duration="432000" />
+      <updated>1678211285640</updated>
+      <workItem from="1678211287594" duration="92000" />
+      <workItem from="1678223108403" duration="11000" />
+      <workItem from="1678262769423" duration="113000" />
+      <workItem from="1678268609608" duration="4461000" />
+      <workItem from="1678279426439" duration="456000" />
     </task>
-    <task id="LOCAL-00001" summary="-">
-      <created>1676482100001</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1676482100001</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Protocol refactor">
-      <created>1676485808746</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1676485808746</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Protocol refactor">
-      <created>1676489946605</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1676489946605</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Protocol refactor">
-      <created>1676490400004</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1676490400004</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Protocol refactor">
-      <created>1676490438171</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1676490438171</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Executor Refactored">
-      <created>1676495983249</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1676495983249</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Executor Refactored">
-      <created>1676496283418</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1676496283418</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Refactored">
-      <created>1676497044596</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1676497044596</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Refactored">
-      <created>1676498314522</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1676498314522</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Refactored">
-      <created>1676500552161</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1676500552161</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Refactored">
-      <created>1676500803589</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1676500803589</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Refactored">
-      <created>1676501692420</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1676501692420</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Refactored">
-      <created>1676566247526</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1676566247526</updated>
-    </task>
-    <task id="LOCAL-00014" summary="[ServerController] castMsg et extractTrends">
-      <created>1676571727910</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1676571727910</updated>
-    </task>
-    <task id="LOCAL-00015" summary="[ServerController] castMsg et extractTrends">
-      <created>1676578596322</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1676578596322</updated>
-    </task>
-    <task id="LOCAL-00016" summary="[ServerController] castMsg et extractTrends">
-      <created>1676633022069</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1676633022069</updated>
-    </task>
-    <task id="LOCAL-00017" summary="commit">
-      <created>1676633130438</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1676633130438</updated>
-    </task>
-    <task id="LOCAL-00018" summary="commit">
-      <created>1676644128943</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1676644128943</updated>
-    </task>
-    <task id="LOCAL-00019" summary="commit">
-      <created>1676646142140</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1676646142140</updated>
-    </task>
-    <task id="LOCAL-00020" summary="commit">
-      <created>1676648026136</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1676648026136</updated>
-    </task>
-    <task id="LOCAL-00021" summary="commit">
-      <created>1676648402147</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1676648402147</updated>
-    </task>
-    <task id="LOCAL-00022" summary="commit">
-      <created>1676717385553</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1676717385553</updated>
-    </task>
-    <task id="LOCAL-00023" summary="commit">
-      <created>1676803620381</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1676803620381</updated>
-    </task>
-    <task id="LOCAL-00024" summary="commit">
-      <created>1676811236686</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1676811236686</updated>
-    </task>
-    <task id="LOCAL-00025" summary="commit">
-      <created>1676821014727</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1676821014727</updated>
-    </task>
-    <task id="LOCAL-00026" summary="Code refactored">
-      <created>1676842623324</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1676842623324</updated>
-    </task>
-    <task id="LOCAL-00027" summary="commit">
-      <created>1676842872564</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1676842872564</updated>
-    </task>
-    <task id="LOCAL-00028" summary="commit">
-      <created>1676843541399</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1676843541399</updated>
-    </task>
-    <task id="LOCAL-00029" summary="commit">
-      <created>1676844015635</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1676844015635</updated>
-    </task>
-    <task id="LOCAL-00030" summary="commit">
-      <created>1676846102361</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1676846102361</updated>
-    </task>
-    <task id="LOCAL-00031" summary="commit">
-      <created>1676898633532</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1676898633532</updated>
-    </task>
-    <task id="LOCAL-00032" summary="Listen MSGS + generation ID task">
-      <created>1676982529368</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1676982529368</updated>
-    </task>
-    <task id="LOCAL-00033" summary="commit">
-      <created>1676998791418</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1676998791418</updated>
-    </task>
-    <task id="LOCAL-00034" summary="Review Mr. Lienardy">
-      <created>1677670369313</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1677670369313</updated>
-    </task>
-    <task id="LOCAL-00035" summary="Refactor 01/03">
-      <created>1677687900602</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1677687900602</updated>
-    </task>
-    <task id="LOCAL-00036" summary="Relay Thread Fix">
-      <created>1678194779368</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1678194779368</updated>
-    </task>
-    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -424,56 +98,11 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="origin/echo_thread" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="-" />
-    <MESSAGE value="Protocol refactor" />
-    <MESSAGE value="Executor Refactored" />
-    <MESSAGE value="Refactored" />
-    <MESSAGE value="[ServerController] castMsg et extractTrends" />
-    <MESSAGE value="Code refactored" />
-    <MESSAGE value="Listen MSGS + generation ID task" />
-    <MESSAGE value="commit" />
-    <MESSAGE value="Review Mr. Lienardy" />
-    <MESSAGE value="Refactor 01/03" />
-    <MESSAGE value="Relay Thread Fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Relay Thread Fix" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <breakpoint enabled="true" type="java-exception">
-          <properties class="java.net.ConnectException" package="java.net" />
-          <option name="timeStamp" value="3" />
-        </breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-    <watches-manager>
-      <configuration name="GradleRunConfiguration">
-        <watch expression="dto.trendMap" language="JAVA" />
-      </configuration>
-    </watches-manager>
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/murmurG6$Server.ic" NAME="Server Coverage Results" MODIFIED="1678138594860" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

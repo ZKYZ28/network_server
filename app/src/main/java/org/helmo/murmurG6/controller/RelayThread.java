@@ -25,7 +25,7 @@ public class RelayThread implements Runnable, AutoCloseable {
 
     private static final String MULTICAST_IP = "224.1.1.255"; //TODO Load les 3 depuis la ServerConfig
     private static final int MULTICAST_PORT = 23106;
-    private static final int RELAY_PORT = 20201;
+    private static final int RELAY_PORT = 0;
 
 
     private final ServerController server;
@@ -54,7 +54,8 @@ public class RelayThread implements Runnable, AutoCloseable {
     public void sendToRelay(String sendMessage) {
         try {
             byte[] msgsBytes = AESCrypt.encrypt(sendMessage, server.getServerConfig().getBase64KeyAES());
-            out.println(Arrays.toString(msgsBytes)); //TODO Verifier que c'est bien une string
+            System.out.println("Out: " + out);
+            out.println(Arrays.toString(msgsBytes)+"\n\r"); //TODO Verifier que c'est bien une string
             out.flush();
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,7 +82,7 @@ public class RelayThread implements Runnable, AutoCloseable {
      */
     public void echo() {
         try {
-            String echoMessage = "ECHO " + RELAY_PORT + " " + server.getServerConfig().getServerName() + "\r\n";
+            String echoMessage = "ECHO " + this.serverSocket.getLocalPort() + " " + server.getServerConfig().getServerName() + "\r\n";
             byte[] msgsBytes = echoMessage.getBytes(StandardCharsets.UTF_8);
             DatagramPacket packet = new DatagramPacket(msgsBytes, msgsBytes.length, InetAddress.getByName(MULTICAST_IP), MULTICAST_PORT);
             this.multicastSocket.send(packet);
@@ -100,6 +101,7 @@ public class RelayThread implements Runnable, AutoCloseable {
             this.out = new PrintWriter(new OutputStreamWriter(unicastSocket.getOutputStream(), StandardCharsets.UTF_8), true);
 
             //Relay connecté donc plus besoin de faire echo, fermeture du multicast socket et annulation du thread echo
+            System.out.println("Echo arreté");
             cancelEcho();
 
             String message = receiveFromRelay();

@@ -100,8 +100,6 @@ public class Executor implements TaskScheduler {
 
 
     public void sendToRelay(String sendMessage) {
-        try(RelayThread relay = new RelayThread(this.server)) {
-            relay.sendToRelay(sendMessage);
-        }
+        this.server.getRelay().sendToRelay(sendMessage);
     }
 }

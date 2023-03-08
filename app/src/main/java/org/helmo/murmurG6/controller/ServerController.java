@@ -195,4 +195,8 @@ public class ServerController implements AutoCloseable {
     public synchronized ServerConfig getServerConfig() {
         return serverConfig;
     }
+
+    public RelayThread getRelay(){
+        return this.relay;
+    }
 }
