@@ -49,7 +49,7 @@ public class RelayThread implements Runnable, AutoCloseable {
     public void sendToRelay(String sendMessage) {
         try {
             byte[] msgsBytes = AESCrypt.encrypt(sendMessage, config.base64KeyAES);
-            out.println(Arrays.toString(msgsBytes)+"\n\r"); //TODO Verifier que c'est bien une string
+            out.println(Arrays.toString(msgsBytes)); //TODO Verifier que c'est bien une string
             out.flush();
             System.out.println("[RelayThread] Envoi d'un message au relay.");
         } catch (Exception e) {
