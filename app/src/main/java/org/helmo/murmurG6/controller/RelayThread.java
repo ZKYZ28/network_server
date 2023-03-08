@@ -51,6 +51,7 @@ public class RelayThread implements Runnable, AutoCloseable {
             byte[] msgsBytes = AESCrypt.encrypt(sendMessage, config.base64KeyAES);
             out.println(Arrays.toString(msgsBytes)+"\n\r"); //TODO Verifier que c'est bien une string
             out.flush();
+            System.out.println("[RelayThread] Envoi d'un message au relay.");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -144,6 +145,8 @@ public class RelayThread implements Runnable, AutoCloseable {
         try {
             this.serverSocket.close();
             this.multicastSocket.close();
+            this.in.close();
+            this.out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
