@@ -6,7 +6,7 @@ package org.helmo.murmurG6.models;
 * FOLLOW => Si tendance : 8. tendance 9. domaine
 *        => Si personne : 3. nom_utilisateur 5. domaine
 * CONFIRM => 1.sha3_hex
-* DISCONNECT => /
+* DISCONNECT => / //TODO Remove ces commentaires ?
 * */
 public enum TaskType {
      CONNECT, REGISTER, FOLLOW, CONFIRM, DISCONNECT, MSG, MSGS, UNKNOWN

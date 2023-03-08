@@ -17,7 +17,7 @@ public class TrendLibrary {
         trendMap.get(trendName).add(user);
     }
 
-    public boolean exists(String trendName){
+    public boolean exists(String trendName) {
         return this.trendMap.containsKey(trendName);
     }
 

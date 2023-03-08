@@ -19,12 +19,13 @@ import java.util.regex.Matcher;
  * La classe ClientRunnable est utilisée pour gérer la communication avec les clients connectés au serveur.
  * Elle implémente l'interface Runnable et est exécutée dans un thread séparé pour chaque client connecté.
  */
-public class ClientRunnable implements Runnable {
+public class ClientRunnable implements Runnable, Closeable {
     private final BufferedReader in;
     private final PrintWriter out;
     private User user;
     private String random22;
     private final ServerController server;
+    private final Socket socket;
 
 
     /**
@@ -36,6 +37,7 @@ public class ClientRunnable implements Runnable {
      */
     public ClientRunnable(Socket client) throws UnableToConnectToClientException {
         this.server = ServerController.getInstance();
+        this.socket = client;
         try {
             in = new BufferedReader(new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8));
             out = new PrintWriter(new OutputStreamWriter(client.getOutputStream(), StandardCharsets.UTF_8), true);
@@ -52,6 +54,7 @@ public class ClientRunnable implements Runnable {
      *
      * @throws UnableToRunClientException si une erreur se produit lors de la communication avec le client
      */
+    @Override
     public void run() throws UnableToRunClientException {
         try {
             //L'executor est un singleton. Le thread connait l'executor via une interface
@@ -85,6 +88,7 @@ public class ClientRunnable implements Runnable {
 
                         case DISCONNECT:
                             server.removeClient(this);
+                            this.close();
                             break;
 
                         default:
@@ -129,14 +133,12 @@ public class ClientRunnable implements Runnable {
         return random22;
     }
 
-    /*************************************************/
-
 
     /**
      * REGISTER
      **/
     private void register(Matcher params) {
-        User user = new User(new UserCredentials(params.group("username"), server.getServerConfig().getServerName()), BCrypt.of(params.group("bcrypt")), new HashSet<>(), new HashSet<>());
+        User user = new User(new UserCredentials(params.group("username"), server.getServerConfig().serverDomain), BCrypt.of(params.group("bcrypt")), new HashSet<>(), new HashSet<>());
 
         this.sendMessage(executeRegister(user));
     }
@@ -173,7 +175,7 @@ public class ClientRunnable implements Runnable {
 
     private String sayHello() {
         String random22 = RandomSaltGenerator.generateSalt();
-        sendMessage(Protocol.build_HELLO(server.getServerConfig().getServerName(), random22));
+        sendMessage(Protocol.build_HELLO(server.getServerConfig().serverDomain, random22));
         return random22;
     }
 
@@ -187,5 +189,16 @@ public class ClientRunnable implements Runnable {
 
     private String controlConfirm(String clientChallenge, String userChallenge) {
         return clientChallenge.equals(userChallenge) ? Protocol.build_OK() : Protocol.build_ERROR();
+    }
+
+    @Override
+    public void close() {
+        try {
+            this.in.close();
+            this.out.close();
+            this.socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -94,7 +94,7 @@ public final class MSGExecutor {
 
     private static void manageMessageToClient(User sender, UserCredentials followerCredential, String idMessage, String message) {
         //on regarde si le destinataire est sur ce server ou sur un autre domaine
-        if (followerCredential.getDomain().equals(server.getServerConfig().getServerName())) {
+        if (followerCredential.getDomain().equals(server.getServerConfig().serverDomain)) {
 
             //On recupere le threadClient sur le server du destinataire afin de lui écrire
             ClientRunnable client = server.getClientRunnableByLogin(followerCredential.getLogin());

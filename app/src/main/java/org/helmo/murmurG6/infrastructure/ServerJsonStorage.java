@@ -27,6 +27,6 @@ public class ServerJsonStorage implements ServerRepository {
         } catch (IOException e) {
             throw new UnableToLoadServerConfigurationException("Impossible de charger les informations de configuration du serveur !");
         }
-        return new ServerConfig(serverConfigDto.serverName, serverConfigDto.base64KeyAES);
+        return new ServerConfig(serverConfigDto.serverDomain, serverConfigDto.base64KeyAES, serverConfigDto.multicastIp, serverConfigDto.mutlicastPort, serverConfigDto.serverPort, serverConfigDto.tls);
     }
 }

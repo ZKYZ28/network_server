@@ -15,16 +15,17 @@ public class App {
         System.setProperty("javax.net.ssl.keyStorePassword", "labo2023");
     }
 
-    public static final int DEFAULT_PORT = 20200;
     private static final UserRepository USER_REPOSITORY = new UserJsonStorage();
     private static final TrendRepository TREND_REPOSITORY = new TrendJsonStorage();
 
     public static void main(String[] args){
         try (ServerController server = ServerController.getInstance()) {
-            server.init(20302, USER_REPOSITORY, TREND_REPOSITORY);
+            server.init(USER_REPOSITORY, TREND_REPOSITORY);
             server.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 }
+
+////g6server2.godswila.guru
