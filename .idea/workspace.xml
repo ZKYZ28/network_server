@@ -4,24 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ae76b9f1-2ec5-4bea-b236-a225373471b2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/OffLineMessagesJsonStorage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/dto/OffLineMessageDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/OffLineMessage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/repository/OffLineMessageRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/repository/exceptions/UnableToLoadOffLineMessageLibraryException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/repository/exceptions/UnableToSaveOffLineMessageLibraryException.java" afterDir="false" />
+    <list default="true" id="ae76b9f1-2ec5-4bea-b236-a225373471b2" name="Changes" comment="Extension messages pour clients hors-ligne">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ClientRunnable.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ClientRunnable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/dto/Mapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/dto/Mapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/UserCredentials.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/UserCredentials.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/trends.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/trends.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,8 +92,17 @@
       <workItem from="1678268609608" duration="4461000" />
       <workItem from="1678279426439" duration="456000" />
       <workItem from="1678292242874" duration="1139000" />
-      <workItem from="1678293405894" duration="26000" />
+      <workItem from="1678293405894" duration="180000" />
+      <workItem from="1678303170308" duration="344000" />
     </task>
+    <task id="LOCAL-00001" summary="Extension messages pour clients hors-ligne">
+      <created>1678293573616</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1678293573616</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -125,6 +118,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Extension messages pour clients hors-ligne" />
+    <option name="LAST_COMMIT_MESSAGE" value="Extension messages pour clients hors-ligne" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
