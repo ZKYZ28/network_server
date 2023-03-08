@@ -66,7 +66,7 @@ public class ClientRunnable implements Runnable, Closeable {
 
                 System.out.printf("Ligne reçue : %s\r\n", ligne);
 
-                Task task = new Task(server.generateId(), this, user != null ? user.getCredentials() : null, null, Protocol.detectTaskType(ligne), ligne);
+                Task task = new Task(server.generateId(), user != null ? user.getCredentials() : null, null, Protocol.detectTaskType(ligne), ligne);
 
                 Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
 

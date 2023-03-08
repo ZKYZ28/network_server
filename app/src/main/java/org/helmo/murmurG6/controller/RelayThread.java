@@ -124,7 +124,7 @@ public class RelayThread implements Runnable, AutoCloseable {
             Matcher senderParams = Protocol.RX_USER_DOMAIN.matcher(senderDomain);
             UserCredentials senderCreditential = new UserCredentials(senderParams.group("login"), senderParams.group("domain"));
 
-            Task task = new Task(args.group("id"), null, senderCreditential, args.group("receiver"), Protocol.detectTaskType(args.group("content")), args.group("content"));
+            Task task = new Task(args.group("id"), null, args.group("receiver"), Protocol.detectTaskType(args.group("content")), args.group("content"));
 
             executor.addTask(task);
         }
