@@ -85,11 +85,8 @@ public class ClientRunnable implements Runnable, Closeable {
                             confirm(params.group("challenge"), random22);
                             break;
 
-
-                        //TODO Envoyer OK
                         case DISCONNECT:
-                            server.removeClient(this);
-                            close();
+                            disconnect();
                             break;
 
                         default:
@@ -99,6 +96,7 @@ public class ClientRunnable implements Runnable, Closeable {
                 } else {
                     sendMessage(Protocol.build_ERROR());
                 }
+
                 ligne = in.readLine();
             }
         } catch (IOException ex) {
@@ -127,6 +125,14 @@ public class ClientRunnable implements Runnable, Closeable {
     public void setUser(User u) {
         this.user = u;
     }
+
+
+    private void disconnect() throws IOException {
+        sendMessage(Protocol.build_OK());
+        server.removeClient(this);
+        close();
+    }
+
 
     /**
      * REGISTER

@@ -1,15 +1,12 @@
 package org.helmo.murmurG6.executor;
 
 import org.helmo.murmurG6.controller.ClientRunnable;
-import org.helmo.murmurG6.controller.RelayThread;
 import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.controller.ServerController;
 import org.helmo.murmurG6.controller.TaskScheduler;
 import org.helmo.murmurG6.controller.exceptions.UnableToExecuteTaskException;
 import org.helmo.murmurG6.models.*;
-import org.helmo.murmurG6.utils.RandomSaltGenerator;
 
-import java.io.IOException;
 import java.util.concurrent.*;
 import java.util.regex.Matcher;
 
@@ -59,7 +56,7 @@ public class Executor implements TaskScheduler {
 
 
 
-    private void executeTask(Task task) throws IOException {
+    private void executeTask(Task task) {
         ClientRunnable client = task.getClient();
         Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
 
