@@ -34,4 +34,12 @@ public class UserCredentials {
         UserCredentials userCredentials = (UserCredentials) obj;
         return userCredentials.login.equals(this.login) && userCredentials.domain.equals(this.domain);
     }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + login.hashCode();
+        result = 31 * result + domain.hashCode();
+        return result;
+    }
 }

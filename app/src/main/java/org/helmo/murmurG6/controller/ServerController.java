@@ -6,8 +6,10 @@ import org.helmo.murmurG6.controller.exceptions.UnableToRunClientException;
 import org.helmo.murmurG6.executor.Executor;
 import org.helmo.murmurG6.infrastructure.ServerJsonStorage;
 import org.helmo.murmurG6.models.*;
+import org.helmo.murmurG6.repository.OffLineMessageRepository;
 import org.helmo.murmurG6.repository.TrendRepository;
 import org.helmo.murmurG6.repository.UserRepository;
+import org.helmo.murmurG6.repository.exceptions.UnableToSaveOffLineMessageLibraryException;
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveTrendLibraryException;
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveUserLibraryException;
 import org.helmo.murmurG6.utils.UltraImportantClass;
@@ -39,6 +41,8 @@ public class ServerController implements AutoCloseable {
     private UserLibrary userLibrary;
     private TrendLibrary trendLibrary;
 
+    private OffLineMessageRepository offLineMessageRepository;
+    private Map<String, TreeSet<OffLineMessage>> offlineMessages;
 
     private ServerController() {}
 
@@ -62,7 +66,7 @@ public class ServerController implements AutoCloseable {
      * @param userRepository Le dépôt d'utilisateurs enregistrés sur le server
      * @param trendRepository Le dépôt des tendances enregistrées sur le server
      */
-    public void init(int port, UserRepository userRepository, TrendRepository trendRepository) {
+    public void init(int port, UserRepository userRepository, TrendRepository trendRepository, OffLineMessageRepository offLineMessageRepository) {
         try{
             SSLServerSocketFactory sslServerSocketFactory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
             this.serverSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(port);
@@ -75,6 +79,9 @@ public class ServerController implements AutoCloseable {
 
             this.userLibrary = userRepository.load();
             this.trendLibrary = trendRepository.load();
+
+            this.offLineMessageRepository = offLineMessageRepository;
+            this.offlineMessages = offLineMessageRepository.load();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -198,5 +205,42 @@ public class ServerController implements AutoCloseable {
 
     public RelayThread getRelay(){
         return this.relay;
+    }
+
+
+
+    public void addOfflineMessageForClient(UserCredentials userCredentials, OffLineMessage offLineMessage) {
+        try {
+            String client = userCredentials.toString();
+            if(offlineMessages.containsKey(client)){
+                offlineMessages.get(client).add(offLineMessage);
+            }else{
+                offlineMessages.put(client, new TreeSet<>());
+                offlineMessages.get(client).add(offLineMessage);
+            }
+
+            offLineMessageRepository.save(offlineMessages);
+
+        }catch (UnableToSaveOffLineMessageLibraryException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public synchronized boolean areOfflineMessagesForClient(ClientRunnable clientRunnable) {
+        return offlineMessages.containsKey(clientRunnable.getUser().getCredentials().toString());
+    }
+
+    public synchronized TreeSet<OffLineMessage> getOfflineMessagesForClient(ClientRunnable clientRunnable) {
+        return offlineMessages.get(clientRunnable.getUser().getCredentials().toString());
+    }
+
+    public void deleteOfflineMessagesForClient(ClientRunnable clientRunnable) {
+        try{
+            offlineMessages.remove(clientRunnable.getUser().getCredentials().toString());
+            offLineMessageRepository.save(offlineMessages);
+        }catch (UnableToSaveOffLineMessageLibraryException e){
+            System.out.println(e.getMessage());
+        }
+
     }
 }

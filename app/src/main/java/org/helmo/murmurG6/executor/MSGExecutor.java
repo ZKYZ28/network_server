@@ -5,6 +5,7 @@ import org.helmo.murmurG6.models.Protocol;
 import org.helmo.murmurG6.controller.ServerController;
 import org.helmo.murmurG6.models.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -96,11 +97,10 @@ public final class MSGExecutor {
         //on regarde si le destinataire est sur ce server ou sur un autre domaine
         if (followerCredential.getDomain().equals(server.getServerConfig().getServerName())) {
 
-            //On recupere le threadClient sur le server du destinataire afin de lui écrire
-            ClientRunnable client = server.getClientRunnableByLogin(followerCredential.getLogin());
+
 
             //Gere l'envoi du message en local (aux user de CE server)
-            operateLocalMessageSend(sender, idMessage, message, client);
+            operateLocalMessageSend(sender, idMessage, message, followerCredential);
 
 
             //Si le destinataire n'appartient pas à ce server
@@ -120,7 +120,11 @@ public final class MSGExecutor {
      * @param message   Le message
      * @param client    Le thread ClientRunnable du destinataire sur ce server
      */
-    private static void operateLocalMessageSend(User sender, String idMessage, String message, ClientRunnable client) {
+    private static void operateLocalMessageSend(User sender, String idMessage, String message, UserCredentials followerCredential) {
+
+        //On recupere le threadClient sur le server du destinataire afin de lui écrire
+        ClientRunnable client = server.getClientRunnableByLogin(followerCredential.getLogin());
+
         //Si le client est connecté
         if (client != null) {
 
@@ -135,6 +139,7 @@ public final class MSGExecutor {
             //Si le destinataire n'est pas actuellement connecté
         } else {
             //TODO : Extension file de message quand le client n'est pas connecté (quand il est nul dans ce cas ci)
+            server.addOfflineMessageForClient(followerCredential, new OffLineMessage(LocalDateTime.now(), message));
         }
     }
 

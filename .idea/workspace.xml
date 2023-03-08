@@ -5,24 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ae76b9f1-2ec5-4bea-b236-a225373471b2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/OffLineMessagesJsonStorage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/dto/OffLineMessageDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/OffLineMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/repository/OffLineMessageRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/repository/exceptions/UnableToLoadOffLineMessageLibraryException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/repository/exceptions/UnableToSaveOffLineMessageLibraryException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/RelayThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/RelayThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ClientRunnable.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ClientRunnable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/Executor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/Executor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/FollowExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/FollowExecutor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/dto/Mapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/dto/Mapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/UserCredentials.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/UserCredentials.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/trends.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/trends.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/org/helmo/murmurG6/models/ProtocolTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/org/helmo/murmurG6/models/ProtocolTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -51,9 +63,17 @@
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="org.helmo.murmurG6.repository" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.helmo.murmurG6.App" />
@@ -87,6 +107,8 @@
       <workItem from="1678262769423" duration="113000" />
       <workItem from="1678268609608" duration="4461000" />
       <workItem from="1678279426439" duration="456000" />
+      <workItem from="1678292242874" duration="1139000" />
+      <workItem from="1678293405894" duration="26000" />
     </task>
     <servers />
   </component>
@@ -103,6 +125,21 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="10" />
+        </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java</url>
+          <line>125</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/murmurG6$Server.ic" NAME="Server Coverage Results" MODIFIED="1678138594860" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
