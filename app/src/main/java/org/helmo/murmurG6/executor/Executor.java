@@ -44,7 +44,7 @@ public class Executor implements TaskScheduler {
     @Override
     public void run() {
         executorService.submit(() -> {
-            while (/*server.isRunning()*/ true) {
+            while (!this.executorService.isTerminated()) {
                 try {
                     Task task = taskQueue.take(); //Consomation des tâches de la file d'attente en appelant la méthode take de BlockingQueue, ce qui bloquera le thread (waiting) jusqu'à ce qu'une tâche soit disponible dans la file d'attente.
                     executeTask(task);

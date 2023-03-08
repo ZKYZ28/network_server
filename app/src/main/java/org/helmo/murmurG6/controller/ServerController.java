@@ -15,13 +15,15 @@ import org.helmo.murmurG6.repository.exceptions.UnableToSaveUserLibraryException
 import org.helmo.murmurG6.utils.UltraImportantClass;
 
 import javax.net.ServerSocketFactory;
-import javax.net.SocketFactory;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * La classe ServerController représente le contrôleur principal de l'application serveur.
@@ -34,16 +36,9 @@ public class ServerController implements AutoCloseable {
     private ServerSocket serverSocket;
     private ServerConfig serverConfig;
     private RelayThread relay;
+    private DataManager dataManager;
     private int uuid;
 
-
-    private UserRepository userRepository;
-    private TrendRepository trendRepository;
-    private UserLibrary userLibrary;
-    private TrendLibrary trendLibrary;
-
-    private OffLineMessageRepository offLineMessageRepository;
-    private Map<String, TreeSet<OffLineMessage>> offlineMessages;
 
     private ServerController() {}
 
@@ -69,18 +64,10 @@ public class ServerController implements AutoCloseable {
     public void init(UserRepository userRepository, TrendRepository trendRepository, OffLineMessageRepository offLineMessageRepository) {
         try{
             this.serverConfig = new ServerJsonStorage().load();
+            this.dataManager = new DataManager(userRepository, trendRepository, offLineMessageRepository);
 
             ServerSocketFactory socketFactory = serverConfig.tls ? SSLServerSocketFactory.getDefault() : ServerSocketFactory.getDefault();
             this.serverSocket = socketFactory.createServerSocket(serverConfig.serverPort);
-
-            this.userRepository = userRepository;
-            this.trendRepository = trendRepository;
-
-            this.userLibrary = userRepository.load();
-            this.trendLibrary = trendRepository.load();
-
-            this.offLineMessageRepository = offLineMessageRepository;
-            this.offlineMessages = offLineMessageRepository.load();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -135,8 +122,8 @@ public class ServerController implements AutoCloseable {
      * Synchronized car plusieurs ClientRunnable peuvent appeler la méthode
      */
     public synchronized void save() throws UnableToSaveUserLibraryException, UnableToSaveTrendLibraryException {
-        userRepository.save(this.userLibrary);
-        trendRepository.save(this.trendLibrary);
+        dataManager.saveUsers();
+        dataManager.saveTrends();
     }
 
     /**
@@ -162,20 +149,13 @@ public class ServerController implements AutoCloseable {
 
     /************** GETTERS/SETTERS ***************/
     public synchronized UserLibrary getUserLibrary() {
-        return userLibrary;
+        return dataManager.getUserLibrary();
     }
 
     public TrendLibrary getTrendLibrary() {
-        return trendLibrary;
+        return dataManager.getTrendLibrary();
     }
 
-    /*public String getDomain() {
-        try {
-            return InetAddress.getLocalHost().getCanonicalHostName();
-        } catch (UnknownHostException e) {
-            return null;
-        }
-    }*/
 
     /**
      * Supprime un client de la liste des thread ClientRunnable
@@ -210,17 +190,13 @@ public class ServerController implements AutoCloseable {
 
 
 
+
+    /**OFFLINE_MESSAGES**/
     public void addOfflineMessageForClient(UserCredentials userCredentials, OffLineMessage offLineMessage) {
         try {
             String client = userCredentials.toString();
-            if(offlineMessages.containsKey(client)){
-                offlineMessages.get(client).add(offLineMessage);
-            }else{
-                offlineMessages.put(client, new TreeSet<>());
-                offlineMessages.get(client).add(offLineMessage);
-            }
-
-            offLineMessageRepository.save(offlineMessages);
+            dataManager.getOfflineMessagesLibrary().addOfflineMessage(client, offLineMessage);
+            dataManager.saveOfflineMessages();
 
         }catch (UnableToSaveOffLineMessageLibraryException e){
             System.out.println(e.getMessage());
@@ -228,17 +204,17 @@ public class ServerController implements AutoCloseable {
     }
 
     public synchronized boolean areOfflineMessagesForClient(ClientRunnable clientRunnable) {
-        return offlineMessages.containsKey(clientRunnable.getUser().getCredentials().toString());
+        return dataManager.getOfflineMessagesLibrary().existOfflineMessagesForUser(clientRunnable.getUser().getCredentials().toString());
     }
 
     public synchronized TreeSet<OffLineMessage> getOfflineMessagesForClient(ClientRunnable clientRunnable) {
-        return offlineMessages.get(clientRunnable.getUser().getCredentials().toString());
+        return dataManager.getOfflineMessagesLibrary().getOfflineMessagesForUser(clientRunnable.getUser().getCredentials().toString());
     }
 
     public void deleteOfflineMessagesForClient(ClientRunnable clientRunnable) {
         try{
-            offlineMessages.remove(clientRunnable.getUser().getCredentials().toString());
-            offLineMessageRepository.save(offlineMessages);
+            dataManager.getOfflineMessagesLibrary().deleteOfflineMessagesForUser(clientRunnable.getUser().getCredentials().toString());
+            dataManager.saveOfflineMessages();
         }catch (UnableToSaveOffLineMessageLibraryException e){
             System.out.println(e.getMessage());
         }

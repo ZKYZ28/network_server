@@ -6,6 +6,7 @@ import org.helmo.murmurG6.infrastructure.dto.Mapper;
 import org.helmo.murmurG6.infrastructure.dto.OffLineMessageDto;
 import org.helmo.murmurG6.infrastructure.dto.UserCredentialsDto;
 import org.helmo.murmurG6.models.OffLineMessage;
+import org.helmo.murmurG6.models.OfflineMessagesLibrary;
 import org.helmo.murmurG6.models.UserCredentials;
 import org.helmo.murmurG6.repository.OffLineMessageRepository;
 import org.helmo.murmurG6.repository.exceptions.UnableToLoadOffLineMessageLibraryException;
@@ -27,11 +28,11 @@ public class OffLineMessagesJsonStorage implements OffLineMessageRepository {
     private final Gson gson = new Gson();
 
     @Override
-    public void save(Map<String , TreeSet<OffLineMessage>> messages) throws UnableToSaveOffLineMessageLibraryException {
+    public void save(OfflineMessagesLibrary offlineMessagesLibrary) throws UnableToSaveOffLineMessageLibraryException {
         createFile(FILE_PATH);
 
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(FILE_PATH, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING)) {
-            gson.toJson(Mapper.offLineMessagesToDto(messages), new TypeToken<Map<String, TreeSet<OffLineMessageDto>>>(){}.getType(), bufferedWriter);
+            gson.toJson(Mapper.offLineMessagesToDto(offlineMessagesLibrary.getOfflineMessages()), new TypeToken<Map<String, TreeSet<OffLineMessageDto>>>(){}.getType(), bufferedWriter);
         } catch (IOException e) {
             throw new UnableToSaveOffLineMessageLibraryException("Impossible de sauvegarder les messages hors-ligne!");
         }
@@ -39,12 +40,12 @@ public class OffLineMessagesJsonStorage implements OffLineMessageRepository {
 
 
     @Override
-    public Map<String, TreeSet<OffLineMessage>> load() throws UnableToLoadOffLineMessageLibraryException {
+    public OfflineMessagesLibrary load() throws UnableToLoadOffLineMessageLibraryException {
         createFile(FILE_PATH);
 
         try (BufferedReader reader = Files.newBufferedReader(FILE_PATH, StandardCharsets.UTF_8)) {
             Map<String, TreeSet<OffLineMessageDto>> resultDto = gson.fromJson(reader, new TypeToken<Map<String, TreeSet<OffLineMessageDto>>>(){}.getType());
-            return Mapper.offLineMessagesFromDto(resultDto);
+            return new OfflineMessagesLibrary(Mapper.offLineMessagesFromDto(resultDto));
         } catch (IOException e) {
             throw new UnableToLoadOffLineMessageLibraryException("Impossible de charger la liste de messages hors ligne!");
         }
