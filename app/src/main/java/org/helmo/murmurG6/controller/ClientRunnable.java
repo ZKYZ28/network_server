@@ -57,7 +57,7 @@ public class ClientRunnable implements Runnable, Closeable {
 
             String ligne = in.readLine();
 
-            while (!this.socket.isClosed()) {
+            while (!this.socket.isClosed() && ligne != null) {
                 System.out.printf("Ligne reçue : %s\r\n", ligne);
 
                 Task task = new Task(server.generateId(), this, user != null ? user.getCredentials() : null, null, Protocol.detectTaskType(ligne), ligne);
