@@ -9,7 +9,13 @@
   <component name="ChangeListManager">
     <list default="true" id="ae76b9f1-2ec5-4bea-b236-a225373471b2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/DataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/DataManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ClientRunnable.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ClientRunnable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/RelayThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/RelayThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/Executor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/Executor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/Task.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/offlineMessages.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/offlineMessages.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/trends.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/trends.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +64,7 @@
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+    "settings.editor.selected.configurable": "configurable.group.editor"
   }
 }]]></component>
   <component name="RunManager">
@@ -77,6 +83,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.App" />
         <item itemvalue="Application.App" />
         <item itemvalue="Application.App" />
         <item itemvalue="Application.App" />

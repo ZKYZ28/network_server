@@ -57,7 +57,7 @@ public class Executor implements TaskScheduler {
 
 
     private void executeTask(Task task) {
-        ClientRunnable client = task.getClient();
+        ClientRunnable client = server.getClientRunnableByLogin(task.getSender().getLogin());
         Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
 
         if(params != null && client != null) {
