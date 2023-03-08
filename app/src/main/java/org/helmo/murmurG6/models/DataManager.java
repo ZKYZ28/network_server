@@ -30,18 +30,6 @@ public class DataManager {
     }
 
 
-    public UserRepository getUserRepository() {
-        return userRepository;
-    }
-
-    public TrendRepository getTrendRepository() {
-        return trendRepository;
-    }
-
-    public OffLineMessageRepository getOffLineMessageRepository() {
-        return offLineMessageRepository;
-    }
-
     public UserLibrary getUserLibrary() {
         return userLibrary;
     }

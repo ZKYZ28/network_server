@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_TEST_SOURCES" value="false" />
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ae76b9f1-2ec5-4bea-b236-a225373471b2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/DataManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/OfflineMessagesLibrary.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/Executor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/Executor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/OffLineMessagesJsonStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/infrastructure/OffLineMessagesJsonStorage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/repository/OffLineMessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/repository/OffLineMessageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/DataManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/DataManager.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,22 +37,30 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectId" id="2MhEC32Sedt4xvJ2ZdK2cP0OCmh" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="org.helmo.murmurG6.App" />
@@ -71,6 +77,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.App" />
         <item itemvalue="Application.App" />
         <item itemvalue="Application.App" />
       </list>
@@ -90,6 +97,14 @@
       <workItem from="1678268609608" duration="4461000" />
       <workItem from="1678279426439" duration="456000" />
     </task>
+    <task id="LOCAL-00001" summary="Code refactored (Datamanager server controller)">
+      <created>1678307914531</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1678307914531</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -105,6 +120,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Code refactored (Datamanager server controller)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Code refactored (Datamanager server controller)" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/murmurG6$Server.ic" NAME="Server Coverage Results" MODIFIED="1678138594860" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
