@@ -2,10 +2,7 @@ package org.helmo.murmurG6.infrastructure.dto;
 
 import org.helmo.murmurG6.models.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Mapper {
 
@@ -110,5 +107,43 @@ public class Mapper {
             }
         }
         return library;
+    }
+
+
+
+    public static Map<String, TreeSet<OffLineMessage>> offLineMessagesFromDto(Map<String, TreeSet<OffLineMessageDto>> offlineMessagesDto){
+
+        Map<String, TreeSet<OffLineMessage>> offlineMessages = new HashMap<String, TreeSet<OffLineMessage>>();
+
+        if(offlineMessagesDto != null){
+            //On parcours chaque clé de la liste de messages hors-ligne (les user creditentials dto)
+            for(String uc : offlineMessagesDto.keySet()){
+
+                //On rempli la liste de messages hors ligne avec les userCreditentials
+                offlineMessages.put(uc, new TreeSet<>());
+
+                //Pour chaque userCreditentialsDto dans la liste de message dto, on ajoute les messages
+                for(OffLineMessageDto messageDto : offlineMessagesDto.get(uc)){
+                    offlineMessages.get(uc).add(OffLineMessageDto.fromDto(messageDto));
+                }
+            }
+        }
+        return offlineMessages;
+    }
+
+    public static Map<String, HashSet<OffLineMessageDto>> offLineMessagesToDto(Map<String, TreeSet<OffLineMessage>> offlineMessages){
+
+        Map<String, HashSet<OffLineMessageDto>> offlineMessagesDto = new HashMap<String, HashSet<OffLineMessageDto>>();
+
+        if(offlineMessages != null){
+            for(String uc : offlineMessages.keySet()){
+
+                offlineMessagesDto.put(uc, new HashSet<>());
+                for(OffLineMessage message : offlineMessages.get(uc)){
+                    offlineMessagesDto.get(uc).add(OffLineMessageDto.toDto(message));
+                }
+            }
+        }
+        return offlineMessagesDto;
     }
 }

@@ -11,6 +11,7 @@ import org.helmo.murmurG6.utils.RandomSaltGenerator;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 
@@ -84,6 +85,8 @@ public class ClientRunnable implements Runnable, Closeable {
                             confirm(params.group("challenge"), random22);
                             break;
 
+
+                        //TODO Envoyer OK
                         case DISCONNECT:
                             server.removeClient(this);
                             close();
@@ -174,10 +177,29 @@ public class ClientRunnable implements Runnable, Closeable {
     private void confirm(String challengeReceived, String random22) {
         String expected = user.getBcrypt().generateChallenge(random22);
         sendMessage(controlConfirm(challengeReceived, expected));
+        checkOfflineMessages();
     }
 
     private String controlConfirm(String clientChallenge, String userChallenge) {
-        return clientChallenge.equals(userChallenge) ? Protocol.build_OK() : Protocol.build_ERROR();
+        if(clientChallenge.equals(userChallenge)){
+            return Protocol.build_OK();
+        }else{
+            return Protocol.build_ERROR();
+        }
+    }
+
+
+    /**
+     * OFFLINE_MESSAGES
+     */
+    private void checkOfflineMessages(){
+        //On regarde si des messages ont été envoyé au client quand celui ci était hors ligne
+        if(server.areOfflineMessagesForClient(this)){
+            for(OffLineMessage message : server.getOfflineMessagesForClient(this)){
+                sendMessage("MSGS " + user.getCredentials().toString() + " " + message.getMessage() + " (envoye le: " + message.getDateTime() + ")");
+            }
+            server.deleteOfflineMessagesForClient(this);
+        }
     }
 
     @Override
