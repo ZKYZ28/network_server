@@ -9,6 +9,7 @@ import org.helmo.murmurG6.models.UserCredentials;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.concurrent.Executors;
@@ -49,16 +50,22 @@ public class RelayThread implements Runnable, AutoCloseable {
      */
     public void sendToRelay(String sendMessage) {
         try {
-            byte[] msgsBytes = AESCrypt.encrypt(sendMessage, config.base64KeyAES);
-            System.out.println(Base64.getEncoder().encodeToString(msgsBytes));
-            System.out.println(Arrays.toString(Base64.getEncoder().encodeToString(msgsBytes).getBytes()));
-            out.println(Base64.getEncoder().encodeToString(msgsBytes)); //TODO Verifier que c'est bien une string
+            System.out.println("Envois au relay du message: " + sendMessage);
+
+
+            byte[] ciphertext = AESCrypt.encrypt(sendMessage, "DHADoCxPItcFyKwxcTEuGg5neBd2K+VLXWc6zCnsBq4=");
+            String ciphertext_base64 = Base64.getEncoder().encodeToString(ciphertext);
+
+            System.out.println("Envois du message chiffré : " + ciphertext_base64);
+
+            out.println(ciphertext_base64); // Send the encrypted message to the relay
             out.flush();
             System.out.println("[RelayThread] Envoi d'un message au relay.");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     /**
      * Reçoit un message du relais.
