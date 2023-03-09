@@ -26,7 +26,7 @@ import java.util.*;
  * @since 11 février 2023
  */
 public class UserJsonStorage implements UserRepository {
-    private final Path FILE_PATH = Paths.get(JsonConfig.SAVE_DIR, "users2.json");
+    private final Path FILE_PATH = Paths.get(JsonConfig.SAVE_DIR, "users.json");
     private final Gson gson = new Gson();
 
     @Override

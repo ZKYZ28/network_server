@@ -1,0 +1,33 @@
+[
+  {
+    "login": {
+      "login": "antho",
+      "domain": "g6server2.godswila.guru"
+    },
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "vnInp5PKdcWTfxvukIzske",
+      "hash": "JzkmV5r09DeXQKWXxU565rJGWPoXT/."
+    },
+    "followers": [],
+    "followedTrends": []
+  },
+  {
+    "login": {
+      "login": "thomas",
+      "domain": "g6server2.godswila.guru"
+    },
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "Vkclvo/syH89A1KnvHmz4u",
+      "hash": "EP4GgnHUHzdM5xf9eDacq5vmV1aCVsq"
+    },
+    "followers": [
+      {
+        "login": "antho",
+        "domain": "g6server1.godswila.guru"
+      }
+    ],
+    "followedTrends": []
+  }
+]

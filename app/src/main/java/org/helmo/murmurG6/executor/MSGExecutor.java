@@ -86,7 +86,7 @@ public final class MSGExecutor {
                     Trend distantTrend = senderClient.getTrendByTag(trendName);
 
                     System.out.println(Protocol.build_SEND(idMessage, senderClient.getLogin(), distantTrend.toString(), message));
-                    Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, senderClient.getCredentials().toString(), distantTrend.toString(), message));
+                    Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, senderClient.getCredentials().toString(), distantTrend.toString(), Protocol.build_MSGS(senderClient.getCredentials().toString() + " " + message)));
                 }
             }
         }
@@ -107,7 +107,7 @@ public final class MSGExecutor {
         } else {
             System.out.println("id : " + idMessage);
             System.out.println(Protocol.build_SEND(idMessage, sender.getCredentials().toString(), followerCredential.toString(), message));
-            Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, sender.getCredentials().toString(), followerCredential.toString(), message));
+            Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, sender.getCredentials().toString(), followerCredential.toString(), Protocol.build_MSGS(sender.getCredentials().toString() + " " + message)));
             //TODO a voir avec le toString quand relay fini
         }
     }
