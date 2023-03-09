@@ -86,7 +86,7 @@ public final class MSGExecutor {
                     Trend distantTrend = senderClient.getTrendByTag(trendName);
 
                     System.out.println(Protocol.build_SEND(idMessage, senderClient.getLogin(), distantTrend.toString(), message));
-                    Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, senderClient.getLogin(), distantTrend.toString(), message));
+                    Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, senderClient.getCredentials().toString(), distantTrend.toString(), message));
                 }
             }
         }
