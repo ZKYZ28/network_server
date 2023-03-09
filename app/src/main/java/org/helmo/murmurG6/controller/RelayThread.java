@@ -1,10 +1,7 @@
 package org.helmo.murmurG6.controller;
 
 import org.helmo.murmurG6.executor.Executor;
-import org.helmo.murmurG6.models.AESCrypt;
-import org.helmo.murmurG6.models.Protocol;
-import org.helmo.murmurG6.models.Task;
-import org.helmo.murmurG6.models.UserCredentials;
+import org.helmo.murmurG6.models.*;
 
 import java.io.*;
 import java.net.*;
@@ -129,17 +126,20 @@ public class RelayThread implements Runnable, AutoCloseable {
      */
     private void handleReceivedMessage(String message) {
         Executor executor = Executor.getInstance();
-        Matcher args = Protocol.RX_SEND.matcher(message);
+        Matcher matcher = Protocol.getMatcher(TaskType.SEND, message);
 
-        if (args.matches()) {
+        if (matcher != null && matcher.matches()) {
             //Mise en place du UserCreditential de l'emetteur
-            String senderDomain = args.group("sender"); //ex: "antho123@serv2.godswila.guru"
+            String senderDomain = matcher.group("sender"); //ex: "antho123@serv2.godswila.guru"
             Matcher senderParams = Protocol.RX_USER_DOMAIN.matcher(senderDomain);
-            UserCredentials senderCreditential = new UserCredentials(senderParams.group("login"), senderParams.group("domain"));
+            if(senderParams.matches()){
+                UserCredentials senderCreditential = new UserCredentials(senderParams.group("login"), senderParams.group("userServerDomain"));
+                Task task = new Task(matcher.group("id"),  senderCreditential, matcher.group("receiver"), Protocol.detectTaskType(matcher.group("content")), matcher.group("content"));
 
-            Task task = new Task(args.group("id"), null, args.group("receiver"), Protocol.detectTaskType(args.group("content")), args.group("content"));
+                System.out.println("Tache ajoutée: " + task.getTaskId()+" "+task.getSender()+" "+task.getReceiver()+" "+task.getType()+" "+task.getContent());
+                executor.addTask(task);
+            }
 
-            executor.addTask(task);
         }
     }
 

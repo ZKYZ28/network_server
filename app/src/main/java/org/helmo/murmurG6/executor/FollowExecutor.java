@@ -15,12 +15,12 @@ public final class FollowExecutor {
     private FollowExecutor() {
     }
 
-    static void follow(UserCredentials senderCredentials, String target, String idTask) {
+    static void follow(Task task, String target) {
         try {
             if (target.startsWith("#")) {
-                followTrend(senderCredentials, target, idTask);
+                followTrend(task.getSender(), target, task.getTaskId());
             } else {
-                followUser(senderCredentials, target, idTask);
+                followUser(task.getSender(), target, task.getTaskId());
             }
             server.save();
         } catch (UnableToSaveTrendLibraryException | UnableToSaveUserLibraryException e) {

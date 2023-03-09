@@ -57,26 +57,28 @@ public class Executor implements TaskScheduler {
 
 
     private void executeTask(Task task) {
-        ClientRunnable client = server.getClientRunnableByLogin(task.getSender().getLogin());
         Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
 
-        if(params != null && client != null) {
+        if(params != null && params.matches()) {
                 switch (task.getType()) {
 
                 case MSG:
-                    MSGExecutor.castMsg(client, params.group("message"), task.getTaskId());
+                    System.out.println("MSG en cours de traitement");
+                    MSGExecutor.castMsg(server.getClientRunnableByLogin(task.getSender().getLogin()), params.group("message"), task.getTaskId());
                     break;
 
                 case MSGS:
-                    MSGSExecutor.castMsgs(task.getSender(), task.getReceiver(), params.group("message"), task.getTaskId());
+                    System.out.println("MSGS en cours de traitement");
+                    MSGSExecutor.castMsgs(task, params.group("message"));
                     break;
 
                 case FOLLOW:
-                    FollowExecutor.follow(client.getUser().getCredentials(), params.group("domain"), task.getTaskId());
+                    System.out.println("FOLLOW en cours de traitement");
+                    FollowExecutor.follow(task, params.group("domain"));
                     break;
 
                 default:
-                    client.sendMessage(Protocol.build_ERROR());
+                    System.out.println("Erreur de traitement");
                     break;
             }
         }

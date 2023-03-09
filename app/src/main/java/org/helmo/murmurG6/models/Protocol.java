@@ -43,7 +43,7 @@ public class Protocol {
     private final static Pattern RX_MSG_TASK = Pattern.compile("MSG" + RX_ESP + "(?<message>" + RX_MESSAGE + ")" + RX_CRLF);
 
     //"MSGS" esp nom_domaine esp message crlf
-    private final static Pattern RX_MSGS = Pattern.compile("MSGS" + RX_ESP + RX_USER_DOMAIN + RX_ESP + RX_MESSAGE + RX_CRLF);
+    private final static Pattern RX_MSGS = Pattern.compile("MSGS" + RX_ESP + RX_USER_DOMAIN + RX_ESP + "(?<message>" + RX_MESSAGE+ ")" + RX_CRLF);
 
 
 
@@ -105,7 +105,8 @@ public class Protocol {
             TaskType.CONFIRM, RX_CONFIRM_TASK,
             TaskType.DISCONNECT, RX_DISCONNECT_TASK,
             TaskType.MSG, RX_MSG_TASK,
-            TaskType.MSGS, RX_MSGS
+            TaskType.MSGS, RX_MSGS,
+            TaskType.SEND, RX_SEND
     );
 
     public synchronized static Matcher getMatcher(TaskType type, String command){

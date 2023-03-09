@@ -2,10 +2,9 @@ package org.helmo.murmurG6.executor;
 
 import org.helmo.murmurG6.controller.ClientRunnable;
 import org.helmo.murmurG6.controller.ServerController;
-import org.helmo.murmurG6.models.Protocol;
-import org.helmo.murmurG6.models.User;
-import org.helmo.murmurG6.models.UserCredentials;
+import org.helmo.murmurG6.models.*;
 
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 
 public final class MSGSExecutor {
@@ -15,16 +14,16 @@ public final class MSGSExecutor {
     private MSGSExecutor() {
     }
 
-    static void castMsgs(UserCredentials sender, String target, String message, String messageId) {
-        Matcher params = Protocol.TAG_DOMAIN_OR_RX_USER_DOMAIN.matcher(target);
+    static void castMsgs(Task task, String message) {
+        Matcher params = Protocol.TAG_DOMAIN_OR_RX_USER_DOMAIN.matcher(task.getReceiver());
         if (params.matches()) {
-            if (target.charAt(0) == '#') {
+            if (task.getReceiver().charAt(0) == '#') {
                 //On envoi le message à tous les followers de la trend (ici la trend appartient au server)
-                sendMessageToFollowerOfTrend(sender, target, message, messageId);
+                sendMessageToFollowerOfTrend(task.getSender(), task.getReceiver(), message, task.getTaskId());
 
             } else {
                 //On envoi le message à 1 client (le "receiver")
-                sendMessageToReceiverClient(sender, target, message, messageId);
+                sendMessageToReceiverClient(task.getSender(), task.getReceiver(), message, task.getTaskId());
             }
         }
 
@@ -79,6 +78,7 @@ public final class MSGSExecutor {
                 //Cas ou il n'est pas actuellement connecté
             } else {
                 //TODO ajout dans la file de message hors ligne
+                server.addOfflineMessageForClient(receiverUser.getCredentials(), new OffLineMessage(LocalDateTime.now(), message));
             }
         }
     }
