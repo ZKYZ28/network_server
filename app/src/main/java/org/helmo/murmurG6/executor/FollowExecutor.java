@@ -1,6 +1,5 @@
 package org.helmo.murmurG6.executor;
 
-import org.helmo.murmurG6.controller.ClientRunnable;
 import org.helmo.murmurG6.models.*;
 import org.helmo.murmurG6.controller.ServerController;
 import org.helmo.murmurG6.controller.exceptions.UnableToFollowUserException;
@@ -16,12 +15,12 @@ public final class FollowExecutor {
     private FollowExecutor() {
     }
 
-    static void follow(UserCredentials senderCredentials, String target) {
+    static void follow(UserCredentials senderCredentials, String target, String idTask) {
         try {
             if (target.startsWith("#")) {
-                followTrend(senderCredentials, target);
+                followTrend(senderCredentials, target, idTask);
             } else {
-                followUser(senderCredentials, target);
+                followUser(senderCredentials, target, idTask);
             }
             server.save();
         } catch (UnableToSaveTrendLibraryException | UnableToSaveUserLibraryException e) {
@@ -29,7 +28,7 @@ public final class FollowExecutor {
         }
     }
 
-    private static void followUser(UserCredentials senderCreditentials, String userToFollow) throws UnableToFollowUserException {
+    private static void followUser(UserCredentials senderCreditentials, String userToFollow, String idTask) throws UnableToFollowUserException {
         Matcher matcher = Protocol.RX_USER_DOMAIN.matcher(userToFollow);
         if (matcher.matches()) {
             String login = matcher.group("login");
@@ -37,8 +36,8 @@ public final class FollowExecutor {
 
             //Si la target n'est pas sur ce server, on envoi au relay
             if (!domain.equals(server.getServerConfig().serverDomain)) {
-                System.out.println(Protocol.build_SEND(String.valueOf(UUID.randomUUID()), senderCreditentials.toString(), userToFollow, Protocol.build_FOLLOW(userToFollow)));
-                Executor.getInstance().sendToRelay(Protocol.build_SEND(String.valueOf(UUID.randomUUID()), senderCreditentials.toString(), userToFollow, Protocol.build_FOLLOW(userToFollow)));
+                System.out.println(Protocol.build_SEND(idTask, senderCreditentials.toString(), userToFollow, Protocol.build_FOLLOW(userToFollow)));
+                Executor.getInstance().sendToRelay(Protocol.build_SEND(idTask, senderCreditentials.toString(), userToFollow, Protocol.build_FOLLOW(userToFollow)));
 
                 //Si domain == le domaine de ce server
             } else {
@@ -53,7 +52,7 @@ public final class FollowExecutor {
         }
     }
 
-    private static void followTrend(UserCredentials senderCreditentials, String trendToFollow) throws UnableToFollowUserException {
+    private static void followTrend(UserCredentials senderCreditentials, String trendToFollow, String idTask) throws UnableToFollowUserException {
         Matcher matcher = Protocol.TAG_DOMAIN.matcher(trendToFollow);
         if (matcher.matches()) {
             String trendName = matcher.group("tagName");
@@ -78,8 +77,8 @@ public final class FollowExecutor {
 
                 //Si la trend appartient a un autre server
             } else {
-                System.out.println(Protocol.build_SEND(String.valueOf(UUID.randomUUID()), senderCreditentials.toString(), trendToFollow, Protocol.build_FOLLOW(trendToFollow)));
-                Executor.getInstance().sendToRelay(Protocol.build_SEND(String.valueOf(UUID.randomUUID()), senderCreditentials.toString(), trendToFollow, Protocol.build_FOLLOW(trendToFollow)));
+                System.out.println(Protocol.build_SEND(idTask, senderCreditentials.toString(), trendToFollow, Protocol.build_FOLLOW(trendToFollow)));
+                Executor.getInstance().sendToRelay(Protocol.build_SEND(idTask, senderCreditentials.toString(), trendToFollow, Protocol.build_FOLLOW(trendToFollow)));
             }
         }
     }

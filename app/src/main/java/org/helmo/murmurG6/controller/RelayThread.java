@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -49,7 +50,9 @@ public class RelayThread implements Runnable, AutoCloseable {
     public void sendToRelay(String sendMessage) {
         try {
             byte[] msgsBytes = AESCrypt.encrypt(sendMessage, config.base64KeyAES);
-            out.println(Arrays.toString(msgsBytes)); //TODO Verifier que c'est bien une string
+            System.out.println(Base64.getEncoder().encodeToString(msgsBytes));
+            System.out.println(Arrays.toString(Base64.getEncoder().encodeToString(msgsBytes).getBytes()));
+            out.println(Base64.getEncoder().encodeToString(msgsBytes)); //TODO Verifier que c'est bien une string
             out.flush();
             System.out.println("[RelayThread] Envoi d'un message au relay.");
         } catch (Exception e) {

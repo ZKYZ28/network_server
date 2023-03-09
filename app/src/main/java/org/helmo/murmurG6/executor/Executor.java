@@ -72,7 +72,7 @@ public class Executor implements TaskScheduler {
                     break;
 
                 case FOLLOW:
-                    FollowExecutor.follow(client.getUser().getCredentials(), params.group("domain"));
+                    FollowExecutor.follow(client.getUser().getCredentials(), params.group("domain"), task.getTaskId());
                     break;
 
                 default:

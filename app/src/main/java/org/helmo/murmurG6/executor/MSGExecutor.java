@@ -105,6 +105,7 @@ public final class MSGExecutor {
 
             //Si le destinataire n'appartient pas à ce server
         } else {
+            System.out.println("id : " + idMessage);
             System.out.println(Protocol.build_SEND(idMessage, sender.getCredentials().toString(), followerCredential.toString(), message));
             Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, sender.getCredentials().toString(), followerCredential.toString(), message));
             //TODO a voir avec le toString quand relay fini
@@ -118,7 +119,7 @@ public final class MSGExecutor {
      * @param sender    L'emetteur du message
      * @param idMessage L'id du message
      * @param message   Le message
-     * @param client    Le thread ClientRunnable du destinataire sur ce server
+     * @param     Le thread ClientRunnable du destinataire sur ce server
      */
     private static void operateLocalMessageSend(User sender, String idMessage, String message, UserCredentials followerCredential) {
 

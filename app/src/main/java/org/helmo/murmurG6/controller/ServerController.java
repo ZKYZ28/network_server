@@ -131,7 +131,7 @@ public class ServerController implements AutoCloseable {
      * @return String un id unique sous forme de chaine de caractères
      */
     public synchronized String generateId() {
-        String generatedUniqueId = uuid+this.getServerConfig().serverDomain;
+        String generatedUniqueId = uuid+"@"+this.getServerConfig().serverDomain;
         uuid = (++uuid) % 10000;
         return generatedUniqueId;
     }

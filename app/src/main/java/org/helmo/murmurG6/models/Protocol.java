@@ -64,7 +64,7 @@ public class Protocol {
     private final static String FOLLOW = "FOLLOW <itemToFollow>\r\n";
     private final static String HELLO = "HELLO <ip> <salt>\r\n";
     private final static String PARAM = "PARAM <round> <salt>\r\n";
-    private final static String SEND = "SEND <id> <nom_domaine> <nom/tag_domain> <message_interne>\r\n";
+    private final static String SEND = "SEND <id> <nom_domaine> <nom/tag_domain> <message_interne>";
     private final static String ERROR = "-ERR\r\n";
     private final static String OK = "+OK\r\n";
 
