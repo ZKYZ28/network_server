@@ -66,7 +66,6 @@ public class RelayThread implements Runnable, AutoCloseable {
         }
     }
 
-
     /**
      * Reçoit un message du relais.
      *
@@ -75,7 +74,9 @@ public class RelayThread implements Runnable, AutoCloseable {
     public String receiveFromRelay() {
         try {
             String line = in.readLine();
-            return AESCrypt.decrypt(line.getBytes(), config.base64KeyAES);
+            System.out.println("RELAY : " + line);
+            byte[] decodedBytes = Base64.getDecoder().decode(line);
+            return AESCrypt.decrypt(decodedBytes, config.base64KeyAES);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -109,6 +110,8 @@ public class RelayThread implements Runnable, AutoCloseable {
             cancelEcho();
 
             String message = receiveFromRelay();
+
+            System.out.println("MESSAGE DECHIFFRE : " + message);
 
             while (!unicastSocket.isClosed() && !message.isEmpty()) {
                 handleReceivedMessage(message);
