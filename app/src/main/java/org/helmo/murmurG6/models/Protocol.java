@@ -77,11 +77,11 @@ public class Protocol {
         return FOLLOW.replace("<itemToFollow>", itemToFollow);
     }
 
-    public static String build_HELLO(String ip, String salt) {
+    public synchronized static String build_HELLO(String ip, String salt) {
         return HELLO.replace("<ip>", ip).replace("<salt>", salt);
     }
 
-    public static String build_PARAM(int round, String salt) {
+    public synchronized static String build_PARAM(int round, String salt) {
         return PARAM.replace("<round>", String.valueOf(round)).replace("<salt>", salt);
     }
 
@@ -89,11 +89,11 @@ public class Protocol {
         return SEND.replace("<id>", id).replace("<nom_domaine>", nom_domain).replace("<nom/tag_domain>", nomOrTag_domain).replace("<message_interne>", message_interne);
     }
 
-    public static String build_ERROR() {
+    public synchronized static String build_ERROR() {
         return ERROR;
     }
 
-    public static String build_OK() {
+    public synchronized static String build_OK() {
         return OK;
     }
 
@@ -108,7 +108,7 @@ public class Protocol {
             TaskType.MSGS, RX_MSGS
     );
 
-    public static Matcher getMatcher(TaskType type, String command){
+    public synchronized static Matcher getMatcher(TaskType type, String command){
         Matcher matcher = TYPE_MESSAGE_MAP.get(type).matcher(command);
         if(matcher.matches()){
             return matcher;
@@ -116,7 +116,7 @@ public class Protocol {
         return null;
     }
 
-    public static TaskType detectTaskType(String command){
+    public synchronized static TaskType detectTaskType(String command){
         for(TaskType type: TYPE_MESSAGE_MAP.keySet()){
             if(Pattern.matches(String.valueOf(TYPE_MESSAGE_MAP.get(type)), command)){
                 return type;

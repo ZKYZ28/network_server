@@ -23,7 +23,7 @@ public class RandomSaltGenerator {
      *
      * @return Une chaine composée des SALT_SIZE * un charactère généré aléatoirement
      */
-    public static String generateSalt() {
+    public synchronized static String generateSalt() {
 
         StringBuilder salt = new StringBuilder();
 
