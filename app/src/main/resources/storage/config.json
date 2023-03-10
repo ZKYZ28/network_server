@@ -1,6 +1,6 @@
 {
   "serverDomain": "g6server1.godswila.guru",
-  "multicastIP" : "224.1.1.255",
+  "multicastIp" : "224.1.1.255",
   "mutlicastPort" : 23106,
   "serverPort" : 22222,
   "base64KeyAES": "DHADoCxPItcFyKwxcTEuGg5neBd2K+VLXWc6zCnsBq4=",

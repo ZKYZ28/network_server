@@ -34,7 +34,7 @@ public class RelayThread implements Runnable, AutoCloseable {
         this.config = server.getServerConfig();
         try {
             this.serverSocket = new ServerSocket(0);
-            this.multicastSocket = new DatagramSocket(config.multicastPort, InetAddress.getByName(config.multicastIp));
+            this.multicastSocket = new DatagramSocket();
         } catch (Exception e) {
             e.printStackTrace();
         }
