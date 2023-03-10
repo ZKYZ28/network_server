@@ -43,6 +43,8 @@ public class AESCrypt {
         // Chiffrement du message en utilisant l'algorithme AES/GCM
         byte[] cipherTextBytes = encrypt(plaintextBytes, key, IV);
 
+        System.out.println(Arrays.toString(IV));
+
         // Combine l'IV et le texte chiffré en un seul tableau d'octets
         ByteBuffer byteBuffer = ByteBuffer.allocate(IV.length + cipherTextBytes.length);
         byteBuffer.put(IV);
