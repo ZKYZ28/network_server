@@ -34,7 +34,7 @@ public class RelayThread implements Runnable, AutoCloseable {
         this.config = server.getServerConfig();
         try {
             this.serverSocket = new ServerSocket(0);
-            this.multicastSocket = new DatagramSocket();
+            this.multicastSocket = new DatagramSocket(config.multicastPort, InetAddress.getByName(config.multicastIp));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,6 +89,7 @@ public class RelayThread implements Runnable, AutoCloseable {
             byte[] msgsBytes = echoMessage.getBytes(StandardCharsets.UTF_8);
             DatagramPacket packet = new DatagramPacket(msgsBytes, msgsBytes.length, InetAddress.getByName(config.multicastIp), config.multicastPort);
             this.multicastSocket.send(packet);
+            System.out.println("ECHO");
         } catch (IOException e) {
             e.printStackTrace();
         }
