@@ -1,7 +1,7 @@
 {
-  "serverDomain": "g6server2.godswila.guru",
+  "serverDomain": "g6server1.godswila.guru",
   "multicastIP" : "224.1.1.255",
-  "mutlicastPort" : 25000,
+  "mutlicastPort" : 23106,
   "serverPort" : 22223,
   "base64KeyAES": "DHADoCxPItcFyKwxcTEuGg5neBd2K+VLXWc6zCnsBq4=",
   "tls" : true
