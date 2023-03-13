@@ -45,9 +45,8 @@ public class RelayThread implements Runnable, AutoCloseable {
      */
     public void sendToRelay(String sendMessage) {
         try {
-            byte[] ciphertext = AESCrypt.encrypt(sendMessage, "DHADoCxPItcFyKwxcTEuGg5neBd2K+VLXWc6zCnsBq4=");
+            byte[] ciphertext = AESCrypt.encrypt(sendMessage, config.base64KeyAES);
             String ciphertext_base64 = Base64.getEncoder().encodeToString(ciphertext);
-
             out.println(ciphertext_base64); // Send the encrypted message to the relay
             out.flush();
             System.out.println("[RelayThread] Message envoyé au relay : " + sendMessage);
