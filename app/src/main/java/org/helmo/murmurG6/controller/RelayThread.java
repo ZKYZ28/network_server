@@ -45,16 +45,12 @@ public class RelayThread implements Runnable, AutoCloseable {
      */
     public void sendToRelay(String sendMessage) {
         try {
-            System.out.println("Envois au relay du message: " + sendMessage);
-
             byte[] ciphertext = AESCrypt.encrypt(sendMessage, "DHADoCxPItcFyKwxcTEuGg5neBd2K+VLXWc6zCnsBq4=");
             String ciphertext_base64 = Base64.getEncoder().encodeToString(ciphertext);
 
-            System.out.println("Envois du message chiffré : " + ciphertext_base64);
-
             out.println(ciphertext_base64); // Send the encrypted message to the relay
             out.flush();
-            System.out.println("[RelayThread] Envoi d'un message au relay.");
+            System.out.println("[RelayThread] Message envoyé au relay : " + sendMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,9 +64,10 @@ public class RelayThread implements Runnable, AutoCloseable {
     public String receiveFromRelay() {
         try {
             String line = in.readLine();
-            System.out.println("RELAY : " + line);
             byte[] decodedBytes = Base64.getDecoder().decode(line);
-            return AESCrypt.decrypt(decodedBytes, config.base64KeyAES);
+            String decryptedMessage = AESCrypt.decrypt(decodedBytes, config.base64KeyAES);
+            System.out.println("[RelayThread] Message en provenance du relay reçu : " + decryptedMessage);
+            return decryptedMessage;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -105,8 +102,6 @@ public class RelayThread implements Runnable, AutoCloseable {
             cancelEcho();
 
             String message = receiveFromRelay();
-
-            System.out.println("MESSAGE DECHIFFRE : " + message);
 
             while (!unicastSocket.isClosed() && !message.isEmpty()) {
                 handleReceivedMessage(message);
