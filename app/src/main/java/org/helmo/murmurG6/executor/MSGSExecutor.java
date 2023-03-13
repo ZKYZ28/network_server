@@ -78,6 +78,7 @@ public final class MSGSExecutor {
                 //Cas ou il n'est pas actuellement connecté
             } else {
                 //TODO ajout dans la file de message hors ligne
+                System.out.println("ajout du message hors ligne");
                 server.addOfflineMessageForClient(receiverUser.getCredentials(), new OffLineMessage(LocalDateTime.now(), message));
             }
         }
