@@ -6,8 +6,6 @@ import org.helmo.murmurG6.models.*;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -47,17 +45,11 @@ public class RelayThread implements Runnable, AutoCloseable {
      */
     public void sendToRelay(String sendMessage) {
         try {
-            System.out.println("Envois au relay du message: " + sendMessage);
-
-
-            byte[] ciphertext = AESCrypt.encrypt(sendMessage, "DHADoCxPItcFyKwxcTEuGg5neBd2K+VLXWc6zCnsBq4=");
+            byte[] ciphertext = AESCrypt.encrypt(sendMessage, config.base64KeyAES);
             String ciphertext_base64 = Base64.getEncoder().encodeToString(ciphertext);
-
-            System.out.println("Envois du message chiffré : " + ciphertext_base64);
-
             out.println(ciphertext_base64); // Send the encrypted message to the relay
             out.flush();
-            System.out.println("[RelayThread] Envoi d'un message au relay.");
+            System.out.println("[RelayThread] Message envoyé au relay : " + sendMessage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,9 +63,10 @@ public class RelayThread implements Runnable, AutoCloseable {
     public String receiveFromRelay() {
         try {
             String line = in.readLine();
-            System.out.println("RELAY : " + line);
             byte[] decodedBytes = Base64.getDecoder().decode(line);
-            return AESCrypt.decrypt(decodedBytes, config.base64KeyAES);
+            String decryptedMessage = AESCrypt.decrypt(decodedBytes, config.base64KeyAES);
+            System.out.println("[RelayThread] Message en provenance du relay reçu : " + decryptedMessage);
+            return decryptedMessage;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -89,8 +82,8 @@ public class RelayThread implements Runnable, AutoCloseable {
             byte[] msgsBytes = echoMessage.getBytes(StandardCharsets.UTF_8);
             DatagramPacket packet = new DatagramPacket(msgsBytes, msgsBytes.length, InetAddress.getByName(config.multicastIp), config.multicastPort);
             this.multicastSocket.send(packet);
-            System.out.println("ECHO");
-        } catch (IOException e) {
+            System.out.println(echoMessage);
+        } catch (IOException | SecurityException e) {
             e.printStackTrace();
         }
     }
@@ -108,8 +101,6 @@ public class RelayThread implements Runnable, AutoCloseable {
             cancelEcho();
 
             String message = receiveFromRelay();
-
-            System.out.println("MESSAGE DECHIFFRE : " + message);
 
             while (!unicastSocket.isClosed() && !message.isEmpty()) {
                 handleReceivedMessage(message);
@@ -136,8 +127,7 @@ public class RelayThread implements Runnable, AutoCloseable {
             if(senderParams.matches()){
                 UserCredentials senderCreditential = new UserCredentials(senderParams.group("login"), senderParams.group("userServerDomain"));
                 Task task = new Task(matcher.group("id"),  senderCreditential, matcher.group("receiver"), Protocol.detectTaskType(matcher.group("content")), matcher.group("content"));
-
-                System.out.println("Tache ajoutée: " + task.getTaskId()+" "+task.getSender()+" "+task.getReceiver()+" "+task.getType()+" "+task.getContent());
+                System.out.println("[RelayThread] Tâche ajoutée: " + task.getTaskId() + " " + task.getSender() + " " + task.getReceiver() + " " + task.getType() + " " + task.getContent());
                 executor.addTask(task);
             }
 
