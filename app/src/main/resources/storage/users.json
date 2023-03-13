@@ -1,1 +1,56 @@
-[{"login":{"login":"anthouu","domain":"g6server1.godswila.guru"},"bcryptDto":{"rounds":14,"salt":"7wDKSPzzn1eH6AgI8AsGEe","hash":"dBAieZDKJuhPZsR2h76JFrRECQbAupa"},"followers":[],"followedTrends":[]},{"login":{"login":"antho","domain":"g6server1.godswila.guru"},"bcryptDto":{"rounds":14,"salt":"5y5HA7OgUxXuyVPpZ75qWe","hash":"/WflKTHjQ6XZ4G48v1f5H2EZHpcxHN2"},"followers":[{"login":"thomas","domain":"g6server2.godswila.guru"}],"followedTrends":[{"trendName":"#femme","domain":"g6server1.godswila.guru"}]}]
+[
+  {
+    "login": {
+      "login": "anthouu",
+      "domain": "g6server1.godswila.guru"
+    },
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "7wDKSPzzn1eH6AgI8AsGEe",
+      "hash": "dBAieZDKJuhPZsR2h76JFrRECQbAupa"
+    },
+    "followers": [],
+    "followedTrends": []
+  },
+  {
+    "login": {
+      "login": "antho",
+      "domain": "g6server1.godswila.guru"
+    },
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "5y5HA7OgUxXuyVPpZ75qWe",
+      "hash": "/WflKTHjQ6XZ4G48v1f5H2EZHpcxHN2"
+    },
+    "followers": [
+      {
+        "login": "thomas",
+        "domain": "g6server2.godswila.guru"
+      }
+    ],
+    "followedTrends": [
+      {
+        "trendName": "#femme",
+        "domain": "g6server1.godswila.guru"
+      }
+    ]
+  },
+  {
+    "login": {
+      "login": "edwinnn",
+      "domain": "g6server2.godswila.guru"
+    },
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "ZemQNH7t.Ss2CzYHIyWCg.",
+      "hash": "rC8JtxRgAIrqpiQmft5mzT69dEd8FMu"
+    },
+    "followers": [
+      {
+        "login": "franchi",
+        "domain": "g6server1.godswila.guru"
+      }
+    ],
+    "followedTrends": []
+  }
+]
