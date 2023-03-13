@@ -167,6 +167,19 @@ public class RelayThread implements Runnable, AutoCloseable {
 
 
     /**
+     * Lance les 2 thread principaux, un pour envoyé echo périodiquement et l'autre pour écouter les messages entrants provenant du Relay.<br>
+     * Utilise un ScheduledThreadPool de 2 threads. Un thread est utilisé pour envoyer périodiquement un message ECHO
+     * toutes les 15 secondes, tandis que l'autre thread est utilisé pour écouter les messages entrants provenant du relais.
+     */
+    @Override
+    public void run() {
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
+        this.echoTask = executorService.scheduleAtFixedRate(this::echo, 0, 15, TimeUnit.SECONDS);
+        executorService.submit(this::listen);
+    }
+
+
+    /**
      * Fermeture des sockets, du BufferedReader et du PrintWriter.
      */
     @Override
@@ -179,18 +192,5 @@ public class RelayThread implements Runnable, AutoCloseable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-
-    /**
-     * Lance les 2 thread principaux, un pour envoyé echo périodiquement et l'autre pour écouter les messages entrants provenant du Relay.<br>
-     * Utilise un ScheduledThreadPool de 2 threads. Un thread est utilisé pour envoyer périodiquement un message ECHO
-     * toutes les 15 secondes, tandis que l'autre thread est utilisé pour écouter les messages entrants provenant du relais.
-     */
-    @Override
-    public void run() {
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
-        this.echoTask = executorService.scheduleAtFixedRate(this::echo, 0, 15, TimeUnit.SECONDS);
-        executorService.submit(this::listen);
     }
 }
