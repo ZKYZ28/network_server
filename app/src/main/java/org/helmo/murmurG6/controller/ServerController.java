@@ -1,6 +1,5 @@
 package org.helmo.murmurG6.controller;
 
-import org.helmo.murmurG6.controller.exceptions.UnableToConnectToClientException;
 import org.helmo.murmurG6.controller.exceptions.UnableToExecuteTaskException;
 import org.helmo.murmurG6.controller.exceptions.UnableToRunClientException;
 import org.helmo.murmurG6.executor.Executor;
@@ -113,10 +112,6 @@ public class ServerController implements AutoCloseable {
     }
 
 
-    /*public boolean isRunning() {
-        return !this.serverSocket.isClosed();
-    }*/
-
     /**
      * Sauvegarde les utilisateurs et tendances.
      * Synchronized car plusieurs ClientRunnable peuvent appeler la méthode
@@ -218,6 +213,5 @@ public class ServerController implements AutoCloseable {
         }catch (UnableToSaveOffLineMessageLibraryException e){
             System.out.println(e.getMessage());
         }
-
     }
 }
