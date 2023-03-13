@@ -6,8 +6,6 @@ import org.helmo.murmurG6.models.*;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -49,7 +47,6 @@ public class RelayThread implements Runnable, AutoCloseable {
         try {
             System.out.println("Envois au relay du message: " + sendMessage);
 
-
             byte[] ciphertext = AESCrypt.encrypt(sendMessage, "DHADoCxPItcFyKwxcTEuGg5neBd2K+VLXWc6zCnsBq4=");
             String ciphertext_base64 = Base64.getEncoder().encodeToString(ciphertext);
 
@@ -89,8 +86,8 @@ public class RelayThread implements Runnable, AutoCloseable {
             byte[] msgsBytes = echoMessage.getBytes(StandardCharsets.UTF_8);
             DatagramPacket packet = new DatagramPacket(msgsBytes, msgsBytes.length, InetAddress.getByName(config.multicastIp), config.multicastPort);
             this.multicastSocket.send(packet);
-            System.out.println("ECHO");
-        } catch (IOException e) {
+            System.out.println(echoMessage);
+        } catch (IOException | SecurityException e) {
             e.printStackTrace();
         }
     }
