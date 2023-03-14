@@ -22,9 +22,10 @@ import java.util.regex.Matcher;
  */
 public class RelayThread implements Runnable, AutoCloseable {
 
+    private static final long ECHO_FREQUENCY = 1;
     private final ServerConfig config;
     private ServerSocket serverSocket;
-    private DatagramSocket multicastSocket;
+    private MulticastSocket multicastSocket;
     private BufferedReader in;
     private PrintWriter out;
     private ScheduledFuture<?> echoTask;
@@ -42,7 +43,8 @@ public class RelayThread implements Runnable, AutoCloseable {
         this.config = server.getServerConfig();
         try {
             this.serverSocket = new ServerSocket(0);
-            this.multicastSocket = new DatagramSocket();
+            this.multicastSocket = new MulticastSocket();
+            multicastSocket.setNetworkInterface(NetworkInterface.getByName("eth12"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -174,7 +176,7 @@ public class RelayThread implements Runnable, AutoCloseable {
     @Override
     public void run() {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
-        this.echoTask = executorService.scheduleAtFixedRate(this::echo, 0, 15, TimeUnit.SECONDS);
+        this.echoTask = executorService.scheduleAtFixedRate(this::echo, 0, ECHO_FREQUENCY, TimeUnit.SECONDS);
         executorService.submit(this::listen);
     }
 
