@@ -44,7 +44,7 @@ public class RelayThread implements Runnable, AutoCloseable {
         try {
             this.serverSocket = new ServerSocket(0);
             this.multicastSocket = new MulticastSocket();
-            multicastSocket.setNetworkInterface(NetworkInterface.getByName("eth12"));
+            multicastSocket.setNetworkInterface(config.networkInterface);
         } catch (IOException e) {
             e.printStackTrace();
         }

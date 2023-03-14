@@ -68,6 +68,8 @@ public class ServerController implements AutoCloseable {
             ServerSocketFactory socketFactory = serverConfig.tls ? SSLServerSocketFactory.getDefault() : ServerSocketFactory.getDefault();
             this.serverSocket = socketFactory.createServerSocket(serverConfig.serverPort);
 
+            serverConfig.networkInterface = new NetChooser().selectInterface();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
