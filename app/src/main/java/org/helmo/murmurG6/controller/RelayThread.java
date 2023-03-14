@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
  */
 public class RelayThread implements Runnable, AutoCloseable {
 
-    private static final long ECHO_FREQUENCY = 1;
+    private static final long ECHO_FREQUENCY = 15;
     private final ServerConfig config;
     private ServerSocket serverSocket;
     private MulticastSocket multicastSocket;
