@@ -1,6 +1,7 @@
 package org.helmo.murmurG6.models;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 
@@ -27,7 +28,7 @@ public class OffLineMessage implements Comparable{
     public int compareTo(Object o) {
         if (o instanceof OffLineMessage) {
             OffLineMessage otherMessage = (OffLineMessage) o;
-            return dateTime.compareTo(otherMessage.dateTime);
+            return (int) (Math.abs(this.dateTime.toEpochSecond(ZoneOffset.UTC)) - Math.abs(otherMessage.dateTime.toEpochSecond(ZoneOffset.UTC)));
         } else {
             return 0;
         }
