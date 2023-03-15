@@ -1,0 +1,15 @@
+[
+  {
+    "login": {
+      "login": "antho",
+      "domain": "g6server2.godswila.guru"
+    },
+    "bcryptDto": {
+      "rounds": 14,
+      "salt": "uh.9jZIY9vgnA.YVlUB/rO",
+      "hash": "hbzoFmTwYWocOgZE0XY4lpW8y9t4IcS"
+    },
+    "followers": [],
+    "followedTrends": []
+  }
+]
