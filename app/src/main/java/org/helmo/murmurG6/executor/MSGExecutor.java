@@ -120,9 +120,9 @@ public final class MSGExecutor {
      * @param sender    L'emetteur du message
      * @param idMessage L'id du message
      * @param message   Le message
-     * @param     Le thread ClientRunnable du destinataire sur ce server
+     * @param   Le thread ClientRunnable du destinataire sur ce server
      */
-    private static void operateLocalMessageSend(User sender, String idMessage, String message, UserCredentials followerCredential) {
+    private static void operateLocalMessageSend(User sender, String idMessage, String message, UserCredentials followerCredential){
 
         //On recupere le threadClient sur le server du destinataire afin de lui écrire
         ClientRunnable client = server.getClientRunnableByLogin(followerCredential.getLogin());
@@ -141,7 +141,12 @@ public final class MSGExecutor {
             //Si le destinataire n'est pas actuellement connecté
         } else {
             //TODO : Extension file de message quand le client n'est pas connecté (quand il est nul dans ce cas ci)
-            server.addOfflineMessageForClient(followerCredential, new OffLineMessage(LocalDateTime.now(), message));
+            try{
+                server.addOfflineMessageForClient(followerCredential, new OffLineMessage(LocalDateTime.now(), new String(AESCrypt.encrypt(message, server.getServerConfig().base64KeyAES))));
+            }catch (Exception e){
+                System.out.println("ERREUR lors de l'encryptage du message hors ligne");
+            }
+
         }
     }
 
