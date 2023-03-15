@@ -29,21 +29,24 @@ public final class MSGSExecutor {
 
     }
 
-    private static void sendMessageToFollowerOfTrend(UserCredentials sender, String target, String message, String messageId) {
+    private static void sendMessageToFollowerOfTrend(UserCredentials senderCreditentials, String target, String message, String messageId) {
         Matcher targetArgs = Protocol.TAG_DOMAIN.matcher(target);
 
         if (targetArgs.matches()) {
             //On itère sur tous les followers de la trend appartenant au serveur
             for (UserCredentials trendFollowerCreditentials : server.getTrendLibrary().getUsersForTrend(targetArgs.group("tagName"))) {
 
-                //Si le destinataire du message appartient à ce serveur
-                if (server.getUserLibrary().isRegistered(trendFollowerCreditentials.getLogin())) {
+                //Le sender ne doit pas s'envoyer de message à lui meme
+                if(!senderCreditentials.equals(trendFollowerCreditentials)) {
+                    //Si le destinataire du message appartient à ce serveur
+                    if (server.getUserLibrary().isRegistered(trendFollowerCreditentials.getLogin())) {
 
-                    sendMessageToReceiverClient(sender, trendFollowerCreditentials.toString(), message, messageId);
+                        sendMessageToReceiverClient(senderCreditentials, trendFollowerCreditentials.toString(), message, messageId);
 
-                    //Cas ou le destinataire appartient à un autre serveur
-                } else {
-                    Executor.getInstance().sendToRelay(Protocol.build_SEND(messageId, sender.toString(), trendFollowerCreditentials.toString(), Protocol.build_MSGS(sender.toString() + " " + message)));
+                        //Cas ou le destinataire appartient à un autre serveur
+                    } else {
+                        Executor.getInstance().sendToRelay(Protocol.build_SEND(messageId, senderCreditentials.toString(), trendFollowerCreditentials.toString(), Protocol.build_MSGS(senderCreditentials.toString() + " " + message)));
+                    }
                 }
             }
         }
