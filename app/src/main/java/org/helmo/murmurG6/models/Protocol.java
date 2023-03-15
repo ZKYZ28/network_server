@@ -112,12 +112,19 @@ public class Protocol {
     );
 
     public synchronized static Matcher getMatcher(TaskType type, String command) throws UnableToMatchProtocolException {
-        Matcher matcher = TYPE_MESSAGE_MAP.get(type).matcher(command);
-        if(matcher.matches()){
-            return matcher;
+        Pattern pattern = TYPE_MESSAGE_MAP.get(type);
+        if (pattern == null) {
+            throw new UnableToMatchProtocolException("Le message reçu ou envoyé ne correspond pas au Protocol du serveur");
         }
-        throw new UnableToMatchProtocolException("Le message reçu ou envoyé ne correspond pas au Protocol du serveur");
+        Matcher matcher = pattern.matcher(command);
+        if (matcher.matches()) {
+            return matcher;
+        } else {
+            throw new UnableToMatchProtocolException("Le message reçu ou envoyé ne correspond pas au Protocol du serveur");
+        }
     }
+
+
 
     public synchronized static TaskType detectTaskType(String command){
         for(TaskType type: TYPE_MESSAGE_MAP.keySet()){
