@@ -36,7 +36,7 @@ public final class MSGSExecutor {
             //On itère sur tous les followers de la trend appartenant au serveur
             for (UserCredentials trendFollowerCreditentials : server.getTrendLibrary().getUsersForTrend(targetArgs.group("tagName"))) {
 
-                if(sender.equals(trendFollowerCreditentials)) {
+                if(!sender.equals(trendFollowerCreditentials)) {
                     //Si le destinataire du message appartient à ce serveur
                     if (server.getUserLibrary().isRegistered(trendFollowerCreditentials.getLogin())) {
 
