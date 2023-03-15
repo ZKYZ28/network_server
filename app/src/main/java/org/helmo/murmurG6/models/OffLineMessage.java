@@ -28,25 +28,9 @@ public class OffLineMessage implements Comparable{
     public int compareTo(Object o) {
         if (o instanceof OffLineMessage) {
             OffLineMessage otherMessage = (OffLineMessage) o;
-            return dateTime.compareTo(otherMessage.dateTime);
+            return (int) (Math.abs(this.dateTime.toEpochSecond(ZoneOffset.UTC)) - Math.abs(otherMessage.dateTime.toEpochSecond(ZoneOffset.UTC)));
         } else {
             return 0;
         }
     }
-
-
-    /**
-     * On compare 2 messages offline avec leur contenu et leur date (si 2 meme contenu de difference de date < 5 seconde => egal
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OffLineMessage that = (OffLineMessage) o;
-        if (Math.abs(this.dateTime.toEpochSecond(ZoneOffset.UTC) - that.dateTime.toEpochSecond(ZoneOffset.UTC)) > 5) {
-            return false;
-        }
-        return this.message.equals(that.message);
-    }
-
 }
