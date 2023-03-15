@@ -1,5 +1,7 @@
 package org.helmo.murmurG6.models;
 
+import org.helmo.murmurG6.models.exceptions.UnableToMatchProtocolException;
+
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -109,12 +111,12 @@ public class Protocol {
             TaskType.SEND, RX_SEND
     );
 
-    public synchronized static Matcher getMatcher(TaskType type, String command){
+    public synchronized static Matcher getMatcher(TaskType type, String command) throws UnableToMatchProtocolException {
         Matcher matcher = TYPE_MESSAGE_MAP.get(type).matcher(command);
         if(matcher.matches()){
             return matcher;
         }
-        return null;
+        throw new UnableToMatchProtocolException("Le message reçu ou envoyé ne correspond pas au Protocol du serveur");
     }
 
     public synchronized static TaskType detectTaskType(String command){
