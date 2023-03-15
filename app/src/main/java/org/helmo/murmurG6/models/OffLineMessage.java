@@ -36,11 +36,6 @@ public class OffLineMessage implements Comparable{
         if (o instanceof OffLineMessage) {
             OffLineMessage otherMessage = (OffLineMessage) o;
 
-            int dateComparison = (int) (Math.abs(this.dateTime.toEpochSecond(ZoneOffset.UTC)) - Math.abs(otherMessage.dateTime.toEpochSecond(ZoneOffset.UTC)));
-            if (dateComparison != 0) {
-                return dateComparison;
-            }
-
             int senderComparison = this.senderCreditentialsInString.compareTo(otherMessage.senderCreditentialsInString);
             if (senderComparison != 0) {
                 return senderComparison;
