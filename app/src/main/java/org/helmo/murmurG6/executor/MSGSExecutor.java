@@ -82,7 +82,11 @@ public final class MSGSExecutor {
             } else {
                 //TODO ajout dans la file de message hors ligne
                 System.out.println("ajout du message hors ligne");
-                server.addOfflineMessageForClient(receiverUser.getCredentials(), new OffLineMessage(LocalDateTime.now(), message));
+                try{
+                    server.addOfflineMessageForClient(receiverUser.getCredentials(), new OffLineMessage(LocalDateTime.now(), new String(AESCrypt.encrypt(message, server.getServerConfig().base64KeyAES))));
+                }catch (Exception e){
+                    System.out.println("ERREUR lors de l'encryptage du message hors ligne");
+                }
             }
         }
     }
