@@ -198,7 +198,7 @@ public class ClientRunnable implements Runnable, Closeable {
                 try{
                     //String decryptedMessage = AESCrypt.decrypt(message.getMessage().getBytes(), server.getServerConfig().base64KeyAES);
                     String decryptedMessage = AESCrypt.decrypt(Base64.getDecoder().decode(message.getMessage()), server.getServerConfig().base64KeyAES);
-                    sendMessage("MSGS " + user.getCredentials().toString() + " " + decryptedMessage + " (envoye le: " + message.getDateTime() + ")");
+                    sendMessage("MSGS " + message.getSenderCreditentialsInString() + " " + decryptedMessage + " (envoye le: " + message.getDateTime() + ")");
                 }catch (Exception e){
                     System.out.println("ERREUR lors du décryptage du message hors ligne");
                 }
