@@ -120,9 +120,9 @@ public class Protocol {
 
         if (matcher.matches()) {
             return matcher;
-        } else {
-            throw new UnableToMatchProtocolException("Le message reçu ou envoyé ne correspond pas au Protocol du serveur");
         }
+
+        throw new UnableToMatchProtocolException("Le message reçu ou envoyé ne correspond pas au Protocol du serveur");
     }
 
 
