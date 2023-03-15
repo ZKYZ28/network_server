@@ -3,6 +3,7 @@ package org.helmo.murmurG6.controller;
 import org.helmo.murmurG6.controller.exceptions.UnableToRunClientException;
 import org.helmo.murmurG6.executor.Executor;
 import org.helmo.murmurG6.models.*;
+import org.helmo.murmurG6.models.exceptions.UnableToMatchProtocolException;
 import org.helmo.murmurG6.models.exceptions.UserAlreadyRegisteredException;
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveTrendLibraryException;
 import org.helmo.murmurG6.repository.exceptions.UnableToSaveUserLibraryException;
@@ -101,6 +102,8 @@ public class ClientRunnable implements Runnable, Closeable {
             }
         } catch (IOException ex) {
             ex.printStackTrace();
+        } catch (UnableToMatchProtocolException e) {
+            System.out.println("Message non attendu par le Protocol");
         }
     }
 
@@ -194,6 +197,7 @@ public class ClientRunnable implements Runnable, Closeable {
     private void checkOfflineMessages(){
         //On regarde si des messages ont été envoyé au client quand celui ci était hors ligne
         if(server.areOfflineMessagesForClient(this)){
+            System.out.println("TAILLE : " + server.getOfflineMessagesForClient(this).size());
             for(OffLineMessage message : server.getOfflineMessagesForClient(this)){
                 try{
                     //String decryptedMessage = AESCrypt.decrypt(message.getMessage().getBytes(), server.getServerConfig().base64KeyAES);

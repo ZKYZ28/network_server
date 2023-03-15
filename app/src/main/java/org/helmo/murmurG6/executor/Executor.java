@@ -5,6 +5,7 @@ import org.helmo.murmurG6.controller.ServerController;
 import org.helmo.murmurG6.controller.TaskScheduler;
 import org.helmo.murmurG6.controller.exceptions.UnableToExecuteTaskException;
 import org.helmo.murmurG6.models.*;
+import org.helmo.murmurG6.models.exceptions.UnableToMatchProtocolException;
 import org.helmo.murmurG6.models.exceptions.UnableToSendToRelayException;
 
 import java.util.concurrent.*;
@@ -57,7 +58,12 @@ public class Executor implements TaskScheduler {
 
 
     private void executeTask(Task task) {
-        Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
+        Matcher params = null;
+        try {
+            params = Protocol.getMatcher(task.getType(), task.getContent());
+        } catch (UnableToMatchProtocolException e) {
+            System.out.println("Message non attendu par le Protocol");
+        }
 
         if(params != null && params.matches()) {
                 switch (task.getType()) {

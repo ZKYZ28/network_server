@@ -3,6 +3,7 @@ package org.helmo.murmurG6.controller;
 import org.helmo.murmurG6.executor.Executor;
 import org.helmo.murmurG6.models.*;
 import org.helmo.murmurG6.models.exceptions.AesException;
+import org.helmo.murmurG6.models.exceptions.UnableToMatchProtocolException;
 import org.helmo.murmurG6.models.exceptions.UnableToReceiveFromRelayException;
 import org.helmo.murmurG6.models.exceptions.UnableToSendToRelayException;
 
@@ -154,7 +155,12 @@ public class RelayThread implements Runnable, AutoCloseable {
      */
     private void handleReceivedMessage(String message) {
         Executor executor = Executor.getInstance();
-        Matcher matcher = Protocol.getMatcher(TaskType.SEND, message);
+        Matcher matcher = null;
+        try {
+            matcher = Protocol.getMatcher(TaskType.SEND, message);
+        } catch (UnableToMatchProtocolException e) {
+            System.out.println("Message non attendu par le Protocol");
+        }
 
         if (matcher != null && matcher.matches()) {
             //Mise en place du UserCreditential de l'emetteur
