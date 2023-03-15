@@ -36,14 +36,16 @@ public final class MSGSExecutor {
             //On itère sur tous les followers de la trend appartenant au serveur
             for (UserCredentials trendFollowerCreditentials : server.getTrendLibrary().getUsersForTrend(targetArgs.group("tagName"))) {
 
-                //Si le destinataire du message appartient à ce serveur
-                if (server.getUserLibrary().isRegistered(trendFollowerCreditentials.getLogin())) {
+                if(sender.equals(trendFollowerCreditentials)) {
+                    //Si le destinataire du message appartient à ce serveur
+                    if (server.getUserLibrary().isRegistered(trendFollowerCreditentials.getLogin())) {
 
-                    sendMessageToReceiverClient(sender, trendFollowerCreditentials.toString(), message, messageId);
+                        sendMessageToReceiverClient(sender, trendFollowerCreditentials.toString(), message, messageId);
 
-                    //Cas ou le destinataire appartient à un autre serveur
-                } else {
-                    Executor.getInstance().sendToRelay(Protocol.build_SEND(messageId, sender.toString(), trendFollowerCreditentials.toString(), Protocol.build_MSGS(sender.toString() + " " + message)));
+                        //Cas ou le destinataire appartient à un autre serveur
+                    } else {
+                        Executor.getInstance().sendToRelay(Protocol.build_SEND(messageId, sender.toString(), trendFollowerCreditentials.toString(), Protocol.build_MSGS(sender.toString() + " " + message)));
+                    }
                 }
             }
         }
