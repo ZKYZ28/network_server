@@ -1,25 +1,15 @@
 [
   {
     "login": {
-      "login": "franchina",
-      "domain": "g6server1.godswila.guru"
+      "login": "antho",
+      "domain": "g6server2.godswila.guru"
     },
     "bcryptDto": {
       "rounds": 14,
-      "salt": "HPYu..ibzP6aRTMJrdmdnO",
-      "hash": "vjir3FfZR2dQys6u7OjfbQQyLXxRTvO"
+      "salt": "uh.9jZIY9vgnA.YVlUB/rO",
+      "hash": "hbzoFmTwYWocOgZE0XY4lpW8y9t4IcS"
     },
-    "followers": [
-      {
-        "login": "antho",
-        "domain": "g6server2.godswila.guru"
-      }
-    ],
-    "followedTrends": [
-      {
-        "trendName": "#femmes",
-        "domain": "g6server2.godswila.guru"
-      }
-    ]
+    "followers": [],
+    "followedTrends": []
   }
 ]

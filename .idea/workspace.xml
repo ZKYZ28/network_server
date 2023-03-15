@@ -7,11 +7,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80d6a6b1-98ac-4076-b856-98bb2db1ca20" name="Changes" comment="Fix double message horsligne">
+    <list default="true" id="80d6a6b1-98ac-4076-b856-98bb2db1ca20" name="Changes" comment="commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/OffLineMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/models/OffLineMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/offlineMessages.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/offlineMessages.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/trends.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/trends.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/controller/ServerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/helmo/murmurG6/executor/MSGExecutor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/resources/storage/users.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -139,7 +138,7 @@
       <workItem from="1678743603387" duration="1485000" />
       <workItem from="1678801531609" duration="629000" />
       <workItem from="1678865221911" duration="879000" />
-      <workItem from="1678866511609" duration="9725000" />
+      <workItem from="1678866511609" duration="3470000" />
     </task>
     <task id="LOCAL-00001" summary="Code refactored (Datamanager server controller)">
       <created>1678307914531</created>
@@ -211,21 +210,14 @@
       <option name="project" value="LOCAL" />
       <updated>1678402843047</updated>
     </task>
-    <task id="LOCAL-00011" summary="Fix bug msgs executor">
-      <created>1678870407575</created>
+    <task id="LOCAL-00011" summary="Gestion des exceptions AESCrypt">
+      <created>1678883946143</created>
       <option name="number" value="00011" />
       <option name="presentableId" value="LOCAL-00011" />
       <option name="project" value="LOCAL" />
-      <updated>1678870407575</updated>
+      <updated>1678883946143</updated>
     </task>
-    <task id="LOCAL-00012" summary="Fix double message horsligne">
-      <created>1678875605790</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1678875605790</updated>
-    </task>
-    <option name="localTasksCounter" value="13" />
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -248,9 +240,8 @@
     <MESSAGE value="envoi message chiffré au relay" />
     <MESSAGE value="projet fini a 99%" />
     <MESSAGE value="commit" />
-    <MESSAGE value="Fix bug msgs executor" />
-    <MESSAGE value="Fix double message horsligne" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix double message horsligne" />
+    <MESSAGE value="Gestion des exceptions AESCrypt" />
+    <option name="LAST_COMMIT_MESSAGE" value="Gestion des exceptions AESCrypt" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -261,6 +252,11 @@
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="java.util.HashMap$Node" memberName="value" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/murmurG6$Server.ic" NAME="Server Coverage Results" MODIFIED="1678138594860" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
