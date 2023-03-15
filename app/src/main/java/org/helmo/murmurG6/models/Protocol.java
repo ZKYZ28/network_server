@@ -47,6 +47,9 @@ public class Protocol {
     //"MSGS" esp nom_domaine esp message crlf
     private final static Pattern RX_MSGS = Pattern.compile("MSGS" + RX_ESP + RX_USER_DOMAIN + RX_ESP + "(?<message>" + RX_MESSAGE+ ")" + RX_CRLF);
 
+    public final static Pattern UNKNOWN = Pattern.compile("");
+
+
 
 
 //************************************************************************************************************************
@@ -108,20 +111,18 @@ public class Protocol {
             TaskType.DISCONNECT, RX_DISCONNECT_TASK,
             TaskType.MSG, RX_MSG_TASK,
             TaskType.MSGS, RX_MSGS,
-            TaskType.SEND, RX_SEND
+            TaskType.SEND, RX_SEND,
+            TaskType.UNKNOWN, UNKNOWN
     );
 
     public synchronized static Matcher getMatcher(TaskType type, String command) throws UnableToMatchProtocolException {
-        Pattern pattern = TYPE_MESSAGE_MAP.get(type);
-        if (pattern == null) {
-            throw new UnableToMatchProtocolException("Le message reçu ou envoyé ne correspond pas au Protocol du serveur");
-        }
-        Matcher matcher = pattern.matcher(command);
+        Matcher matcher = TYPE_MESSAGE_MAP.get(type).matcher(command);
+
         if (matcher.matches()) {
             return matcher;
-        } else {
-            throw new UnableToMatchProtocolException("Le message reçu ou envoyé ne correspond pas au Protocol du serveur");
         }
+
+        throw new UnableToMatchProtocolException("Le message reçu ou envoyé ne correspond pas au Protocol du serveur");
     }
 
 
@@ -134,5 +135,4 @@ public class Protocol {
         }
         return TaskType.UNKNOWN;
     }
-
 }
