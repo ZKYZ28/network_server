@@ -11,6 +11,7 @@ import org.helmo.murmurG6.utils.RandomSaltGenerator;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 
@@ -195,7 +196,8 @@ public class ClientRunnable implements Runnable, Closeable {
         if(server.areOfflineMessagesForClient(this)){
             for(OffLineMessage message : server.getOfflineMessagesForClient(this)){
                 try{
-                    String decryptedMessage = AESCrypt.decrypt(message.getMessage().getBytes(), server.getServerConfig().base64KeyAES);
+                    //String decryptedMessage = AESCrypt.decrypt(message.getMessage().getBytes(), server.getServerConfig().base64KeyAES);
+                    String decryptedMessage = AESCrypt.decrypt(Base64.getDecoder().decode(message.getMessage()), server.getServerConfig().base64KeyAES);
                     sendMessage("MSGS " + user.getCredentials().toString() + " " + decryptedMessage + " (envoye le: " + message.getDateTime() + ")");
                 }catch (Exception e){
                     System.out.println("ERREUR lors du décryptage du message hors ligne");

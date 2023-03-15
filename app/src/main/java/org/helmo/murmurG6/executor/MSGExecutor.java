@@ -6,6 +6,7 @@ import org.helmo.murmurG6.controller.ServerController;
 import org.helmo.murmurG6.models.*;
 
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -120,7 +121,6 @@ public final class MSGExecutor {
      * @param sender    L'emetteur du message
      * @param idMessage L'id du message
      * @param message   Le message
-     * @param   Le thread ClientRunnable du destinataire sur ce server
      */
     private static void operateLocalMessageSend(User sender, String idMessage, String message, UserCredentials followerCredential){
 
@@ -142,7 +142,9 @@ public final class MSGExecutor {
         } else {
             //TODO : Extension file de message quand le client n'est pas connecté (quand il est nul dans ce cas ci)
             try{
-                server.addOfflineMessageForClient(followerCredential, new OffLineMessage(LocalDateTime.now(), new String(AESCrypt.encrypt(message, server.getServerConfig().base64KeyAES))));
+                byte[] ciphertext = AESCrypt.encrypt(message, server.getServerConfig().base64KeyAES);
+                String ciphertext_base64 = Base64.getEncoder().encodeToString(ciphertext);
+                server.addOfflineMessageForClient(followerCredential, new OffLineMessage(LocalDateTime.now(), ciphertext_base64));
             }catch (Exception e){
                 System.out.println("ERREUR lors de l'encryptage du message hors ligne");
             }
