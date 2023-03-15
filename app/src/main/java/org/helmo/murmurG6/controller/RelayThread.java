@@ -2,6 +2,9 @@ package org.helmo.murmurG6.controller;
 
 import org.helmo.murmurG6.executor.Executor;
 import org.helmo.murmurG6.models.*;
+import org.helmo.murmurG6.models.exceptions.AesException;
+import org.helmo.murmurG6.models.exceptions.UnableToReceiveFromRelayException;
+import org.helmo.murmurG6.models.exceptions.UnableToSendToRelayException;
 
 import java.io.*;
 import java.net.*;
@@ -57,16 +60,17 @@ public class RelayThread implements Runnable, AutoCloseable {
      * Le message chiffré est ensuite encodé en Base64 avant d'être envoyé au serveur de relais via la connexion de sortie.<br>
      *
      * @param sendMessage Le message à envoyer au serveur de relais
+     * @throws UnableToSendToRelayException Exception lorsque l'envoi au relai n'a pas pu être fait.
      */
-    public void sendToRelay(String sendMessage) {
+    public void sendToRelay(String sendMessage) throws UnableToSendToRelayException {
         try {
             byte[] ciphertext = AESCrypt.encrypt(sendMessage, config.base64KeyAES);
             String ciphertext_base64 = Base64.getEncoder().encodeToString(ciphertext);
             out.println(ciphertext_base64);
             out.flush();
             System.out.println("[RelayThread] Message envoyé au relay : " + sendMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (AesException e) {
+            throw new UnableToSendToRelayException("Impossible d'envoyer vers le relay => " + e.getMessage());
         }
     }
 
@@ -84,11 +88,17 @@ public class RelayThread implements Runnable, AutoCloseable {
             String decryptedMessage = AESCrypt.decrypt(decodedBytes, config.base64KeyAES);
             System.out.println("[RelayThread] Message en provenance du relay reçu : " + decryptedMessage);
             return decryptedMessage;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        } catch (SocketException e) {
+            throw new UnableToReceiveFromRelayException("La connexion avec le relay a été interrompue : " + e.getMessage());
+        } catch (IOException e) {
+            throw new UnableToReceiveFromRelayException("Erreur lors de la lecture de la réponse du relay : " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new UnableToReceiveFromRelayException(("Erreur lors du décodage de la réponse du relay : " + e.getMessage()));
+        } catch (AesException e) {
+            throw new UnableToReceiveFromRelayException("Erreur lors du déchiffrement de la réponse du relay : " + e.getMessage());
         }
     }
+
 
 
     /**
@@ -128,7 +138,9 @@ public class RelayThread implements Runnable, AutoCloseable {
                 handleReceivedMessage(message);
                 message = receiveFromRelay();
             }
-        } catch (IOException e) {
+        } catch (UnableToReceiveFromRelayException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
