@@ -89,12 +89,17 @@ public class ServerController implements AutoCloseable {
             new Thread(this.relay).start();
 
             while (!this.serverSocket.isClosed()) {
-
+                if (serverConfig.tls) {
                     SSLSocket client = (SSLSocket) serverSocket.accept();
                     ClientRunnable runnable = new ClientRunnable(client);
                     clientList.add(runnable);
                     new Thread(runnable).start();
-
+                } else {
+                    Socket client = serverSocket.accept();
+                    ClientRunnable runnable = new ClientRunnable(client);
+                    clientList.add(runnable);
+                    new Thread(runnable).start();
+                }
             }
         } catch (UnableToRunClientException | UnableToExecuteTaskException e) {
             e.printStackTrace();

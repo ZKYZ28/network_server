@@ -43,7 +43,7 @@ public final class MSGSExecutor {
 
                     //Cas ou le destinataire appartient à un autre serveur
                 } else {
-                    Executor.getInstance().sendToRelay(Protocol.build_SEND(messageId, sender.toString(), trendFollowerCreditentials.toString(), message));
+                    Executor.getInstance().sendToRelay(Protocol.build_SEND(messageId, sender.toString(), trendFollowerCreditentials.toString(), Protocol.build_MSGS(sender.toString() + " " + message)));
                 }
             }
         }

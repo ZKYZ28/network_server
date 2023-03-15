@@ -94,21 +94,22 @@ public final class MSGExecutor {
 
 
     private static void manageMessageToClient(User sender, UserCredentials followerCredential, String idMessage, String message) {
-        //on regarde si le destinataire est sur ce server ou sur un autre domaine
-        if (followerCredential.getDomain().equals(server.getServerConfig().serverDomain)) {
+        if(!sender.getCredentials().equals(followerCredential)) {
+            //on regarde si le destinataire est sur ce server ou sur un autre domaine
+            if (followerCredential.getDomain().equals(server.getServerConfig().serverDomain)) {
 
 
+                //Gere l'envoi du message en local (aux user de CE server)
+                operateLocalMessageSend(sender, idMessage, message, followerCredential);
 
-            //Gere l'envoi du message en local (aux user de CE server)
-            operateLocalMessageSend(sender, idMessage, message, followerCredential);
 
-
-            //Si le destinataire n'appartient pas à ce server
-        } else {
-            System.out.println("id : " + idMessage);
-            System.out.println(Protocol.build_SEND(idMessage, sender.getCredentials().toString(), followerCredential.toString(), message));
-            Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, sender.getCredentials().toString(), followerCredential.toString(), Protocol.build_MSGS(sender.getCredentials().toString() + " " + message)));
-            //TODO a voir avec le toString quand relay fini
+                //Si le destinataire n'appartient pas à ce server
+            } else {
+                System.out.println("id : " + idMessage);
+                System.out.println(Protocol.build_SEND(idMessage, sender.getCredentials().toString(), followerCredential.toString(), message));
+                Executor.getInstance().sendToRelay(Protocol.build_SEND(idMessage, sender.getCredentials().toString(), followerCredential.toString(), Protocol.build_MSGS(sender.getCredentials().toString() + " " + message)));
+                //TODO a voir avec le toString quand relay fini
+            }
         }
     }
 
