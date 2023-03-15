@@ -200,7 +200,6 @@ public class ClientRunnable implements Runnable, Closeable {
                 }catch (Exception e){
                     System.out.println("ERREUR lors du décryptage du message hors ligne");
                 }
-
             }
             server.deleteOfflineMessagesForClient(this);
         }
