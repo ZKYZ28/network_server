@@ -141,14 +141,7 @@ public final class MSGExecutor {
             //Si le destinataire n'est pas actuellement connecté
         } else {
             //TODO : Extension file de message quand le client n'est pas connecté (quand il est nul dans ce cas ci)
-            try{
-                byte[] ciphertext = AESCrypt.encrypt(message, server.getServerConfig().base64KeyAES);
-                String ciphertext_base64 = Base64.getEncoder().encodeToString(ciphertext);
-                server.addOfflineMessageForClient(followerCredential, new OffLineMessage(sender.getCredentials().toString(), LocalDateTime.now(), ciphertext_base64));
-            }catch (Exception e){
-                System.out.println("ERREUR lors de l'encryptage du message hors ligne");
-            }
-
+            server.addOfflineMessageForClient(followerCredential, sender.getCredentials().toString(), LocalDateTime.now(), message);
         }
     }
 

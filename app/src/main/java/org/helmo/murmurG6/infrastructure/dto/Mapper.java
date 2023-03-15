@@ -111,36 +111,42 @@ public class Mapper {
 
 
 
-    public static Map<String, TreeSet<OffLineMessage>> offLineMessagesFromDto(Map<String, TreeSet<OffLineMessageDto>> offlineMessagesDto){
+    public static Map<String, TreeMap<String, OffLineMessage>> offLineMessagesFromDto(Map<String, TreeMap<String, OffLineMessageDto>> offlineMessagesDto){
 
-        Map<String, TreeSet<OffLineMessage>> offlineMessages = new HashMap<String, TreeSet<OffLineMessage>>();
+        Map<String, TreeMap<String, OffLineMessage>> offlineMessages = new HashMap<>();
 
         if(offlineMessagesDto != null){
             //On parcours chaque clé de la liste de messages hors-ligne (les user creditentials dto)
             for(String uc : offlineMessagesDto.keySet()){
 
                 //On rempli la liste de messages hors ligne avec les userCreditentials
-                offlineMessages.put(uc, new TreeSet<>());
+                offlineMessages.put(uc, new TreeMap<>());
 
                 //Pour chaque userCreditentialsDto dans la liste de message dto, on ajoute les messages
-                for(OffLineMessageDto messageDto : offlineMessagesDto.get(uc)){
-                    offlineMessages.get(uc).add(OffLineMessageDto.fromDto(messageDto));
+                for(String messageId : offlineMessagesDto.get(uc).keySet()){
+                    offlineMessages.get(uc).put(
+                            messageId,
+                            OffLineMessageDto.fromDto(offlineMessagesDto.get(uc).get(messageId))
+                    );
                 }
             }
         }
         return offlineMessages;
     }
 
-    public static Map<String, HashSet<OffLineMessageDto>> offLineMessagesToDto(Map<String, TreeSet<OffLineMessage>> offlineMessages){
+    public static Map<String, HashMap<String, OffLineMessageDto>> offLineMessagesToDto(Map<String, TreeMap<String, OffLineMessage>> offlineMessages){
 
-        Map<String, HashSet<OffLineMessageDto>> offlineMessagesDto = new HashMap<String, HashSet<OffLineMessageDto>>();
+        Map<String, HashMap<String, OffLineMessageDto>> offlineMessagesDto = new HashMap<>();
 
         if(offlineMessages != null){
             for(String uc : offlineMessages.keySet()){
 
-                offlineMessagesDto.put(uc, new HashSet<>());
-                for(OffLineMessage message : offlineMessages.get(uc)){
-                    offlineMessagesDto.get(uc).add(OffLineMessageDto.toDto(message));
+                offlineMessagesDto.put(uc, new HashMap<>());
+                for(String messageId : offlineMessages.get(uc).keySet()){
+                    offlineMessagesDto.get(uc).put(
+                            messageId,
+                            OffLineMessageDto.toDto(offlineMessages.get(uc).get(messageId))
+                    );
                 }
             }
         }

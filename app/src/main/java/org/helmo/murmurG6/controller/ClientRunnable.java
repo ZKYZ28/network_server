@@ -197,10 +197,8 @@ public class ClientRunnable implements Runnable, Closeable {
     private void checkOfflineMessages(){
         //On regarde si des messages ont été envoyé au client quand celui ci était hors ligne
         if(server.areOfflineMessagesForClient(this)){
-            System.out.println("TAILLE : " + server.getOfflineMessagesForClient(this).size());
             for(OffLineMessage message : server.getOfflineMessagesForClient(this)){
                 try{
-                    //String decryptedMessage = AESCrypt.decrypt(message.getMessage().getBytes(), server.getServerConfig().base64KeyAES);
                     String decryptedMessage = AESCrypt.decrypt(Base64.getDecoder().decode(message.getMessage()), server.getServerConfig().base64KeyAES);
                     sendMessage("MSGS " + message.getSenderCreditentialsInString() + " " + decryptedMessage + " (envoye le: " + message.getDateTime() + ")");
                 }catch (Exception e){

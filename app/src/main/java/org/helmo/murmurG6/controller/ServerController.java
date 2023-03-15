@@ -5,6 +5,7 @@ import org.helmo.murmurG6.controller.exceptions.UnableToRunClientException;
 import org.helmo.murmurG6.executor.Executor;
 import org.helmo.murmurG6.infrastructure.ServerJsonStorage;
 import org.helmo.murmurG6.models.*;
+import org.helmo.murmurG6.models.exceptions.AesException;
 import org.helmo.murmurG6.repository.OffLineMessageRepository;
 import org.helmo.murmurG6.repository.TrendRepository;
 import org.helmo.murmurG6.repository.UserRepository;
@@ -19,10 +20,8 @@ import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * La classe ServerController représente le contrôleur principal de l'application serveur.
@@ -189,14 +188,23 @@ public class ServerController implements AutoCloseable {
 
 
     /**OFFLINE_MESSAGES**/
-    public void addOfflineMessageForClient(UserCredentials userCredentials, OffLineMessage offLineMessage) {
+    public void addOfflineMessageForClient(UserCredentials userCredentials, String senderCreditentials, LocalDateTime messageDate, String message) {
         try {
+            byte[] ciphertext = AESCrypt.encrypt(message, getServerConfig().base64KeyAES);
+            String ciphertext_base64 = Base64.getEncoder().encodeToString(ciphertext);
+
             String client = userCredentials.toString();
+
+            OffLineMessage offLineMessage = new OffLineMessage(senderCreditentials, messageDate, message);
+            offLineMessage.setEncryptedMessage(ciphertext_base64);
+
             dataManager.getOfflineMessagesLibrary().addOfflineMessage(client, offLineMessage);
             dataManager.saveOfflineMessages();
 
         }catch (UnableToSaveOffLineMessageLibraryException e){
             System.out.println(e.getMessage());
+        } catch (AesException e) {
+            System.out.println("ERREUR lors de l'encryptage du message hors ligne");
         }
     }
 
@@ -204,7 +212,7 @@ public class ServerController implements AutoCloseable {
         return dataManager.getOfflineMessagesLibrary().existOfflineMessagesForUser(clientRunnable.getUser().getCredentials().toString());
     }
 
-    public synchronized TreeSet<OffLineMessage> getOfflineMessagesForClient(ClientRunnable clientRunnable) {
+    public synchronized Iterable<OffLineMessage> getOfflineMessagesForClient(ClientRunnable clientRunnable) {
         return dataManager.getOfflineMessagesLibrary().getOfflineMessagesForUser(clientRunnable.getUser().getCredentials().toString());
     }
 

@@ -32,7 +32,7 @@ public class OffLineMessagesJsonStorage implements OffLineMessageRepository {
         createFile(FILE_PATH);
 
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(FILE_PATH, StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING)) {
-            gson.toJson(Mapper.offLineMessagesToDto(offlineMessagesLibrary.getOfflineMessages()), new TypeToken<Map<String, TreeSet<OffLineMessageDto>>>(){}.getType(), bufferedWriter);
+            gson.toJson(Mapper.offLineMessagesToDto(offlineMessagesLibrary.getOfflineMessages()), new TypeToken<Map<String, TreeMap<String, OffLineMessageDto>>>(){}.getType(), bufferedWriter);
         } catch (IOException e) {
             throw new UnableToSaveOffLineMessageLibraryException("Impossible de sauvegarder les messages hors-ligne!");
         }
@@ -44,7 +44,7 @@ public class OffLineMessagesJsonStorage implements OffLineMessageRepository {
         createFile(FILE_PATH);
 
         try (BufferedReader reader = Files.newBufferedReader(FILE_PATH, StandardCharsets.UTF_8)) {
-            Map<String, TreeSet<OffLineMessageDto>> resultDto = gson.fromJson(reader, new TypeToken<Map<String, TreeSet<OffLineMessageDto>>>(){}.getType());
+            Map<String, TreeMap<String, OffLineMessageDto>> resultDto = gson.fromJson(reader, new TypeToken<Map<String, TreeMap<String, OffLineMessageDto>>>(){}.getType());
             return new OfflineMessagesLibrary(Mapper.offLineMessagesFromDto(resultDto));
         } catch (IOException e) {
             throw new UnableToLoadOffLineMessageLibraryException("Impossible de charger la liste de messages hors ligne!");
