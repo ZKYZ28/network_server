@@ -94,7 +94,7 @@ public class ClientRunnable implements Runnable, Closeable {
                 ligne = in.readLine();
             }
         } catch (IOException ex) {
-            System.out.println("Impossible de lire la ligne envoyée par leF client.");
+            System.out.println("Impossible de réceptioner le message du client.");
         } catch (UnableToMatchProtocolException e) {
             System.out.println("Message non attendu par le Protocol");
         }
