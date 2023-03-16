@@ -64,7 +64,7 @@ public class ClientRunnable implements Runnable, Closeable {
 
             String ligne = in.readLine();
 
-            while (ligne != null && !ligne.isEmpty() && socket.isClosed()) {
+            while (ligne != null && !ligne.isEmpty() && !socket.isClosed()) {
 
                 System.out.printf("Ligne reçue : %s\r\n", ligne);
 
@@ -93,6 +93,7 @@ public class ClientRunnable implements Runnable, Closeable {
                         executor.addTask(task);
                         break;
                 }
+                ligne = in.readLine();
             }
         } catch (IOException ex) {
             ex.printStackTrace();
