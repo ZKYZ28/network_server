@@ -66,37 +66,39 @@ public class ClientRunnable implements Runnable, Closeable {
 
             while (ligne != null && !ligne.isEmpty() && !socket.isClosed()) {
 
-                System.out.printf("Ligne reçue : %s\r\n", ligne);
-                Task task = new Task(server.generateId(), user != null ? user.getCredentials() : null, null, Protocol.detectTaskType(ligne), ligne);
-                Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
+                try {
+                    System.out.printf("Ligne reçue : %s\r\n", ligne);
+                    Task task = new Task(server.generateId(), user != null ? user.getCredentials() : null, null, Protocol.detectTaskType(ligne), ligne);
+                    Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
 
-                switch (task.getType()) {
-                    case REGISTER:
-                        register(params);
-                        break;
+                    switch (task.getType()) {
+                        case REGISTER:
+                            register(params);
+                            break;
 
-                    case CONNECT:
-                        connect(params);
-                        break;
+                        case CONNECT:
+                            connect(params);
+                            break;
 
-                    case CONFIRM:
-                        confirm(params.group("challenge"), random22);
-                        break;
+                        case CONFIRM:
+                            confirm(params.group("challenge"), random22);
+                            break;
 
-                    case DISCONNECT:
-                        close();
-                        break;
+                        case DISCONNECT:
+                            close();
+                            break;
 
-                    default:
-                        executor.addTask(task);
-                        break;
+                        default:
+                            executor.addTask(task);
+                            break;
+                    }
+                } catch (UnableToMatchProtocolException e) {
+                    System.out.println("Message non attendu par le Protocol");
                 }
                 ligne = in.readLine();
             }
         } catch (IOException ex) {
             System.out.println("Impossible de réceptioner le message du client.");
-        } catch (UnableToMatchProtocolException e) {
-            System.out.println("Message non attendu par le Protocol");
         }
     }
 
@@ -129,7 +131,8 @@ public class ClientRunnable implements Runnable, Closeable {
             this.user = user;
             server.save();
             return Protocol.build_OK();
-        } catch (UnableToSaveUserLibraryException | UnableToSaveTrendLibraryException | UserAlreadyRegisteredException e) {
+        } catch (UnableToSaveUserLibraryException | UnableToSaveTrendLibraryException |
+                 UserAlreadyRegisteredException e) {
             return Protocol.build_ERROR();
         }
     }
@@ -168,9 +171,9 @@ public class ClientRunnable implements Runnable, Closeable {
     }
 
     private String controlConfirm(String clientChallenge, String userChallenge) {
-        if(clientChallenge.equals(userChallenge)){
+        if (clientChallenge.equals(userChallenge)) {
             return Protocol.build_OK();
-        }else{
+        } else {
             return Protocol.build_ERROR();
         }
     }
@@ -179,14 +182,14 @@ public class ClientRunnable implements Runnable, Closeable {
     /**
      * OFFLINE_MESSAGES
      */
-    private void checkOfflineMessages(){
+    private void checkOfflineMessages() {
         //On regarde si des messages ont été envoyé au client quand celui ci était hors ligne
-        if(server.areOfflineMessagesForClient(this)){
-            for(OffLineMessage message : server.getOfflineMessagesForClient(this)){
-                try{
+        if (server.areOfflineMessagesForClient(this)) {
+            for (OffLineMessage message : server.getOfflineMessagesForClient(this)) {
+                try {
                     String decryptedMessage = AESCrypt.decrypt(Base64.getDecoder().decode(message.getMessage()), server.getServerConfig().base64KeyAES);
                     sendMessage("MSGS " + message.getSenderCreditentialsInString() + " " + decryptedMessage + " (envoye le: " + message.getDateTime() + ")");
-                }catch (Exception e){
+                } catch (Exception e) {
                     System.out.println("ERREUR lors du décryptage du message hors ligne");
                 }
             }
