@@ -26,7 +26,6 @@ import java.util.regex.Matcher;
  */
 public class RelayThread implements Runnable, AutoCloseable {
 
-    private static final long ECHO_FREQUENCY = 15;
     private final ServerConfig config;
     private ServerSocket serverSocket;
     private MulticastSocket multicastSocket;
@@ -194,7 +193,7 @@ public class RelayThread implements Runnable, AutoCloseable {
     @Override
     public void run() {
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
-        this.echoTask = executorService.scheduleAtFixedRate(this::echo, 0, ECHO_FREQUENCY, TimeUnit.SECONDS);
+        this.echoTask = executorService.scheduleAtFixedRate(this::echo, 0, 15, TimeUnit.SECONDS);
         executorService.submit(this::listen);
     }
 

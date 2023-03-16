@@ -64,7 +64,7 @@ public class ClientRunnable implements Runnable, Closeable {
 
             String ligne = in.readLine();
 
-            while (ligne != null && !ligne.isEmpty()) {
+            while (ligne != null && !ligne.isEmpty() && socket.isClosed()) {
 
                 System.out.printf("Ligne reçue : %s\r\n", ligne);
 
@@ -72,33 +72,27 @@ public class ClientRunnable implements Runnable, Closeable {
 
                 Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
 
-                if (params != null) {
-                    switch (task.getType()) {
-                        case REGISTER:
-                            register(params);
-                            break;
+                switch (task.getType()) {
+                    case REGISTER:
+                        register(params);
+                        break;
 
-                        case CONNECT:
-                            connect(params);
-                            break;
+                    case CONNECT:
+                        connect(params);
+                        break;
 
-                        case CONFIRM:
-                            confirm(params.group("challenge"), random22);
-                            break;
+                    case CONFIRM:
+                        confirm(params.group("challenge"), random22);
+                        break;
 
-                        case DISCONNECT:
-                            close();
-                            break;
+                    case DISCONNECT:
+                        close();
+                        break;
 
-                        default:
-                            executor.addTask(task);
-                            break;
-                    }
-                } else {
-                    sendMessage(Protocol.build_ERROR());
+                    default:
+                        executor.addTask(task);
+                        break;
                 }
-
-                if (socket.isClosed()) break; else ligne = in.readLine();
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -118,17 +112,9 @@ public class ClientRunnable implements Runnable, Closeable {
     }
 
 
-    /***************** GETTERS/SETTERS *****************/
-
-
     public User getUser() {
         return this.user;
     }
-
-    public void setUser(User u) {
-        this.user = u;
-    }
-
 
     /**
      * REGISTER
