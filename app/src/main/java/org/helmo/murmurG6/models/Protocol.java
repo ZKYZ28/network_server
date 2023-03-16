@@ -116,7 +116,7 @@ public class Protocol {
     );
 
     public synchronized static Matcher getMatcher(TaskType type, String command) throws UnableToMatchProtocolException {
-        Matcher matcher = TYPE_MESSAGE_MAP.get(type).matcher(command);
+        Matcher matcher = TYPE_MESSAGE_MAP.get(type).matcher(command.trim());
 
         if (matcher.matches()) {
             return matcher;
