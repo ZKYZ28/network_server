@@ -41,7 +41,7 @@ public class ClientRunnable implements Runnable, Closeable {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
             this.out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Impossible de créer la connection avec le client.");
         }
     }
 
@@ -67,9 +67,7 @@ public class ClientRunnable implements Runnable, Closeable {
             while (ligne != null && !ligne.isEmpty() && socket.isClosed()) {
 
                 System.out.printf("Ligne reçue : %s\r\n", ligne);
-
                 Task task = new Task(server.generateId(), user != null ? user.getCredentials() : null, null, Protocol.detectTaskType(ligne), ligne);
-
                 Matcher params = Protocol.getMatcher(task.getType(), task.getContent());
 
                 switch (task.getType()) {
@@ -95,7 +93,7 @@ public class ClientRunnable implements Runnable, Closeable {
                 }
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
+            System.out.println("Impossible de lire la ligne envoyée par leF client.");
         } catch (UnableToMatchProtocolException e) {
             System.out.println("Message non attendu par le Protocol");
         }

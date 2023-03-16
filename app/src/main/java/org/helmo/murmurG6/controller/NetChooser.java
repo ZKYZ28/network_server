@@ -40,7 +40,7 @@ public class NetChooser {
                     interfaces.add(currentInterface);
             }
         } catch(SocketException ex) {
-            ex.printStackTrace();
+            System.out.println("Impossible de loader les interfaces réseaux.");
         }
 
     }

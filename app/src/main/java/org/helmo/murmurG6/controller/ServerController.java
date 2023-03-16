@@ -70,7 +70,7 @@ public class ServerController implements AutoCloseable {
             serverConfig.networkInterface = new NetChooser().selectInterface();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Impossible d'initialiser le serveur.");
         }
     }
 
@@ -101,7 +101,7 @@ public class ServerController implements AutoCloseable {
                 }
             }
         } catch (UnableToRunClientException | UnableToExecuteTaskException e) {
-            e.printStackTrace();
+            System.out.println("Une erreur est survenue lors de la création du thread client.");
         }
     }
 
@@ -139,7 +139,7 @@ public class ServerController implements AutoCloseable {
             this.relay.close();
             this.serverSocket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+           System.out.println("Impossible de fermer le serveur.");
         }
     }
 

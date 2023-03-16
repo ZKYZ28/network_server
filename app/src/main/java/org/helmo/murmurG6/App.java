@@ -26,7 +26,7 @@ public class App {
             server.init(USER_REPOSITORY, TREND_REPOSITORY, OFFLINE_MESSAGES_REPOSITORY);
             server.start();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Impossible de lancer le serveur.");
         }
     }
 }

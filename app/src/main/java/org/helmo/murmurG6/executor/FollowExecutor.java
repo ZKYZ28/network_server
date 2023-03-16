@@ -24,7 +24,7 @@ public final class FollowExecutor {
             }
             server.save();
         } catch (UnableToSaveTrendLibraryException | UnableToSaveUserLibraryException e) {
-            e.printStackTrace();
+            System.out.println("Impossible de sauvegarder la liste d'utilisateurs ou de trends.");
         }
     }
 

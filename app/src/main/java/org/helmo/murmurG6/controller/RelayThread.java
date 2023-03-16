@@ -49,7 +49,7 @@ public class RelayThread implements Runnable, AutoCloseable {
             this.multicastSocket = new MulticastSocket();
             multicastSocket.setNetworkInterface(config.networkInterface);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Impossible de créer le thread Relay");
         }
     }
 
@@ -113,7 +113,7 @@ public class RelayThread implements Runnable, AutoCloseable {
             this.multicastSocket.send(packet);
             System.out.println("[RelayThread] " + echoMessage);
         } catch (IOException | SecurityException e) {
-            e.printStackTrace();
+            System.out.println("Impossible d'émettre le message ECHO");
         }
     }
 
@@ -138,10 +138,8 @@ public class RelayThread implements Runnable, AutoCloseable {
                 handleReceivedMessage(message);
                 message = receiveFromRelay();
             }
-        } catch (UnableToReceiveFromRelayException e) {
-            System.out.println(e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (UnableToReceiveFromRelayException | IOException e) {
+            System.out.println("Impossible de recevoir une communication du Relay.");
         }
     }
 
@@ -209,7 +207,7 @@ public class RelayThread implements Runnable, AutoCloseable {
             this.in.close();
             this.out.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Impossible de fermer le thread relay");
         }
     }
 }
